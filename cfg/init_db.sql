@@ -31,22 +31,22 @@ CREATE TABLE Kategorie (
 );
 
 CREATE TABLE Kategorie_Studiengang_Mapping (
-	kategorie_name INTEGER,
+	kategorie_name VARCHAR(50),
 	studiengang_name VARCHAR(40),
 	
 	PRIMARY KEY(kategorie_name, studiengang_name),
-	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(kategorie_name),
+	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name),
 	FOREIGN KEY(studiengang_name) REFERENCES Studiengang(name)
 );
 
 CREATE TABLE Kategorienfilter (
 	benutzername VARCHAR(50),
-	kategorie_name INTEGER,
+	kategorie_name VARCHAR(50),
 	kategorieAusgewaehlt_Check BOOLEAN DEFAULT TRUE,
 	
 	PRIMARY KEY(benutzername, kategorie_name),
 	FOREIGN KEY(benutzername) REFERENCES Benutzer(benutzername),
-	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(kategorie_name)
+	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name)
 );
 
 CREATE TABLE Spiel (
@@ -81,7 +81,7 @@ ALTER TABLE Spiel ADD FOREIGN KEY(aktuelleRunde) REFERENCES Runde(rundenID);
 
 CREATE TABLE Frage (
 	fragenID INTEGER PRIMARY KEY AUTO_INCREMENT,
-	kategorie_name INTEGER NOT NULL,
+	kategorie_name VARCHAR(50) NOT NULL,
 	flagFragenTypMult BOOLEAN NOT NULL,
 	frage VARCHAR(100) NOT NULL,
 	antwortmoeglichkeit1 VARCHAR(50) NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE Frage (
 	wahrheitAntwortmoeglichkeit4 BOOLEAN NOT NULL,
 	flagFrageValidiert BOOLEAN NOT NULL,
 	
-	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(kategorie_name)
+	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name)
 );
 
 CREATE TABLE Antwort (
