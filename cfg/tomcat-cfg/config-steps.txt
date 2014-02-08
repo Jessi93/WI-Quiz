@@ -1,0 +1,7 @@
+mysql-connector in ${tomcat-home}/lib
+
+Eintrag in context.xml:
+<Resource name="jdbc/studiduellDB" auth="Container" type="javax.sql.DataSource"
+               maxActive="100" maxIdle="30" maxWait="10000"
+               username="studiduell" password="development" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://localhost:3306/studiduell"/>
