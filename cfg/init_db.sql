@@ -1,6 +1,6 @@
-CREATE SCHEMA wi_quiz;
+CREATE SCHEMA studiduell;
 
-USE wi_quiz;
+USE studiduell;
 
 CREATE TABLE Benutzer (
     benutzername VARCHAR(50) PRIMARY KEY, -- TODO or varbinary?
@@ -19,7 +19,7 @@ CREATE TABLE Freundesliste (
 );
 
 CREATE TABLE Spielstatus (
-	name CHAR PRIMARY KEY
+	name VARCHAR(8) PRIMARY KEY
 );
 
 CREATE TABLE Studiengang (
