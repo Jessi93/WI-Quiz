@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import com.sun.jersey.api.core.InjectParam;
 
 import de.dhbw.db.DatabaseManager;
+import de.dhbw.exc.StudiduellRuntimeException;
 
 /**
  * Developer control page.
@@ -27,7 +28,7 @@ public class Check {
 	public String itWorks() {
 		boolean dbAvail = checkDB();
 		
-		// don't refactor, as it is a never chaning component
+		// Don't refactor, as it is a never chaning component
 		return "<!DOCTYPE html><html><h1>Studiduell Server Information!</h1>" +
 				"<table border=\"1\"><tr><th>Service<th>Avail" +
 				"<tr><td>ReST webservice<td><b>true</b>" +
@@ -45,7 +46,7 @@ public class Check {
 			dbAvail = true;
 			
 		} catch(SQLException ex) {
-			ex.printStackTrace();
+			throw new StudiduellRuntimeException(ex);
 		}
 		
 		return dbAvail;

@@ -10,6 +10,8 @@ import javax.sql.DataSource;
 
 import com.sun.jersey.spi.resource.Singleton;
 
+import de.dhbw.exc.StudiduellRuntimeException;
+
 @Singleton
 public class DatabaseManager {
 	private DataSource dataSource;
@@ -20,7 +22,7 @@ public class DatabaseManager {
 			Context envContext  = (Context) initContext.lookup("java:/comp/env");
 			dataSource = (DataSource) envContext.lookup("jdbc/studiduellDB");
 		} catch(NamingException ex) {
-			ex.printStackTrace();
+			throw new StudiduellRuntimeException(ex);
 		}
 	}
 	
