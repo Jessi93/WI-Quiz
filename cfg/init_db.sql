@@ -42,7 +42,7 @@ CREATE TABLE Kategorie_Studiengang_Mapping (
 CREATE TABLE Kategorienfilter (
 	benutzername VARCHAR(50),
 	kategorie_name VARCHAR(50),
-	kategorieAusgewaehlt_Check BOOLEAN DEFAULT TRUE,
+	kategorieAusgewaehlt_Check BOOLEAN NOT NULL DEFAULT TRUE,
 	
 	PRIMARY KEY(benutzername, kategorie_name),
 	FOREIGN KEY(benutzername) REFERENCES Benutzer(benutzername),
@@ -113,6 +113,12 @@ CREATE TABLE Antwort (
 	FOREIGN KEY(rundenID) REFERENCES Runde(rundenID),
 	FOREIGN KEY(benutzername) REFERENCES Benutzer(benutzername)
 );
+
+
+/* User creation */
+CREATE USER 'studiduell'@'localhost' IDENTIFIED BY 'development';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON studiduell .* TO 'studiduell'@'localhost';
 
 
 /* Insertions of constant values, such as enum types. */
