@@ -1,5 +1,8 @@
 package de.dhbw.db;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -14,29 +17,24 @@ public class DatabaseManager {
 	public DatabaseManager() {
 		try {
 			Context initContext = new InitialContext();
-			Context envContext  = (Context)initContext.lookup("java:/comp/env");
-			dataSource = (DataSource)envContext.lookup("jdbc/studiduellDB");
+			Context envContext  = (Context) initContext.lookup("java:/comp/env");
+			dataSource = (DataSource) envContext.lookup("jdbc/studiduellDB");
 		} catch(NamingException ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public String sayHello() {
-		/* TODO
-		try {
-			Connection conn = dataSource.getConnection();
-			Statement statement = conn.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT * FROM Spielstatus");
-			rs.next();
-			String tmp = rs.getString(1);
-			conn.close();
-			return tmp;
-		} catch(SQLException ex) {
-			ex.printStackTrace();
-		}
-		return null;
-		*/
-		return "hello (no DB!)";
+	/**
+	 * Returns a database connection with auto commit
+	 * set to <code>false</code>.<br>
+	 * The connection has to be closed by the invoker.
+	 * 
+	 * @return database connection
+	 * @throws SQLException
+	 */
+	public Connection connect() throws SQLException {
+		Connection conn = dataSource.getConnection();
+		conn.setAutoCommit(false);
+		return conn;
 	}
-	
 }
