@@ -3,10 +3,10 @@ CREATE SCHEMA studiduell;
 USE studiduell;
 
 CREATE TABLE Benutzer (
-    benutzername VARCHAR(50) PRIMARY KEY, -- TODO or varbinary?
-    passwort_hash BLOB NOT NULL,
-	push_id VARCHAR(100),
-    letzteAktivitaet TIMESTAMP NOT NULL
+    	benutzername VARCHAR(50) PRIMARY KEY, -- TODO or varbinary?
+    	passwort_hash BLOB NOT NULL,
+    	push_id VARCHAR(100),
+    	letzteAktivitaet TIMESTAMP NOT NULL
 );
 
 CREATE TABLE Freundesliste (
@@ -22,12 +22,24 @@ CREATE TABLE Spielstatus (
 	name VARCHAR(8) PRIMARY KEY
 );
 
+CREATE TABLE Spieltyp (
+	name VARCHAR(6) PRIMARY KEY
+);
+
 CREATE TABLE Studiengang (
 	name VARCHAR(40) PRIMARY KEY
 );
 
 CREATE TABLE Kategorie (
 	name VARCHAR(50) PRIMARY KEY
+);
+
+
+CREATE TABLE Unterkategorie (
+	name VARCHAR(50),
+	kategorie_name VARCHAR(50),
+	PRIMARY KEY (name,kategorie_name),
+	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name) 
 );
 
 CREATE TABLE Kategorie_Studiengang_Mapping (
@@ -51,6 +63,7 @@ CREATE TABLE Kategorienfilter (
 
 CREATE TABLE Spiel (
 	spielID INTEGER PRIMARY KEY AUTO_INCREMENT,
+	spieltyp_name CHAR NOT NULL,
 	spieler1 VARCHAR(50) NOT NULL,
 	spieler2 VARCHAR(50) NOT NULL,
 	sieger VARCHAR(50),
@@ -60,6 +73,7 @@ CREATE TABLE Spiel (
 	spielstatus_name CHAR NOT NULL,
 	letzteAktivitaet TIMESTAMP NOT NULL,
 	
+	FOREIGN KEY(spieltyp_name) REFERENCES Spieltyp(name)
 	FOREIGN KEY(spieler1) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(spieler2) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(sieger) REFERENCES Benutzer(benutzername),
@@ -82,6 +96,7 @@ ALTER TABLE Spiel ADD FOREIGN KEY(aktuelleRunde) REFERENCES Runde(rundenID);
 CREATE TABLE Frage (
 	fragenID INTEGER PRIMARY KEY AUTO_INCREMENT,
 	kategorie_name VARCHAR(50) NOT NULL,
+	unterkategorie_name VARCHAR(50),
 	flagFragenTypMult BOOLEAN NOT NULL,
 	frage VARCHAR(100) NOT NULL,
 	antwortmoeglichkeit1 VARCHAR(50) NOT NULL,
@@ -95,6 +110,7 @@ CREATE TABLE Frage (
 	flagFrageValidiert BOOLEAN NOT NULL,
 	
 	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name)
+	FOREIGN KEY(unterkategorie_name) REFERENCES Unterkategorie(name)
 );
 
 CREATE TABLE Antwort (

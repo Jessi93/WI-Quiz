@@ -1,10 +1,10 @@
-WI-QUIZ
+StudiDuell
 =======
 
-This repository contains WI-QUIZ code.
+This repository contains Studiduell code.
 
 These are the containing projects:
 
-* WI-QUIZ server servlet and ReST-webservice
-* WI-QUIZ client application
+* StudiDuell server servlet and ReST-webservice
+* StudiDuell client application
 * Configuration files such as SQL-DDL instructions
