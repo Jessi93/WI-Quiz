@@ -19,7 +19,7 @@ CREATE TABLE Freundesliste (
 );
 
 CREATE TABLE Spielstatus (
-	name VARCHAR(8) PRIMARY KEY
+	name CHAR PRIMARY KEY
 );
 
 CREATE TABLE Spieltyp (
@@ -139,7 +139,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON studiduell .* TO 'studiduell'@'localhost
 
 /* Insertions of constant values, such as enum types. */
 INSERT INTO Spielstatus VALUES
-	('ACTIVE'),
-	('PENDING'),
-	('CLOSED'),
-	('DECLINED');
+	('A'), /* ACTIVE */
+	('P'), /* PENDING */
+	('C'), /* CLOSED */
+	('D'); /* DECLINED */
