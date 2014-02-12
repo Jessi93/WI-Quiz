@@ -23,7 +23,7 @@ CREATE TABLE Spielstatus (
 );
 
 CREATE TABLE Spieltyp (
-	name VARCHAR(6) PRIMARY KEY
+	name CHAR PRIMARY KEY
 );
 
 CREATE TABLE Studiengang (
@@ -73,7 +73,7 @@ CREATE TABLE Spiel (
 	spielstatus_name CHAR NOT NULL,
 	letzteAktivitaet TIMESTAMP NOT NULL,
 	
-	FOREIGN KEY(spieltyp_name) REFERENCES Spieltyp(name)
+	FOREIGN KEY(spieltyp_name) REFERENCES Spieltyp(name),
 	FOREIGN KEY(spieler1) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(spieler2) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(sieger) REFERENCES Benutzer(benutzername),
@@ -109,7 +109,7 @@ CREATE TABLE Frage (
 	wahrheitAntwortmoeglichkeit4 BOOLEAN NOT NULL,
 	flagFrageValidiert BOOLEAN NOT NULL,
 	
-	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name)
+	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name),
 	FOREIGN KEY(unterkategorie_name) REFERENCES Unterkategorie(name)
 );
 
