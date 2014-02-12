@@ -29,7 +29,7 @@ import de.dhbw.studiduell.utils.hash.PasswordHash;
  *
  */
 @Path("/register")
-public class Register {
+public class RegisterService {
 	@InjectParam
 	private StudiduellProps props;
 	@InjectParam

@@ -18,7 +18,7 @@ import de.dhbw.studiduell.props.StudiduellProps;
  *
  */
 @Path("/")
-public class Check {
+public class CheckService {
 	@InjectParam
 	private StudiduellProps props;
 	@InjectParam

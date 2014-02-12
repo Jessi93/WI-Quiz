@@ -1,0 +1,58 @@
+package de.dhbw.studiduell.rest;
+
+import java.util.Random;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
+import org.json.JSONObject;
+
+@Path("/settings")
+public class SettingsService {
+	
+	@Path("/friend")
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String friend(
+			@QueryParam("nick") String nick,
+			@QueryParam("password") String password,
+			@QueryParam("friend") String friend) {
+		//TODO Authentifizierung
+		
+		//TODO implement and remove mock
+		return Boolean.FALSE.toString();
+	}
+	
+	@Path("/unfriend")
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String unfriend(
+			@QueryParam("nick") String nick,
+			@QueryParam("password") String password,
+			@QueryParam("friend") String friend) {
+		//TODO Authentifizierung
+		
+		//TODO implement and remove mock
+		return Boolean.FALSE.toString();
+	}
+	
+	@Path("/list_friends")
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listFriends(
+			@QueryParam("nick") String nick,
+			@QueryParam("password") String password) {
+		//TODO Authentifizierung
+		
+		//TODO implement and remove mock
+		String tmp = (new Random().nextBoolean()) ? "[FreundA,FreundB,FreundC]" : null;
+		return new JSONObject("{friends:" + tmp + "}").toString();
+	}
+}

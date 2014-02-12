@@ -20,7 +20,7 @@ import de.dhbw.studiduell.utils.UserUtils;
 
 
 @Path("/sync")
-public class Sync {
+public class SyncService {
 	@InjectParam
 	private UserUtils userUtils;
 	
@@ -32,7 +32,7 @@ public class Sync {
 			@QueryParam("nick") String nick,
 			@QueryParam("password") String password,
 			@QueryParam("pushRegid") String pushRegid) {
-		
+		//TODO use pushRedid (Okay if null)
 		if(!userUtils.authenticate(nick, password))
 			return Boolean.FALSE.toString();
 		
