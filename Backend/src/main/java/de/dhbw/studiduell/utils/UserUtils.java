@@ -1,15 +1,13 @@
 package de.dhbw.studiduell.utils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Arrays;
+
+import javax.persistence.EntityManager;
 
 import com.sun.jersey.api.core.InjectParam;
 
 import de.dhbw.studiduell.db.PersistenceManager;
-import de.dhbw.studiduell.exc.StudiduellRuntimeException;
+import de.dhbw.studiduell.db.entity.BenutzerEntity;
 import de.dhbw.studiduell.props.StudiduellProps;
 import de.dhbw.studiduell.utils.hash.PasswordHash;
 
@@ -44,21 +42,16 @@ public class UserUtils {
 				|| password == null || password.isEmpty())
 			return false;
 		
-		boolean authenticateOK = false;
-		try(Connection conn = null/*persistenceManager.connect();*//*TODO*/) {
-			PreparedStatement stmt = conn.prepareStatement(props.get("sql.selectPassword"));
-			stmt.setString(1, nick);
-			ResultSet result = stmt.executeQuery();
-			if(result.next()) {
-				// user found
-				byte[] db_pw = result.getBytes(1);
-				byte[] input_pw = pwHash.hash(password.getBytes());
-				authenticateOK = Arrays.equals(db_pw, input_pw);
+		EntityManager em = persistenceManager.getEntityManager();
+		try {
+			BenutzerEntity user = em.find(BenutzerEntity.class, nick);
+			if(user != null) {
+				return Arrays.equals(
+						pwHash.hash(password.getBytes()), user.getPasswort_hash());
 			}
-		} catch(SQLException ex) {
-			throw new StudiduellRuntimeException(ex);
+			return false;
+		} finally {
+			em.close();
 		}
-		
-		return authenticateOK;
 	}
 }
