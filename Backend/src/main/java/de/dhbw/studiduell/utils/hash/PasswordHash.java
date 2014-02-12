@@ -1,4 +1,4 @@
-package de.dhbw.hash;
+package de.dhbw.studiduell.utils.hash;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,8 +8,8 @@ import javax.annotation.PostConstruct;
 import com.sun.jersey.api.core.InjectParam;
 import com.sun.jersey.spi.resource.Singleton;
 
-import de.dhbw.exc.StudiduellRuntimeException;
-import de.dhbw.props.StudiduellProps;
+import de.dhbw.studiduell.exc.StudiduellRuntimeException;
+import de.dhbw.studiduell.props.StudiduellProps;
 
 @Singleton
 public class PasswordHash {

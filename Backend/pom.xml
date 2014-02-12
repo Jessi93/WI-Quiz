@@ -75,7 +75,7 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			
+
 			<!-- move persistence.xml to the right place (concerns war file) -->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>

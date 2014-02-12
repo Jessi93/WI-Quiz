@@ -1,4 +1,4 @@
-package de.dhbw.exc;
+package de.dhbw.studiduell.exc;
 
 public class StudiduellRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = -3980471785131385935L;

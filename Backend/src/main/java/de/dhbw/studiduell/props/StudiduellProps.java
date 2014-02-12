@@ -1,4 +1,4 @@
-package de.dhbw.props;
+package de.dhbw.studiduell.props;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import javax.ws.rs.core.Context;
 
 import com.sun.jersey.spi.resource.Singleton;
 
-import de.dhbw.exc.StudiduellRuntimeException;
+import de.dhbw.studiduell.exc.StudiduellRuntimeException;
 
 @Singleton
 public class StudiduellProps {

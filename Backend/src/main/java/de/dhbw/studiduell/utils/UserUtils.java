@@ -1,4 +1,4 @@
-package de.dhbw.utils;
+package de.dhbw.studiduell.utils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,10 +8,10 @@ import java.util.Arrays;
 
 import com.sun.jersey.api.core.InjectParam;
 
-import de.dhbw.db.DatabaseManager;
-import de.dhbw.exc.StudiduellRuntimeException;
-import de.dhbw.hash.PasswordHash;
-import de.dhbw.props.StudiduellProps;
+import de.dhbw.studiduell.db.PersistenceManager;
+import de.dhbw.studiduell.exc.StudiduellRuntimeException;
+import de.dhbw.studiduell.props.StudiduellProps;
+import de.dhbw.studiduell.utils.hash.PasswordHash;
 
 /**
  * Provides utils for user management.
@@ -22,7 +22,7 @@ import de.dhbw.props.StudiduellProps;
 
 public class UserUtils {
 	@InjectParam
-	private DatabaseManager dbManager;
+	private PersistenceManager persistenceManager;
 	@InjectParam
 	private StudiduellProps props;
 	@InjectParam
@@ -45,7 +45,7 @@ public class UserUtils {
 			return false;
 		
 		boolean authenticateOK = false;
-		try(Connection conn = dbManager.connect();) {
+		try(Connection conn = null/*persistenceManager.connect();*//*TODO*/) {
 			PreparedStatement stmt = conn.prepareStatement(props.get("sql.selectPassword"));
 			stmt.setString(1, nick);
 			ResultSet result = stmt.executeQuery();
