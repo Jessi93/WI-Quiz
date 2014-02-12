@@ -5,6 +5,7 @@
 	    <class>de.dhbw.studiduell.db.entity.BenutzerEntity</class>
 	    <class>de.dhbw.studiduell.db.entity.KategorieEntity</class>
 	    <class>de.dhbw.studiduell.db.entity.KategorienfilterEntity</class>
+	    <class>de.dhbw.studiduell.db.entity.SpielEntity</class>
 	    
 		<properties>
 		    <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />

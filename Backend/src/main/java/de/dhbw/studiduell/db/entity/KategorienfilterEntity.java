@@ -5,6 +5,8 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+import de.dhbw.studiduell.db.entity.id.KategorienfilterId;
+
 @Entity
 @Table(name="Kategorienfilter")
 @IdClass(KategorienfilterId.class)
