@@ -1,0 +1,26 @@
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<http auto-config="true" use-expressions="true">
+		<http-basic />
+		<intercept-url pattern="/" access="permitAll" />
+		<intercept-url pattern="/user/register" access="permitAll" />
+		<intercept-url pattern="/user/login" access="permitAll" />
+		<intercept-url pattern="/**" access="hasRole('USER')" />
+	</http>
+
+	<jdbc-user-service id="userService" data-source-ref="dataSource"
+		users-by-username-query="select benutzername,passwort_hash,true from benutzer where benutzername=?"
+		authorities-by-username-query="select benutzername,'USER' from benutzer where benutzername=?" />
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="userService">
+			<password-encoder base64="false" hash="md5" />
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>
