@@ -71,7 +71,7 @@ public class UserController {
 	}
 	
 	/**
-	 * Takes the username, password and push_id.
+	 * Takes the username and push_id.
 	 * 
 	 * @param benutzername
 	 * @return
