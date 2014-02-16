@@ -24,8 +24,8 @@ public class RootController {
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE, value = "/")
 	public ResponseEntity<String> sayHello() {
 		String pageContent = "<!DOCTYPE html>"
-				+ "<html><h1>" + projectName + " Sersgver Information!</h1>"
-				+ "The services of " + projectName + " are available.</html>";
+				+ "<html><body><h1>" + projectName + " Sersgver Information!</h1>"
+				+ "<p>The services of " + projectName + " are available.</p></body></html>";
 		return new ResponseEntity<>(pageContent, HttpStatus.OK);
 	}
 }
