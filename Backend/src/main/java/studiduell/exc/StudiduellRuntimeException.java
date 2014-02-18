@@ -6,8 +6,9 @@ package studiduell.exc;
  * A rollback should be triggered.
  * 
  * @author kevin.strobel
- *
+ * @Deprecated no use so far XXX
  */
+@Deprecated
 public class StudiduellRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 841659466531510176L;
 

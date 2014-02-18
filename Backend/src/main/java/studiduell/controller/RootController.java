@@ -20,7 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class RootController {
 	@Value("${project.name}")
 	private String projectName;
-
+	
+	/**
+	 * Runs beyond Spring Security.
+	 * 
+	 * @return the static HTML text
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE, value = "/")
 	public ResponseEntity<String> sayHello() {
 		String pageContent = "<!DOCTYPE html>"

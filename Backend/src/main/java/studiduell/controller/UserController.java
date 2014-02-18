@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.node.JsonNodeFactory;
+import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import studiduell.exc.StudiduellRuntimeException;
 import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.SpielEntity;
@@ -26,7 +27,7 @@ import studiduell.repository.UserRepository;
 import studiduell.security.SecurityContextFacade;
 
 @Controller
-@Transactional(rollbackFor=StudiduellRuntimeException.class)
+@Transactional(rollbackFor=RuntimeException.class)
 @RequestMapping(value = "/user")
 public class UserController {
 	
@@ -41,10 +42,12 @@ public class UserController {
 
 
 	/**
+	 * Runs beyond Spring Security.
+	 * 
 	 * Takes the username and password.
 	 * 
 	 * @param user
-	 * @return
+	 * @return 201/409
 	 */
 	@RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
 					produces = MediaType.TEXT_PLAIN_VALUE, value = "/register")
@@ -53,6 +56,7 @@ public class UserController {
 			// persist user
 			String encryptedPassword = DigestUtils.md5DigestAsHex(user.getPasswort_hash().getBytes());
 			user.setPasswort_hash(encryptedPassword);
+			user.setPush_id(null);
 			user.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
 			
 			userRepository.save(user);
@@ -65,30 +69,28 @@ public class UserController {
 			}
 			//TODO if sth. went wrong: 500 Internal Server Error
 			
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.CREATED);
 		}
 		return new ResponseEntity<>(HttpStatus.CONFLICT);
 	}
 	
 	/**
-	 * Takes the username and push_id.
+	 * Takes the username in the URI.<br>
+	 * Takes password and push_id as JSON.
 	 * 
-	 * @param benutzername
-	 * @return
+	 * @return 200
 	 */
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
 					produces = MediaType.APPLICATION_JSON_VALUE, value = "/sync")
-	public ResponseEntity<List<SpielEntity>> sync(@RequestBody UserEntity user) {
-		UserEntity dbUser = userRepository.findOne(user.getBenutzername());
+	public ResponseEntity<List<SpielEntity>> sync(@RequestBody UserEntity userEntity) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		
-		if(dbUser == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		if(!user.getBenutzername().equals(authUsername))
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		// null check not required as spring security guarantees this code to be executed only for authorized users
+		UserEntity dbUser = userRepository.findOne(authUsername);
 		
 		// Save regid for push messaging service
-		dbUser.setPush_id(user.getPush_id());
+		dbUser.setPush_id(userEntity.getPush_id());
+		// Set last activity to now
+		dbUser.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
 		userRepository.save(dbUser);
 		
 		// Fetch all active games
@@ -101,5 +103,38 @@ public class UserController {
 		mockSpiele.add(new SpielEntity(3, 'M', "spieler1", "spieler2", "sieger", "verlierer", "wartenAuf", 2, 'P', new Timestamp(System.currentTimeMillis())));
 		
 		return new ResponseEntity<>(mockSpiele, HttpStatus.OK);
+	}
+	
+	/**
+	 * 
+	 * @return 200
+	 */
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
+			value = "/stats")
+	public ResponseEntity<ObjectNode> stats() {
+		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+		// null check not required as spring security guarantees this code to be executed only for authorized users
+		UserEntity dbUser = userRepository.findOne(authUsername);
+		
+		// Fetch stats data
+		//TODO
+		
+		//TODO replace mock
+		JsonNodeFactory json = JsonNodeFactory.instance;
+		ObjectNode gameObj = json.objectNode();
+		gameObj.put("lost", "lostVal");
+		gameObj.put("won", "wonVal");
+		gameObj.put("draw", "drawVal");
+		gameObj.put("total", "totalVal");
+		
+		ObjectNode questionsObj = json.objectNode();
+		questionsObj.put("perc_right", "perc_rightVal");
+		questionsObj.put("total", "totalVal");
+		
+		ObjectNode allObj = json.objectNode();
+		allObj.put("game", gameObj);
+		allObj.put("questions", questionsObj);
+		
+		return new ResponseEntity<>(allObj, HttpStatus.OK);
 	}
 }

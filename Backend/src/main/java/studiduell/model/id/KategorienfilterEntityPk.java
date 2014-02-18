@@ -8,6 +8,14 @@ public class KategorienfilterEntityPk implements Serializable {
 	private String benutzername;
 	private String kategorie_name;
 	
+	public KategorienfilterEntityPk() {
+	}
+
+	public KategorienfilterEntityPk(String benutzername, String kategorie_name) {
+		this.benutzername = benutzername;
+		this.kategorie_name = kategorie_name;
+	}
+
 	public String getBenutzername() {
 		return benutzername;
 	}

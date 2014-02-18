@@ -33,5 +33,28 @@ public class KategorienfilterEntity {
 	
 	@Column(name = "kategorieAusgewaehlt_Check", nullable = false)
 	private boolean kategorieAusgewaehlt_Check = true;
-	
+
+	public String getBenutzername() {
+		return benutzername;
+	}
+
+	public void setBenutzername(String benutzername) {
+		this.benutzername = benutzername;
+	}
+
+	public String getKategorie_name() {
+		return kategorie_name;
+	}
+
+	public void setKategorie_name(String kategorie_name) {
+		this.kategorie_name = kategorie_name;
+	}
+
+	public boolean isKategorieAusgewaehlt_Check() {
+		return kategorieAusgewaehlt_Check;
+	}
+
+	public void setKategorieAusgewaehlt_Check(boolean kategorieAusgewaehlt_Check) {
+		this.kategorieAusgewaehlt_Check = kategorieAusgewaehlt_Check;
+	}
 }
