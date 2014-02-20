@@ -4,7 +4,7 @@ USE studiduell;
 
 CREATE TABLE Benutzer (
     	benutzername VARCHAR(50) PRIMARY KEY, -- TODO or varbinary?
-    	passwort_hash VARCHAR(100) NOT NULL,
+    	passwort_hash CHAR(32) NOT NULL,
     	push_id VARCHAR(100),
     	letzteAktivitaet TIMESTAMP NOT NULL
 );
