@@ -1,9 +1,10 @@
 package studiduell.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import studiduell.model.id.FreundeslisteEntityPk;
@@ -14,34 +15,36 @@ import studiduell.model.id.FreundeslisteEntityPk;
 public class FreundeslisteEntity {
 	
 	@Id
-	@Column(name = "benutzername", unique = true, nullable = false)
-	private String benutzername;
+	@ManyToOne
+	@JoinColumn(name = "benutzername", unique = true, nullable = false)
+	private UserEntity benutzername;
 	
 	@Id
-	@Column(name = "befreundetMit", unique = true, nullable = false)
-	private String befreundetMit;
+	@ManyToOne
+	@JoinColumn(name = "befreundetMit", unique = true, nullable = false)
+	private UserEntity befreundetMit;
 	
 	public FreundeslisteEntity() {
 	}
 
-	public FreundeslisteEntity(String benutzername, String befreundetMit) {
+	public FreundeslisteEntity(UserEntity benutzername, UserEntity befreundetMit) {
 		this.benutzername = benutzername;
 		this.befreundetMit = befreundetMit;
 	}
 
-	public String getBenutzername() {
+	public UserEntity getBenutzername() {
 		return benutzername;
 	}
 
-	public void setBenutzername(String benutzername) {
+	public void setBenutzername(UserEntity benutzername) {
 		this.benutzername = benutzername;
 	}
 
-	public String getBefreundetMit() {
+	public UserEntity getBefreundetMit() {
 		return befreundetMit;
 	}
 
-	public void setBefreundetMit(String befreundetMit) {
+	public void setBefreundetMit(UserEntity befreundetMit) {
 		this.befreundetMit = befreundetMit;
 	}
 }

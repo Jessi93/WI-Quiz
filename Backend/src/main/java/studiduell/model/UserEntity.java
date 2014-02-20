@@ -1,17 +1,20 @@
 package studiduell.model;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "benutzer")
 public class UserEntity {
 	@Id
-	@Column(name = "benutzername", unique = true, nullable = false)
+	@JoinColumn(name = "benutzername", unique = true, nullable = false)
 	private String benutzername;
 	
 	@Column(name = "passwort_hash", nullable = false)
@@ -22,6 +25,18 @@ public class UserEntity {
 	
 	@Column(name = "letzteAktivitaet", nullable = false)
 	private Timestamp letzteAktivitaet;
+	
+	// relationships
+	@OneToMany(mappedBy = "benutzername")
+	private Set<FreundeslisteEntity> friendsSet;
+
+	
+	public UserEntity() {
+	}
+	
+	public UserEntity(String benutzername) {
+		this.benutzername = benutzername;
+	}
 
 	public String getBenutzername() {
 		return benutzername;

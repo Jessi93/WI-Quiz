@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import studiduell.model.FreundeslisteEntity;
 import studiduell.model.KategorienfilterEntity;
+import studiduell.model.UserEntity;
 import studiduell.model.id.FreundeslisteEntityPk;
 import studiduell.model.id.KategorienfilterEntityPk;
 import studiduell.repository.FreundeslisteRepository;
@@ -72,11 +73,11 @@ public class SettingsController {
 	public ResponseEntity<List<String>> listFriends() {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		
-		List<FreundeslisteEntity> friends = freundeslisteRepository.findByBenutzername(authUsername);
+		List<FreundeslisteEntity> friendRelationships = freundeslisteRepository.findByBenutzername(new UserEntity(authUsername));
 		
 		List<String> friendNames = new ArrayList<>();
-		for(FreundeslisteEntity friend : friends)
-			friendNames.add(friend.getBefreundetMit());
+		for(FreundeslisteEntity friendRelationship : friendRelationships)
+			friendNames.add(friendRelationship.getBefreundetMit().getBenutzername());
 		
 		return new ResponseEntity<>(friendNames, HttpStatus.OK);
 	}
@@ -89,17 +90,22 @@ public class SettingsController {
 	@RequestMapping(method = RequestMethod.PUT, value = "/friends/{friend}")
 	public ResponseEntity<Void> addFriend(@PathVariable("friend") String friend) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+		
+		UserEntity userUserEntity = userRepository.findOne(authUsername),
+					friendUserEntity = userRepository.findOne(friend);
+		
 		// do I try to be my own friend?
 		if(authUsername.equals(friend))
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		// does friend exist?
-		if(!userRepository.exists(friend))
+		if(friendUserEntity == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		// already befriended?
-		if(freundeslisteRepository.exists(new FreundeslisteEntityPk(authUsername, friend)))
+		if(freundeslisteRepository.findOne(new FreundeslisteEntityPk(authUsername, friend)) != null) // exists does not work here
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		
-		FreundeslisteEntity friends = new FreundeslisteEntity(authUsername, friend);
+		FreundeslisteEntity friends = new FreundeslisteEntity(
+				userUserEntity, friendUserEntity);
 		freundeslisteRepository.save(friends);
 		
 		return new ResponseEntity<>(HttpStatus.CREATED);
