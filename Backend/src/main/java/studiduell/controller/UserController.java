@@ -7,6 +7,10 @@ import java.util.List;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.SpielEntity;
+import studiduell.model.SpielstatusEntity;
+import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
 import studiduell.repository.KategorieRepository;
 import studiduell.repository.KategorienfilterRepository;
@@ -31,6 +37,8 @@ import studiduell.security.SecurityContextFacade;
 @Transactional(rollbackFor=RuntimeException.class)
 @RequestMapping(value = "/user")
 public class UserController {
+	@Value("${user.search.maxSearchableUsers}")
+	private int maxSearchableUsers;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -99,9 +107,9 @@ public class UserController {
 		
 		//TODO replace mock
 		List<SpielEntity> mockSpiele = new ArrayList<>();
-		mockSpiele.add(new SpielEntity(1, 'M', "spieler1", "spieler2", "sieger", "verlierer", "wartenAuf", 2, 'P', new Timestamp(System.currentTimeMillis())));
-		mockSpiele.add(new SpielEntity(2, 'S', null, null, null, null, null, 0, ' ', new Timestamp(System.currentTimeMillis())));
-		mockSpiele.add(new SpielEntity(3, 'M', "spieler1", "spieler2", "sieger", "verlierer", "wartenAuf", 2, 'P', new Timestamp(System.currentTimeMillis())));
+		mockSpiele.add(new SpielEntity(1, new SpieltypEntity('M'), new UserEntity("spieler1"), new UserEntity("spieler2"), new UserEntity("sieger"), new UserEntity("verlierer"), new UserEntity("wartenAuf"), 2, new SpielstatusEntity('P'), new Timestamp(System.currentTimeMillis())));
+		mockSpiele.add(new SpielEntity(2, new SpieltypEntity('S'), null, null, null, null, null, 0, new SpielstatusEntity(' '), new Timestamp(System.currentTimeMillis())));
+		mockSpiele.add(new SpielEntity(3, new SpieltypEntity('M'), new UserEntity("spieler1"), new UserEntity("spieler2"), new UserEntity("sieger"), new UserEntity("verlierer"), new UserEntity("wartenAuf"), 2, new SpielstatusEntity('P'), new Timestamp(System.currentTimeMillis())));
 		
 		return new ResponseEntity<>(mockSpiele, HttpStatus.OK);
 	}
@@ -142,7 +150,10 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
 			value = "/search/{pattern}") 
 	public ResponseEntity<List<String>> search(@PathVariable("pattern") String pattern) {
-		return new ResponseEntity<>(userRepository.roughSearch("%" + pattern + "%"),
+		Pageable pageRequest = new PageRequest(0, maxSearchableUsers);
+		Page<String> page = userRepository.roughSearch("%" + pattern + "%", pageRequest);
+		
+		return new ResponseEntity<>(page.getContent(),
 				HttpStatus.OK);
 	}
 }
