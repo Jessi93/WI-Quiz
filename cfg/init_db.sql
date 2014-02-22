@@ -143,3 +143,6 @@ INSERT INTO Spielstatus VALUES
 	('P'), /* PENDING */
 	('C'), /* CLOSED */
 	('D'); /* DECLINED */
+INSERT INTO Spieltyp VALUES
+	('M'), /* MULTI */
+	('S'); /* SINGLE */
