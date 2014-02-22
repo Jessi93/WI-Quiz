@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -136,5 +137,12 @@ public class UserController {
 		allObj.put("questions", questionsObj);
 		
 		return new ResponseEntity<>(allObj, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
+			value = "/search/{pattern}") 
+	public ResponseEntity<List<String>> search(@PathVariable("pattern") String pattern) {
+		return new ResponseEntity<>(userRepository.roughSearch("%" + pattern + "%"),
+				HttpStatus.OK);
 	}
 }
