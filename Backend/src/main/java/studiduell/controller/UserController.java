@@ -153,7 +153,6 @@ public class UserController {
 		Pageable pageRequest = new PageRequest(0, maxSearchableUsers);
 		Page<String> page = userRepository.roughSearch("%" + pattern + "%", pageRequest);
 		
-		return new ResponseEntity<>(page.getContent(),
-				HttpStatus.OK);
+		return new ResponseEntity<>(page.getContent(), HttpStatus.OK);
 	}
 }
