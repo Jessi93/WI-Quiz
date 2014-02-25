@@ -48,7 +48,7 @@ public class SettingsController {
 	 * @return 200/406
 	 */
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-			value = "/update_categories")
+			value = "/updateCategories")
 	public ResponseEntity<Void> updateCategories(@RequestBody KategorienfilterEntity[] categories) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		
