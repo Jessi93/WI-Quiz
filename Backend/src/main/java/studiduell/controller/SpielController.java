@@ -1,0 +1,242 @@
+package studiduell.controller;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import javax.swing.text.html.HTMLDocument.RunElement;
+
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.JsonNodeFactory;
+import org.codehaus.jackson.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import studiduell.constants.entity.SpielstatusEntityEnum;
+import studiduell.constants.entity.SpieltypEntityEnum;
+import studiduell.model.AntwortEntity;
+import studiduell.model.FrageEntity;
+import studiduell.model.RundeEntity;
+import studiduell.model.SpielEntity;
+import studiduell.model.SpielstatusEntity;
+import studiduell.model.SpieltypEntity;
+import studiduell.model.UserEntity;
+import studiduell.repository.RundeRepository;
+import studiduell.repository.SpielRepository;
+import studiduell.repository.UserRepository;
+import studiduell.security.SecurityContextFacade;
+
+@Controller
+@Transactional(rollbackFor=RuntimeException.class)
+@RequestMapping(value = "/game")
+public class SpielController {
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private SpielRepository spielRepository;
+	@Autowired
+	private RundeRepository rundeRepository;
+	@Autowired
+	private SecurityContextFacade securityContextFacade;
+	
+	private Random random = new Random();
+	
+	@Value("${game.calendar.userActivityTimeout.field}")
+	private int calendarField;
+	@Value("${game.calendar.userActivityTimeout.offset}")
+	private int calendarOffset;
+	@Value("${game.maxRounds}")
+	private int maxRounds;
+	
+	@RequestMapping(method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE,
+			value = "/create/random")
+	public ResponseEntity<String> createRandom() {
+		// TODO logic: regard user that also wants to play (MEETING FOR DB-CLARIFICATION!) - regard user with same category intersections - no regard of time?
+		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
+		
+		// select opponent
+		Calendar activityAfter = Calendar.getInstance();
+		activityAfter.add(calendarField, calendarOffset);
+		List<UserEntity> users = userRepository.findOthersActiveAfter(authUsername, new Timestamp(activityAfter.getTimeInMillis()));
+		//TODO and no running game with that user
+		
+		if(!users.isEmpty()) {
+			UserEntity opponentUserEntity = users.get(random.nextInt(users.size()));
+			
+			SpielEntity game = createGame(userUserEntity, opponentUserEntity,
+					SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
+			spielRepository.save(game);
+			
+			// create rounds
+			/*
+			TODO only do that if user accepted game
+			
+			for(int i = 1; i <= maxRounds; i++) {
+				RundeEntity round = new RundeEntity(game, i);
+				rundeRepository.save(round);
+			}
+			*/
+			
+			//TODO Push notification for opponent here
+			
+			return new ResponseEntity<>(opponentUserEntity.getBenutzername(), HttpStatus.CREATED);
+		} else
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/create/with/{opponent}")
+	public synchronized ResponseEntity<Void> create(@PathVariable("opponent") String opponent) {
+		UserEntity userUserEntity = userRepository.findOne(
+				securityContextFacade.getContext().getAuthentication().getName());
+		UserEntity opponentUserEntity = userRepository.findOne(opponent);
+		
+		if(opponentUserEntity != null) {
+			// does I challenge myself?
+			// does an active game with the opponent exist at the time?
+			if(!userUserEntity.getBenutzername().equals(opponent)
+					&& spielRepository.getGamesWithOpponent(userUserEntity,
+					opponentUserEntity,
+					Arrays.asList(new SpielstatusEntity[] {SpielstatusEntityEnum.A.getEntity(), SpielstatusEntityEnum.P.getEntity()})) == 0) {
+				//TODO category intersection? + own error code
+				SpielEntity game = createGame(userUserEntity, opponentUserEntity,
+						SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
+				spielRepository.save(game);
+				return new ResponseEntity<>(HttpStatus.CREATED);
+			} else
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+		} else
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
+			value = "/answerInvite/{gameID}")
+	private ResponseEntity<Void> answerInvite(@PathVariable("gameID") String gameID, @RequestBody String flag) {
+		boolean flagVal;
+		
+		if(flag.equalsIgnoreCase("true"))
+			flagVal = true;
+		else if(flag.equalsIgnoreCase("false"))
+			flagVal = false;
+		else
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
+		
+		//TODO Mock
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
+			value = "/randomCategoriesFor/{gameID}")
+	private ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") String gameID) {
+		
+		//TODO Mock
+		ArrayNode json = JsonNodeFactory.instance.arrayNode();
+		
+		FrageEntity frage1 = new FrageEntity(1, "Logik und Algebra","uk", false, "Frage 1","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage2 = new FrageEntity(2, "Logik und Algebra","uk", false, "Frage 2","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage3 = new FrageEntity(3, "Logik und Algebra","uk2", false, "Frage 3","A","B","C","D",false,false,false,true,true);
+		ArrayNode cat1 = JsonNodeFactory.instance.arrayNode();
+		cat1.addPOJO(frage1);
+		cat1.addPOJO(frage2);
+		cat1.addPOJO(frage3);
+		
+		FrageEntity frage4 = new FrageEntity(4, "Methoden der Wirtschaftsinformatik","uk", false, "Frage 4","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage5 = new FrageEntity(5, "Methoden der Wirtschaftsinformatik","uk", false, "Frage 5","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage6 = new FrageEntity(6, "Methoden der Wirtschaftsinformatik","uk2", false, "Frage 6","A","B","C","D",false,false,false,true,true);
+		ArrayNode cat2 = JsonNodeFactory.instance.arrayNode();
+		cat2.addPOJO(frage4);
+		cat2.addPOJO(frage5);
+		cat2.addPOJO(frage6);
+		
+		FrageEntity frage7 = new FrageEntity(7, "Verteilte Systeme","uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage8 = new FrageEntity(8, "Verteilte Systeme","uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage9 = new FrageEntity(9, "Verteilte Systeme","uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
+		ArrayNode cat3 = JsonNodeFactory.instance.arrayNode();
+		cat3.addPOJO(frage7);
+		cat3.addPOJO(frage8);
+		cat3.addPOJO(frage9);
+		
+		ObjectNode obj1 = JsonNodeFactory.instance.objectNode();
+		obj1.put("categoryName", "Logik und Algebra");
+		obj1.put("questions", cat1);
+		
+		ObjectNode obj2 = JsonNodeFactory.instance.objectNode();
+		obj2.put("categoryName", "Methoden der Wirtschaftsinformatik");
+		obj2.put("questions", cat2);
+		
+		ObjectNode obj3 = JsonNodeFactory.instance.objectNode();
+		obj3.put("categoryName", "Verteilte Systeme");
+		obj3.put("questions", cat3);
+		
+		json.add(obj1);
+		json.add(obj2);
+		json.add(obj3);
+		
+		return new ResponseEntity<>(json, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
+			value = "/continueRound/{gameID}")
+	public ResponseEntity<ObjectNode> continueRound(@PathVariable("gameID") String gameID) {
+		
+		//TODO Mock
+		
+		ObjectNode obj = JsonNodeFactory.instance.objectNode();
+		
+		FrageEntity frage1 = new FrageEntity(7, "Verteilte Systeme","uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage2 = new FrageEntity(8, "Verteilte Systeme","uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage3 = new FrageEntity(9, "Verteilte Systeme","uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
+		
+		ArrayNode arr1 = JsonNodeFactory.instance.arrayNode();
+		arr1.addPOJO(frage1);
+		arr1.addPOJO(frage2);
+		arr1.addPOJO(frage3);
+		
+		AntwortEntity ans1 = new AntwortEntity(7, 21, "Kevin", false, false, false, true, true, true);
+		AntwortEntity ans2 = new AntwortEntity(8, 21, "Kevin", false, false, false, true, true, true);
+		AntwortEntity ans3 = new AntwortEntity(9, 21, "Kevin", false, false, false, true, true, true);
+		
+		ArrayNode arr2 = JsonNodeFactory.instance.arrayNode();
+		arr2.addPOJO(ans1);
+		arr2.addPOJO(ans2);
+		arr2.addPOJO(ans3);
+		
+		obj.put("questions", arr1);
+		obj.put("answers", arr2);
+		
+		return new ResponseEntity<>(obj, HttpStatus.OK);
+	}
+	
+	private SpielEntity createGame(UserEntity user, UserEntity opponent, SpieltypEntity type, SpielstatusEntity status) {
+		SpielEntity game = new SpielEntity();
+		game.setSpieltyp_name(type);
+		game.setSpieler1(user);
+		game.setSpieler2(opponent);
+		game.setWartenAuf(opponent);
+		game.setAktuelleRunde(1);
+		game.setSpielstatus_name(status);
+		game.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
+		
+		return game;
+	}
+}
+
+//TODO @Transactional use timeout
+//TODO synchronized helps? multiple equal games are created instead of only one. Everywhere or nowhere!

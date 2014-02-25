@@ -1,11 +1,15 @@
 package studiduell.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,9 +19,11 @@ public class SpielEntity {
 	public SpielEntity() {
 	}
 
-	public SpielEntity(int spielID, char spieltyp_name, String spieler1,
-			String spieler2, String sieger, String verlierer, String wartenAuf,
-			int aktuelleRunde, char spielstatus_name, Timestamp letzteAktivitaet) {
+	public SpielEntity(int spielID, SpieltypEntity spieltyp_name,
+			UserEntity spieler1, UserEntity spieler2, UserEntity sieger,
+			UserEntity verlierer, UserEntity wartenAuf, int aktuelleRunde,
+			SpielstatusEntity spielstatus_name, Timestamp letzteAktivitaet) {
+		//XXX constructor
 		this.spielID = spielID;
 		this.spieltyp_name = spieltyp_name;
 		this.spieler1 = spieler1;
@@ -29,38 +35,49 @@ public class SpielEntity {
 		this.spielstatus_name = spielstatus_name;
 		this.letzteAktivitaet = letzteAktivitaet;
 	}
-
+	
 	@Id
 	@GeneratedValue
-	@Column(name = "spielID", unique = true, nullable = false)
+	@JoinColumn(name = "spielID", unique = true, nullable = false)
 	private int spielID;
 	
-	@Column(name = "spieltyp_name", nullable = false)
-	private char spieltyp_name;
+	@JoinColumn(name = "spieltyp_name", nullable = false)
+	@OneToOne
+	private SpieltypEntity spieltyp_name;
 	
-	@Column(name = "spieler1", nullable = false)
-	private String spieler1;
+	@JoinColumn(name = "spieler1", nullable = false)
+	@OneToOne
+	private UserEntity spieler1;
 	
-	@Column(name = "spieler2", nullable = false)
-	private String spieler2;
+	@JoinColumn(name = "spieler2", nullable = false)
+	@OneToOne
+	private UserEntity spieler2;
 	
-	@Column(name = "sieger")
-	private String sieger;
+	@JoinColumn(name = "sieger")
+	@OneToOne
+	private UserEntity sieger;
 	
-	@Column(name = "verlierer")
-	private String verlierer;
+	@JoinColumn(name = "verlierer")
+	@OneToOne
+	private UserEntity verlierer;
 	
-	@Column(name = "wartenAuf", nullable = false)
-	private String wartenAuf;
+	@JoinColumn(name = "wartenAuf", nullable = false)
+	@OneToOne
+	private UserEntity wartenAuf;
 	
 	@Column(name = "aktuelleRunde", nullable = false)
 	private int aktuelleRunde;
 	
-	@Column(name = "spielstatus_name", nullable = false)
-	private char spielstatus_name;
+	@JoinColumn(name = "spielstatus_name", nullable = false)
+	@OneToOne
+	private SpielstatusEntity spielstatus_name;
 	
 	@Column(name = "letzteAktivitaet", nullable = false)
 	private Timestamp letzteAktivitaet;
+	
+	// relationships
+	@OneToMany(mappedBy = "spiel")
+	private List<RundeEntity> runden;
 
 	public int getSpielID() {
 		return spielID;
@@ -70,51 +87,51 @@ public class SpielEntity {
 		this.spielID = spielID;
 	}
 
-	public char getSpieltyp_name() {
+	public SpieltypEntity getSpieltyp_name() {
 		return spieltyp_name;
 	}
 
-	public void setSpieltyp_name(char spieltyp_name) {
+	public void setSpieltyp_name(SpieltypEntity spieltyp_name) {
 		this.spieltyp_name = spieltyp_name;
 	}
 
-	public String getSpieler1() {
+	public UserEntity getSpieler1() {
 		return spieler1;
 	}
 
-	public void setSpieler1(String spieler1) {
+	public void setSpieler1(UserEntity spieler1) {
 		this.spieler1 = spieler1;
 	}
 
-	public String getSpieler2() {
+	public UserEntity getSpieler2() {
 		return spieler2;
 	}
 
-	public void setSpieler2(String spieler2) {
+	public void setSpieler2(UserEntity spieler2) {
 		this.spieler2 = spieler2;
 	}
 
-	public String getSieger() {
+	public UserEntity getSieger() {
 		return sieger;
 	}
 
-	public void setSieger(String sieger) {
+	public void setSieger(UserEntity sieger) {
 		this.sieger = sieger;
 	}
 
-	public String getVerlierer() {
+	public UserEntity getVerlierer() {
 		return verlierer;
 	}
 
-	public void setVerlierer(String verlierer) {
+	public void setVerlierer(UserEntity verlierer) {
 		this.verlierer = verlierer;
 	}
 
-	public String getWartenAuf() {
+	public UserEntity getWartenAuf() {
 		return wartenAuf;
 	}
 
-	public void setWartenAuf(String wartenAuf) {
+	public void setWartenAuf(UserEntity wartenAuf) {
 		this.wartenAuf = wartenAuf;
 	}
 
@@ -126,11 +143,11 @@ public class SpielEntity {
 		this.aktuelleRunde = aktuelleRunde;
 	}
 
-	public char getSpielstatus_name() {
+	public SpielstatusEntity getSpielstatus_name() {
 		return spielstatus_name;
 	}
 
-	public void setSpielstatus_name(char spielstatus_name) {
+	public void setSpielstatus_name(SpielstatusEntity spielstatus_name) {
 		this.spielstatus_name = spielstatus_name;
 	}
 

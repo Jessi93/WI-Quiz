@@ -16,6 +16,11 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 	@Query("SELECT u.benutzername FROM UserEntity u WHERE u.benutzername LIKE :pattern")
 	Page<String> roughSearch(@Param("pattern") String pattern, Pageable pageable);
 	
+	/**
+	 * 
+	 * @deprecated correct invoking method's logic
+	 */
+	@Deprecated()
 	@Query("FROM UserEntity u WHERE u.benutzername != :user AND u.letzteAktivitaet > :lstAct")
 	List<UserEntity> findOthersActiveAfter(@Param("user") String benutzername,
 			@Param("lstAct") Timestamp letzteAktivitaet);
