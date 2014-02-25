@@ -79,7 +79,6 @@ CREATE TABLE Spiel (
 	FOREIGN KEY(sieger) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(verlierer) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(wartenAuf) REFERENCES Benutzer(benutzername),
-	/* FOREIGN KEY for aktuelleRunde afterwards - Runde does not exist*/
 	FOREIGN KEY(spielstatus_name) REFERENCES Spielstatus(name)
 );
 
@@ -90,8 +89,6 @@ CREATE TABLE Runde (
 	
 	FOREIGN KEY(spielID) REFERENCES Spiel(spielID)
 );
-
-ALTER TABLE Spiel ADD FOREIGN KEY(aktuelleRunde) REFERENCES Runde(rundenID);
 
 CREATE TABLE Frage (
 	fragenID INTEGER PRIMARY KEY AUTO_INCREMENT,
