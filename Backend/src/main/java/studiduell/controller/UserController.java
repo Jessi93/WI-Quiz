@@ -2,6 +2,7 @@ package studiduell.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.codehaus.jackson.node.JsonNodeFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import studiduell.constants.entity.SpielstatusEntityEnum;
 import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.SpielEntity;
@@ -30,6 +32,7 @@ import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
 import studiduell.repository.KategorieRepository;
 import studiduell.repository.KategorienfilterRepository;
+import studiduell.repository.SpielRepository;
 import studiduell.repository.UserRepository;
 import studiduell.security.SecurityContextFacade;
 
@@ -46,6 +49,8 @@ public class UserController {
 	private KategorieRepository kategorieRepository;
 	@Autowired
 	private KategorienfilterRepository kategorienfilterRepository;
+	@Autowired
+	private SpielRepository spielRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
 
@@ -93,24 +98,20 @@ public class UserController {
 	public ResponseEntity<List<SpielEntity>> sync(@RequestBody String pushID) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		// null check not required as spring security guarantees this code to be executed only for authorized users
-		UserEntity dbUser = userRepository.findOne(authUsername);
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		
 		// Save regid for push messaging service
-		dbUser.setPush_id(pushID);
+		userUserEntity.setPush_id(pushID);
 		// Set last activity to now
-		dbUser.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
-		userRepository.save(dbUser);
+		userUserEntity.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
+		userRepository.save(userUserEntity);
 		
-		// Fetch all active games
 		//TODO
+		// Fetch all active and pending games
+		List<SpielEntity> games = spielRepository.getWithUserInStatus(userUserEntity,
+				Arrays.asList(new SpielstatusEntity[]{SpielstatusEntityEnum.A.getEntity(), SpielstatusEntityEnum.P.getEntity()}));
 		
-		//TODO replace mock
-		List<SpielEntity> mockSpiele = new ArrayList<>();
-		mockSpiele.add(new SpielEntity(1, new SpieltypEntity('M'), new UserEntity("spieler1"), new UserEntity("spieler2"), new UserEntity("sieger"), new UserEntity("verlierer"), new UserEntity("wartenAuf"), 2, new SpielstatusEntity('P'), new Timestamp(System.currentTimeMillis())));
-		mockSpiele.add(new SpielEntity(2, new SpieltypEntity('S'), null, null, null, null, null, 0, new SpielstatusEntity(' '), new Timestamp(System.currentTimeMillis())));
-		mockSpiele.add(new SpielEntity(3, new SpieltypEntity('M'), new UserEntity("spieler1"), new UserEntity("spieler2"), new UserEntity("sieger"), new UserEntity("verlierer"), new UserEntity("wartenAuf"), 2, new SpielstatusEntity('P'), new Timestamp(System.currentTimeMillis())));
-		
-		return new ResponseEntity<>(mockSpiele, HttpStatus.OK);
+		return new ResponseEntity<>(games, HttpStatus.OK);
 	}
 	
 	/**
@@ -122,7 +123,7 @@ public class UserController {
 	public ResponseEntity<ObjectNode> stats() {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		// null check not required as spring security guarantees this code to be executed only for authorized users
-		UserEntity dbUser = userRepository.findOne(authUsername);
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		
 		// Fetch stats data
 		//TODO

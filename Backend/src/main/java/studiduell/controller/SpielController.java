@@ -95,7 +95,7 @@ public class SpielController {
 			// does I challenge myself?
 			// does an active game with the opponent exist at the time?
 			if(!userUserEntity.getBenutzername().equals(opponent)
-					&& spielRepository.getGamesWithOpponent(userUserEntity,
+					&& spielRepository.getWithUserAndOpponentInStatus(userUserEntity,
 					opponentUserEntity,
 					Arrays.asList(new SpielstatusEntity[] {SpielstatusEntityEnum.A.getEntity(), SpielstatusEntityEnum.P.getEntity()})) == 0) {
 				//TODO category intersection? + own error code
