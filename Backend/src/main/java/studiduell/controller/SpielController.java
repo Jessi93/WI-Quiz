@@ -1,22 +1,17 @@
 package studiduell.controller;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.text.html.HTMLDocument.RunElement;
-
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import studiduell.constants.entity.SpielstatusEntityEnum;
 import studiduell.constants.entity.SpieltypEntityEnum;
@@ -84,16 +78,6 @@ public class SpielController {
 					SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
 			spielRepository.save(game);
 			
-			// create rounds
-			/*
-			TODO only do that if user accepted game
-			
-			for(int i = 1; i <= maxRounds; i++) {
-				RundeEntity round = new RundeEntity(game, i);
-				rundeRepository.save(round);
-			}
-			*/
-			
 			//TODO Push notification for opponent here
 			
 			return new ResponseEntity<>(opponentUserEntity.getBenutzername(), HttpStatus.CREATED);
@@ -127,7 +111,9 @@ public class SpielController {
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
 			value = "/answerInvite/{gameID}")
-	private ResponseEntity<Void> answerInvite(@PathVariable("gameID") String gameID, @RequestBody String flag) {
+	public ResponseEntity<Void> answerInvite(@PathVariable("gameID") Integer gameID, @RequestBody String flag) {
+		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+		
 		boolean flagVal;
 		
 		if(flag.equalsIgnoreCase("true"))
@@ -136,15 +122,36 @@ public class SpielController {
 			flagVal = false;
 		else
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		//TODO LOW: If server breaks down before commit, the roundID is incremented, too. Prevent that?
+		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
+		if(gameSpielEntity != null) {
+			//only accept invite if it is a pending game whose player 2 is this user
+			if(gameSpielEntity.getSpieler2().getBenutzername().equals(authUsername) &&
+					gameSpielEntity.getSpielstatus_name().getName() == SpielstatusEntityEnum.P.getEntity().getName()) {
+				
+				if(flagVal) {
+					// accept challenge
+					gameSpielEntity.setSpielstatus_name(SpielstatusEntityEnum.A.getEntity());
+					
+					// create rounds
+					createRounds(gameSpielEntity);
+				} else {
+					// decline challenge
+					gameSpielEntity.setSpielstatus_name(SpielstatusEntityEnum.D.getEntity());
+				}
+				spielRepository.save(gameSpielEntity);
+				
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		}
 		
-		
-		//TODO Mock
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
 			value = "/randomCategoriesFor/{gameID}")
-	private ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") String gameID) {
+	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") String gameID) {
 		
 		//TODO Mock
 		ArrayNode json = JsonNodeFactory.instance.arrayNode();
@@ -189,7 +196,11 @@ public class SpielController {
 		json.add(obj2);
 		json.add(obj3);
 		
-		return new ResponseEntity<>(json, HttpStatus.OK);
+		//TODO Header in jeden Response
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Access-Control-Allow-Origin", "*");
+		
+		return new ResponseEntity<>(json, headers, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
@@ -224,6 +235,12 @@ public class SpielController {
 		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 	
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+			value = "/sendRoundResult")
+	public ResponseEntity<Void> sendRoundResult(@RequestBody AntwortEntity answer) {
+		return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+	}
+	
 	private SpielEntity createGame(UserEntity user, UserEntity opponent, SpieltypEntity type, SpielstatusEntity status) {
 		SpielEntity game = new SpielEntity();
 		game.setSpieltyp_name(type);
@@ -236,7 +253,14 @@ public class SpielController {
 		
 		return game;
 	}
+	
+	private void createRounds(SpielEntity spielEntity) {
+		for(int i = 1; i <= maxRounds; i++) {
+			RundeEntity round = new RundeEntity(spielEntity, i);
+			rundeRepository.save(round);
+		}
+	}
 }
 
 //TODO @Transactional use timeout
-//TODO synchronized helps? multiple equal games are created instead of only one. Everywhere or nowhere!
+//TODO synchronized? multiple equal games are created instead of only one. Everywhere or nowhere!
