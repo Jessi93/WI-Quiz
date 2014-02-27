@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "Spielstatus") //TODO capital letter for all entity-table mappings
@@ -29,6 +30,7 @@ public class SpielstatusEntity {
 		this.name = name;
 	}
 	
+	@Transient
 	@OneToOne(mappedBy = "spielstatus_name")
 	private SpielEntity spielEntity;
 }

@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "Spieltyp")
@@ -29,6 +30,7 @@ public class SpieltypEntity {
 		this.name = name;
 	}
 	
+	@Transient
 	@OneToOne(mappedBy = "spieltyp_name")
 	private SpielEntity spielEntity;
 }

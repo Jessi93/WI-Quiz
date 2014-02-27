@@ -14,4 +14,7 @@ public interface SpielRepository extends JpaRepository<SpielEntity, Integer> {
 	@Query("SELECT COUNT(*) FROM SpielEntity s WHERE ((s.spieler1 = :user AND s.spieler2 = :opponent) OR (s.spieler1 = :opponent AND s.spieler2 = :user)) AND s.spielstatus_name IN (:status)")
 	Integer getGamesWithOpponent(@Param("user") UserEntity user,
 			@Param("opponent") UserEntity opponent, @Param("status") List<SpielstatusEntity> spielstatus);
+	
+	@Query("FROM SpielEntity s WHERE s.spieler1 = :player OR s.spieler2 = :player")
+	List<SpielEntity> getBySpieler1OrSpieler2(@Param("player") UserEntity spieler);
 }
