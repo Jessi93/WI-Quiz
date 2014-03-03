@@ -10,19 +10,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
-@Table(name = "benutzer")
+@Table(name = "Benutzer")
 public class UserEntity {
 	@Id
 	@JoinColumn(name = "benutzername", unique = true, nullable = false)
 	private String benutzername;
 	
+	@JsonIgnore // don't send password out to user!
 	@Column(name = "passwort_hash", nullable = false)
 	private String passwort_hash;
 	
+	@JsonIgnore
 	@Column(name = "push_id")
 	private String push_id;
 	
+	@JsonIgnore
 	@Column(name = "letzteAktivitaet", nullable = false)
 	private Timestamp letzteAktivitaet;
 	
