@@ -6,11 +6,11 @@ public class FrageEntity {
 	
 	private int fragenID;
 	
-	private String kategorie_name;
+	private String kategorieName;
 	
-	private String unterkategorie_name;
+	private String unterkategorieName;
 	
-	private boolean flag_fragenTyp_mult;
+	private boolean flagFragenTypMult;
 	
 	private String frage;
 	 
@@ -30,25 +30,25 @@ public class FrageEntity {
 	
 	private boolean wahrheitAntwortmoeglichkeit4;
 	
-	private boolean flag_frageValidiert;
+	private boolean flagFrageValidiert;
 
 	public FrageEntity() {
 	}
 
 	public FrageEntity(int fragenID, String kategorie_name,
-			String unterkategorie_name, boolean flag_fragenTyp_mult,
+			String unterkategorie_name, boolean flagFragenTypMult,
 			String frage, String antwortmoeglichkeit1,
 			String antwortmoeglichkeit2, String antwortmoeglichkeit3,
 			String antwortmoeglichkeit4, boolean wahrheitAntwortmoeglichkeit1,
 			boolean wahrheitAntwortmoeglichkeit2,
 			boolean wahrheitAntwortmoeglichkeit3,
-			boolean wahrheitAntwortmoeglichkeit4, boolean flag_frageValidiert) {
+			boolean wahrheitAntwortmoeglichkeit4, boolean flagFrageValidiert) {
 		//XXX only for mock / debugging
 		
 		this.fragenID = fragenID;
-		this.kategorie_name = kategorie_name;
-		this.unterkategorie_name = unterkategorie_name;
-		this.flag_fragenTyp_mult = flag_fragenTyp_mult;
+		this.kategorieName = kategorie_name;
+		this.unterkategorieName = unterkategorie_name;
+		this.flagFragenTypMult = flagFragenTypMult;
 		this.frage = frage;
 		this.antwortmoeglichkeit1 = antwortmoeglichkeit1;
 		this.antwortmoeglichkeit2 = antwortmoeglichkeit2;
@@ -58,7 +58,7 @@ public class FrageEntity {
 		this.wahrheitAntwortmoeglichkeit2 = wahrheitAntwortmoeglichkeit2;
 		this.wahrheitAntwortmoeglichkeit3 = wahrheitAntwortmoeglichkeit3;
 		this.wahrheitAntwortmoeglichkeit4 = wahrheitAntwortmoeglichkeit4;
-		this.flag_frageValidiert = flag_frageValidiert;
+		this.flagFrageValidiert = flagFrageValidiert;
 	}
 
 	public int getFragenID() {
@@ -69,28 +69,28 @@ public class FrageEntity {
 		this.fragenID = fragenID;
 	}
 
-	public String getKategorie_name() {
-		return kategorie_name;
+	public String getKategorieName() {
+		return kategorieName;
 	}
 
-	public void setKategorie_name(String kategorie_name) {
-		this.kategorie_name = kategorie_name;
+	public void setKategorieName(String kategorieName) {
+		this.kategorieName = kategorieName;
 	}
 
-	public String getUnterkategorie_name() {
-		return unterkategorie_name;
+	public String getUnterkategorieName() {
+		return unterkategorieName;
 	}
 
-	public void setUnterkategorie_name(String unterkategorie_name) {
-		this.unterkategorie_name = unterkategorie_name;
+	public void setUnterkategorieName(String unterkategorieName) {
+		this.unterkategorieName = unterkategorieName;
 	}
 
-	public boolean isFlag_fragenTyp_mult() {
-		return flag_fragenTyp_mult;
+	public boolean isFlagFragenTypMult() {
+		return flagFragenTypMult;
 	}
 
-	public void setFlag_fragenTyp_mult(boolean flag_fragenTyp_mult) {
-		this.flag_fragenTyp_mult = flag_fragenTyp_mult;
+	public void setFlagFragenTyp_mult(boolean flagFragenTypMult) {
+		this.flagFragenTypMult = flagFragenTypMult;
 	}
 
 	public String getFrage() {
@@ -165,11 +165,11 @@ public class FrageEntity {
 		this.wahrheitAntwortmoeglichkeit4 = wahrheitAntwortmoeglichkeit4;
 	}
 
-	public boolean isFlag_frageValidiert() {
-		return flag_frageValidiert;
+	public boolean isFlagFrageValidiert() {
+		return flagFrageValidiert;
 	}
 
-	public void setFlag_frageValidiert(boolean flag_frageValidiert) {
-		this.flag_frageValidiert = flag_frageValidiert;
+	public void setFlagFrageValidiert(boolean flagFrageValidiert) {
+		this.flagFrageValidiert = flagFrageValidiert;
 	}
 }

@@ -84,9 +84,10 @@ public class SettingsController {
 				.findByBenutzername(new UserEntity(authUsername));
 
 		List<String> friendNames = new ArrayList<>();
-		for (FreundeslisteEntity friendRelationship : friendRelationships)
+		for (FreundeslisteEntity friendRelationship : friendRelationships) {
 			friendNames.add(friendRelationship.getBefreundetMit()
 					.getBenutzername());
+		}
 
 		return new ResponseEntity<>(friendNames, HttpStatus.OK);
 	}

@@ -16,10 +16,10 @@ public class KategorienfilterEntity {
 	public KategorienfilterEntity() {
 	}
 
-	public KategorienfilterEntity(String benutzername, String kategorie_name,
+	public KategorienfilterEntity(String benutzername, String kategorieName,
 			boolean kategorieAusgewaehlt_Check) {
 		this.benutzername = benutzername;
-		this.kategorie_name = kategorie_name;
+		this.kategorie_name = kategorieName;
 		this.kategorieAusgewaehlt_Check = kategorieAusgewaehlt_Check;
 	}
 
