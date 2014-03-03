@@ -26,11 +26,14 @@ import studiduell.constants.entity.SpielstatusEntityEnum;
 import studiduell.constants.entity.SpieltypEntityEnum;
 import studiduell.model.AntwortEntity;
 import studiduell.model.FrageEntity;
+import studiduell.model.KategorieEntity;
 import studiduell.model.RundeEntity;
 import studiduell.model.SpielEntity;
 import studiduell.model.SpielstatusEntity;
 import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
+import studiduell.repository.AntwortRepository;
+import studiduell.repository.FrageRepository;
 import studiduell.repository.RundeRepository;
 import studiduell.repository.SpielRepository;
 import studiduell.repository.UserRepository;
@@ -46,6 +49,10 @@ public class SpielController {
 	private SpielRepository spielRepository;
 	@Autowired
 	private RundeRepository rundeRepository;
+	@Autowired
+	private AntwortRepository antwortRepository;
+	@Autowired
+	private FrageRepository frageRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
 	
@@ -107,6 +114,25 @@ public class SpielController {
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} else
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
+			value = "/overview/{gameID}")
+	public ResponseEntity<ObjectNode> gameOverview(@PathVariable("gameID") Integer gameID) {
+		SpielEntity spielEntity = spielRepository.findOne(gameID);
+		List<RundeEntity> rounds = spielEntity.getRunden();
+		
+		ObjectNode json = JsonNodeFactory.instance.objectNode();
+		
+		// rounds - answers - questions
+		ArrayNode roundsArray = JsonNodeFactory.instance.arrayNode();
+		for(RundeEntity e : rounds) {
+			roundsArray.addPOJO(e);
+		}
+		
+		json.putPOJO("rounds", roundsArray);
+		
+		return new ResponseEntity<>(json, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
@@ -220,9 +246,13 @@ public class SpielController {
 		arr1.addPOJO(frage2);
 		arr1.addPOJO(frage3);
 		
-		AntwortEntity ans1 = new AntwortEntity(7, 21, "Kevin", false, false, false, true, true, true);
-		AntwortEntity ans2 = new AntwortEntity(8, 21, "Kevin", false, false, false, true, true, true);
-		AntwortEntity ans3 = new AntwortEntity(9, 21, "Kevin", false, false, false, true, true, true);
+		RundeEntity r = new RundeEntity();
+		r.setRundenID(21);
+		
+		UserEntity user = userRepository.findOne("Kevin01");
+		AntwortEntity ans1 = new AntwortEntity(frageRepository.findOne(7), r, user, false, false, false, true, true, true);
+		AntwortEntity ans2 = new AntwortEntity(frageRepository.findOne(8), r, user, false, false, false, true, true, true);
+		AntwortEntity ans3 = new AntwortEntity(frageRepository.findOne(9), r, user, false, false, false, true, true, true);
 		
 		ArrayNode arr2 = JsonNodeFactory.instance.arrayNode();
 		arr2.addPOJO(ans1);
