@@ -1,7 +1,6 @@
 package studiduell.controller;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +27,6 @@ import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.SpielEntity;
 import studiduell.model.SpielstatusEntity;
-import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
 import studiduell.repository.KategorieRepository;
 import studiduell.repository.KategorienfilterRepository;
@@ -53,7 +51,6 @@ public class UserController {
 	private SpielRepository spielRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
-
 
 	/**
 	 * Runs beyond Spring Security.
@@ -106,7 +103,6 @@ public class UserController {
 		userUserEntity.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
 		userRepository.save(userUserEntity);
 		
-		//TODO
 		// Fetch all active and pending games
 		List<SpielEntity> games = spielRepository.getWithUserInStatus(userUserEntity,
 				Arrays.asList(new SpielstatusEntity[]{SpielstatusEntityEnum.A.getEntity(), SpielstatusEntityEnum.P.getEntity()}));

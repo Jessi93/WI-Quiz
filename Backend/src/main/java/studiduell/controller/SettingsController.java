@@ -31,13 +31,11 @@ import studiduell.security.SecurityContextFacade;
 public class SettingsController {
 	
 	@Autowired
-	private UserRepository userRepository; //TODO used?
+	private UserRepository userRepository;
 	@Autowired
-	private KategorieRepository kategorieRepository; //TODO used?
+	private KategorienfilterRepository kategorienfilterRepository;
 	@Autowired
-	private KategorienfilterRepository kategorienfilterRepository; //TODO used?
-	@Autowired
-	private SecurityContextFacade securityContextFacade; //TODO used?
+	private SecurityContextFacade securityContextFacade;
 	@Autowired
 	private FreundeslisteRepository freundeslisteRepository;
 
