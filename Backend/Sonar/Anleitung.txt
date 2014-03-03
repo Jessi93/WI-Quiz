@@ -1,0 +1,22 @@
+1. Download the latest versions of “SonarQube” and “SonarQube Runner” from http://www.sonarqube.org/downloads/
+2. Extract the archive sonarqube-x.x.zip to  C:\Environment\Sonar\ and rename the directory sonarqube-x.x to  sonarqube
+3. Extract the archive sonar-runner-dist-x.x.zip  to  C:\Environment\Sonar\ and rename the directory sonar-runner-dist-x.x  to  sonar-runner
+4. Execute StartServer.bat to start the SonarQube Server
+5. Access the Sonar Dashboard at http://localhost:9000/
+6. Authenticate as an administrator by logging in as (top-right corner):
+	username: admin 
+	password: admin
+7. In the top-right corner, select “Settings”. Then select “Update Center” in the left panel. Then open the tab “Available Plugins”.
+8. Install the following plugins:
+	- Languages: (JavaScript, Web,) XML
+	- Developer Tools: Issues Report
+9. In the top-left corner, select “Quality Profiles”. Then click “set as default” for “Sonar way with Findbugs”, which is listed under Java Profiles.
+10. Restart the SonarQube Server (Close the Shell and execute StartServer.bat again).
+
+
+To analyze the source code of your project(s), you need to execute the SonarQube Runner.
+For the SonarQube Runner to work, the SonarQube Server needs to be running first.
+
+Alternative A:	Execute RunSonarScan.bat  to scan the code of the project and store the results in the database of the SonarQube Server. You can then view the issue-report in the web-frontend of the SonarQube Server at http://localhost:9000/
+Alternative B:	Execute RunSonarScanWithHTMLReport.bat which scans the code as with Alternative A, but additionally also stores the issue-report in a static HTML-file at %project_directory%\.sonar\issues-report\issues-report.html
+
