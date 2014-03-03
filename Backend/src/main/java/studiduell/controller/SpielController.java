@@ -119,39 +119,43 @@ public class SpielController {
 		
 		boolean flagVal;
 		
-		if(flag.equalsIgnoreCase("true")) {
+		if (flag.equalsIgnoreCase("true")) {
 			flagVal = true;
-		}
-		else if(flag.equalsIgnoreCase("false")) {
+		} else if (flag.equalsIgnoreCase("false")) {
 			flagVal = false;
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
-		//TODO LOW: If server breaks down before commit, the roundID is incremented, too. Prevent that?
+		// TODO LOW: If server breaks down before commit, the roundID is
+		// incremented, too. Prevent that?
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
-		if(gameSpielEntity != null) {
-			//only accept invite if it is a pending game whose player 2 is this user
-			if(gameSpielEntity.getSpieler2().getBenutzername().equals(authUsername) &&
-					gameSpielEntity.getSpielstatusName().getName() == SpielstatusEntityEnum.P.getEntity().getName()) {
-				
-				if(flagVal) {
+		if (gameSpielEntity != null) {
+			// only accept invite if it is a pending game whose player 2 is this
+			// user
+			if (gameSpielEntity.getSpieler2().getBenutzername()
+					.equals(authUsername)
+					&& gameSpielEntity.getSpielstatusName().getName() == SpielstatusEntityEnum.P
+							.getEntity().getName()) {
+
+				if (flagVal) {
 					// accept challenge
-					gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.A.getEntity());
-					
+					gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.A
+							.getEntity());
+
 					// create rounds
 					createRounds(gameSpielEntity);
 				} else {
 					// decline challenge
-					gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.D.getEntity());
+					gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.D
+							.getEntity());
 				}
 				spielRepository.save(gameSpielEntity);
-				
+
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
-		
+
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
