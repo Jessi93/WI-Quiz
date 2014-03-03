@@ -95,7 +95,7 @@ CREATE TABLE Frage (
 	kategorie_name VARCHAR(50) NOT NULL,
 	unterkategorie_name VARCHAR(50),
 	flagFragenTypMult BOOLEAN NOT NULL,
-	frage VARCHAR(100) NOT NULL,
+	frage VARCHAR(100) UNIQUE NOT NULL,
 	antwortmoeglichkeit1 VARCHAR(50) NOT NULL,
 	antwortmoeglichkeit2 VARCHAR(50) NOT NULL,
 	antwortmoeglichkeit3 VARCHAR(50) NOT NULL,
@@ -111,9 +111,9 @@ CREATE TABLE Frage (
 );
 
 CREATE TABLE Antwort (
-	fragenID INTEGER,
-	rundenID INTEGER,
-	benutzername VARCHAR(50),
+	fragenID INTEGER NOT NULL,
+	rundenID INTEGER NOT NULL,
+	benutzername VARCHAR(50) NOT NULL,
 	antwortmoeglichkeit1_check BOOLEAN NOT NULL,
 	antwortmoeglichkeit2_check BOOLEAN NOT NULL,
 	antwortmoeglichkeit3_check BOOLEAN NOT NULL,
