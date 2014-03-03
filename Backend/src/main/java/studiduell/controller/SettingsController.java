@@ -56,7 +56,7 @@ public class SettingsController {
 		for (KategorienfilterEntity category : categories) {
 			KategorienfilterEntity filterEntity = kategorienfilterRepository
 					.findOne(new KategorienfilterEntityPk(authUsername,
-							category.getKategorie_name()));
+							category.getKategorieName()));
 			if (filterEntity == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			}
@@ -66,9 +66,9 @@ public class SettingsController {
 		for (KategorienfilterEntity category : categories) {
 			KategorienfilterEntity filterEntity = kategorienfilterRepository
 					.findOne(new KategorienfilterEntityPk(authUsername,
-							category.getKategorie_name()));
-			filterEntity.setKategorieAusgewaehlt_Check(category
-					.isKategorieAusgewaehlt_Check());
+							category.getKategorieName()));
+			filterEntity.setKategorieAusgewaehltCheck(category
+					.isKategorieAusgewaehltCheck());
 			kategorienfilterRepository.save(filterEntity);
 		}
 

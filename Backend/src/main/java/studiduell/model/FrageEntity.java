@@ -35,8 +35,8 @@ public class FrageEntity {
 	public FrageEntity() {
 	}
 
-	public FrageEntity(int fragenID, String kategorie_name,
-			String unterkategorie_name, boolean flagFragenTypMult,
+	public FrageEntity(int fragenID, String kategorieName,
+			String unterkategorieName, boolean flagFragenTypMult,
 			String frage, String antwortmoeglichkeit1,
 			String antwortmoeglichkeit2, String antwortmoeglichkeit3,
 			String antwortmoeglichkeit4, boolean wahrheitAntwortmoeglichkeit1,
@@ -46,8 +46,8 @@ public class FrageEntity {
 		//XXX only for mock / debugging
 		
 		this.fragenID = fragenID;
-		this.kategorieName = kategorie_name;
-		this.unterkategorieName = unterkategorie_name;
+		this.kategorieName = kategorieName;
+		this.unterkategorieName = unterkategorieName;
 		this.flagFragenTypMult = flagFragenTypMult;
 		this.frage = frage;
 		this.antwortmoeglichkeit1 = antwortmoeglichkeit1;
@@ -89,7 +89,7 @@ public class FrageEntity {
 		return flagFragenTypMult;
 	}
 
-	public void setFlagFragenTyp_mult(boolean flagFragenTypMult) {
+	public void setFlagFragenTypMult(boolean flagFragenTypMult) {
 		this.flagFragenTypMult = flagFragenTypMult;
 	}
 

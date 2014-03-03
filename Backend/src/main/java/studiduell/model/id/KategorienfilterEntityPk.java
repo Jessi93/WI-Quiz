@@ -6,14 +6,14 @@ public class KategorienfilterEntityPk implements Serializable {
 	private static final long serialVersionUID = -2739234094594019035L;
 	
 	private String benutzername;
-	private String kategorie_name;
+	private String kategorieName;
 	
 	public KategorienfilterEntityPk() {
 	}
 
-	public KategorienfilterEntityPk(String benutzername, String kategorie_name) {
+	public KategorienfilterEntityPk(String benutzername, String kategorieName) {
 		this.benutzername = benutzername;
-		this.kategorie_name = kategorie_name;
+		this.kategorieName = kategorieName;
 	}
 
 	public String getBenutzername() {
@@ -24,17 +24,17 @@ public class KategorienfilterEntityPk implements Serializable {
 		this.benutzername = benutzername;
 	}
 
-	public String getKategorie_name() {
-		return kategorie_name;
+	public String getKategorieName() {
+		return kategorieName;
 	}
 
-	public void setKategorie_name(String kategorie_name) {
-		this.kategorie_name = kategorie_name;
+	public void setKategorieName(String kategorieName) {
+		this.kategorieName = kategorieName;
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) benutzername.hashCode() + kategorie_name.hashCode();
+		return (int) benutzername.hashCode() + kategorieName.hashCode();
 	}
 	
 	@Override
@@ -49,6 +49,6 @@ public class KategorienfilterEntityPk implements Serializable {
 			return false;
 		}
 		KategorienfilterEntityPk pk = (KategorienfilterEntityPk) obj;
-		return pk.benutzername.equals(benutzername) && pk.kategorie_name.equals(kategorie_name);
+		return pk.benutzername.equals(benutzername) && pk.kategorieName.equals(kategorieName);
 	}
 }

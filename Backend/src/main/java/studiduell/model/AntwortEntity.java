@@ -86,7 +86,7 @@ public class AntwortEntity {
 		return antwortmoeglichkeit3Check;
 	}
 
-	public void setAntwortmoeglichkeit3_check(boolean antwortmoeglichkeit3Check) {
+	public void setAntwortmoeglichkeit3Check(boolean antwortmoeglichkeit3Check) {
 		this.antwortmoeglichkeit3Check = antwortmoeglichkeit3Check;
 	}
 
@@ -94,7 +94,7 @@ public class AntwortEntity {
 		return antwortmoeglichkeit4Check;
 	}
 
-	public void setAntwortmoeglichkeit4_check(boolean antwortmoeglichkeit4Check) {
+	public void setAntwortmoeglichkeit4Check(boolean antwortmoeglichkeit4Check) {
 		this.antwortmoeglichkeit4Check = antwortmoeglichkeit4Check;
 	}
 

@@ -133,17 +133,17 @@ public class SpielController {
 		if(gameSpielEntity != null) {
 			//only accept invite if it is a pending game whose player 2 is this user
 			if(gameSpielEntity.getSpieler2().getBenutzername().equals(authUsername) &&
-					gameSpielEntity.getSpielstatus_name().getName() == SpielstatusEntityEnum.P.getEntity().getName()) {
+					gameSpielEntity.getSpielstatusName().getName() == SpielstatusEntityEnum.P.getEntity().getName()) {
 				
 				if(flagVal) {
 					// accept challenge
-					gameSpielEntity.setSpielstatus_name(SpielstatusEntityEnum.A.getEntity());
+					gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.A.getEntity());
 					
 					// create rounds
 					createRounds(gameSpielEntity);
 				} else {
 					// decline challenge
-					gameSpielEntity.setSpielstatus_name(SpielstatusEntityEnum.D.getEntity());
+					gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.D.getEntity());
 				}
 				spielRepository.save(gameSpielEntity);
 				
@@ -249,12 +249,12 @@ public class SpielController {
 	
 	private SpielEntity createGame(UserEntity user, UserEntity opponent, SpieltypEntity type, SpielstatusEntity status) {
 		SpielEntity game = new SpielEntity();
-		game.setSpieltyp_name(type);
+		game.setSpieltypName(type);
 		game.setSpieler1(user);
 		game.setSpieler2(opponent);
 		game.setWartenAuf(opponent);
 		game.setAktuelleRunde(1);
-		game.setSpielstatus_name(status);
+		game.setSpielstatusName(status);
 		game.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
 		
 		return game;

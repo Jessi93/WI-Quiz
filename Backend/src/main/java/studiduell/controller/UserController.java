@@ -68,9 +68,9 @@ public class UserController {
 	public ResponseEntity<Void> register(@RequestBody UserEntity user) {
 		if(userRepository.findOne(user.getBenutzername()) == null) {
 			// persist user
-			String encryptedPassword = DigestUtils.md5DigestAsHex(user.getPasswort_hash().getBytes());
-			user.setPasswort_hash(encryptedPassword);
-			user.setPush_id(null);
+			String encryptedPassword = DigestUtils.md5DigestAsHex(user.getPasswortHash().getBytes());
+			user.setPasswortHash(encryptedPassword);
+			user.setPushId(null);
 			user.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
 			
 			userRepository.save(user);
@@ -101,7 +101,7 @@ public class UserController {
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		
 		// Save regid for push messaging service
-		userUserEntity.setPush_id(pushID);
+		userUserEntity.setPushId(pushID);
 		// Set last activity to now
 		userUserEntity.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
 		userRepository.save(userUserEntity);
