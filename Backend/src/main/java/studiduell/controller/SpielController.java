@@ -81,8 +81,9 @@ public class SpielController {
 			//TODO Push notification for opponent here
 			
 			return new ResponseEntity<>(opponentUserEntity.getBenutzername(), HttpStatus.CREATED);
-		} else
+		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/create/with/{opponent}")
@@ -103,10 +104,12 @@ public class SpielController {
 						SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
 				spielRepository.save(game);
 				return new ResponseEntity<>(HttpStatus.CREATED);
-			} else
+			} else {
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
-		} else
+			}
+		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
@@ -116,12 +119,15 @@ public class SpielController {
 		
 		boolean flagVal;
 		
-		if(flag.equalsIgnoreCase("true"))
+		if(flag.equalsIgnoreCase("true")) {
 			flagVal = true;
-		else if(flag.equalsIgnoreCase("false"))
+		}
+		else if(flag.equalsIgnoreCase("false")) {
 			flagVal = false;
-		else
+		}
+		else {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		}
 		//TODO LOW: If server breaks down before commit, the roundID is incremented, too. Prevent that?
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		if(gameSpielEntity != null) {

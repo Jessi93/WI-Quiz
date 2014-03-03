@@ -26,62 +26,71 @@ import studiduell.repository.UserRepository;
 import studiduell.security.SecurityContextFacade;
 
 @Controller
-@Transactional(rollbackFor=RuntimeException.class)
+@Transactional(rollbackFor = RuntimeException.class)
 @RequestMapping(value = "/settings")
 public class SettingsController {
-	
+
 	@Autowired
-	private UserRepository userRepository; //TODO used?
+	private UserRepository userRepository; // TODO used?
 	@Autowired
-	private KategorieRepository kategorieRepository; //TODO used?
+	private KategorieRepository kategorieRepository; // TODO used?
 	@Autowired
-	private KategorienfilterRepository kategorienfilterRepository; //TODO used?
+	private KategorienfilterRepository kategorienfilterRepository; // TODO used?
 	@Autowired
-	private SecurityContextFacade securityContextFacade; //TODO used?
+	private SecurityContextFacade securityContextFacade; // TODO used?
 	@Autowired
 	private FreundeslisteRepository freundeslisteRepository;
-
 
 	/**
 	 * Takes the category_name and check status.
 	 * 
 	 * @return 200/406
 	 */
-	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-			value = "/updateCategories")
-	public ResponseEntity<Void> updateCategories(@RequestBody KategorienfilterEntity[] categories) {
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		
-		//check whether submitted categories exist
-		for(KategorienfilterEntity category : categories) {
-			KategorienfilterEntity filterEntity = kategorienfilterRepository.findOne(new KategorienfilterEntityPk(authUsername, category.getKategorie_name()));
-			if(filterEntity == null)
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/updateCategories")
+	public ResponseEntity<Void> updateCategories(
+			@RequestBody KategorienfilterEntity[] categories) {
+		String authUsername = securityContextFacade.getContext()
+				.getAuthentication().getName();
+
+		// check whether submitted categories exist
+		for (KategorienfilterEntity category : categories) {
+			KategorienfilterEntity filterEntity = kategorienfilterRepository
+					.findOne(new KategorienfilterEntityPk(authUsername,
+							category.getKategorie_name()));
+			if (filterEntity == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			}
 		}
-		
-		//set categories' status
-		for(KategorienfilterEntity category : categories) {
-			KategorienfilterEntity filterEntity = kategorienfilterRepository.findOne(new KategorienfilterEntityPk(authUsername, category.getKategorie_name()));
-			filterEntity.setKategorieAusgewaehlt_Check(category.isKategorieAusgewaehlt_Check());
+
+		// set categories' status
+		for (KategorienfilterEntity category : categories) {
+			KategorienfilterEntity filterEntity = kategorienfilterRepository
+					.findOne(new KategorienfilterEntityPk(authUsername,
+							category.getKategorie_name()));
+			filterEntity.setKategorieAusgewaehlt_Check(category
+					.isKategorieAusgewaehlt_Check());
 			kategorienfilterRepository.save(filterEntity);
 		}
-		
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/friends")
 	public ResponseEntity<List<String>> listFriends() {
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		
-		List<FreundeslisteEntity> friendRelationships = freundeslisteRepository.findByBenutzername(new UserEntity(authUsername));
-		
+		String authUsername = securityContextFacade.getContext()
+				.getAuthentication().getName();
+
+		List<FreundeslisteEntity> friendRelationships = freundeslisteRepository
+				.findByBenutzername(new UserEntity(authUsername));
+
 		List<String> friendNames = new ArrayList<>();
-		for(FreundeslisteEntity friendRelationship : friendRelationships)
-			friendNames.add(friendRelationship.getBefreundetMit().getBenutzername());
-		
+		for (FreundeslisteEntity friendRelationship : friendRelationships)
+			friendNames.add(friendRelationship.getBefreundetMit()
+					.getBenutzername());
+
 		return new ResponseEntity<>(friendNames, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 
 	 * @param friend
@@ -89,31 +98,37 @@ public class SettingsController {
 	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/friends/{friend}")
 	public ResponseEntity<Void> addFriend(@PathVariable("friend") String friend) {
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		
-		UserEntity userUserEntity = userRepository.findOne(authUsername),
-					friendUserEntity = userRepository.findOne(friend);
-		
+		String authUsername = securityContextFacade.getContext()
+				.getAuthentication().getName();
+
+		UserEntity userUserEntity = userRepository.findOne(authUsername), friendUserEntity = userRepository
+				.findOne(friend);
+
 		// do I try to be my own friend?
-		if(authUsername.equals(friend))
+		if (authUsername.equals(friend)) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
 		// does friend exist?
-		if(friendUserEntity == null)
+		if (friendUserEntity == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 		// already befriended?
-		if(freundeslisteRepository.findOne(new FreundeslisteEntityPk(authUsername, friend)) != null) // exists does not work here
+		if (freundeslisteRepository.findOne(new FreundeslisteEntityPk(
+				authUsername, friend)) != null) { // exists does not work here
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		
-		FreundeslisteEntity friends = new FreundeslisteEntity(
-				userUserEntity, friendUserEntity);
+		}
+
+		FreundeslisteEntity friends = new FreundeslisteEntity(userUserEntity,
+				friendUserEntity);
 		freundeslisteRepository.save(friends);
-		
+
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.DELETE, value = "/friends/{friend}")
-	public ResponseEntity<Void> deleteFriend(@PathVariable("friend") String friend) {
-		//TODO maybe implement
+	public ResponseEntity<Void> deleteFriend(
+			@PathVariable("friend") String friend) {
+		// TODO maybe implement
 		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 }

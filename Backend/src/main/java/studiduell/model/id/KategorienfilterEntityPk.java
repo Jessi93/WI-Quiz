@@ -39,9 +39,15 @@ public class KategorienfilterEntityPk implements Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) return false;
-		if (obj == this) return true;
-		if (!(obj instanceof KategorienfilterEntityPk)) return false;
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof KategorienfilterEntityPk)) {
+			return false;
+		}
 		KategorienfilterEntityPk pk = (KategorienfilterEntityPk) obj;
 		return pk.benutzername.equals(benutzername) && pk.kategorie_name.equals(kategorie_name);
 	}
