@@ -1,17 +1,15 @@
 package studiduell.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
-@Table(name = "Spielstatus") //TODO capital letter for all entity-table mappings
+@Table(name = "Spielstatus")
 public class SpielstatusEntity {
 	@Id
-	@JoinColumn(name = "name", unique = true, nullable = false)
+	@Column(name = "name", unique = true, nullable = false)
 	private char name;
 
 	public SpielstatusEntity() {
@@ -28,8 +26,4 @@ public class SpielstatusEntity {
 	public void setName(char name) {
 		this.name = name;
 	}
-	
-	@Transient
-	@OneToOne(mappedBy = "spielstatus_name")
-	private SpielEntity spielEntity;
 }

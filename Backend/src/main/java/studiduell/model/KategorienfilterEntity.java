@@ -10,7 +10,7 @@ import studiduell.model.id.KategorienfilterEntityPk;
 
 @Entity
 @IdClass(KategorienfilterEntityPk.class)
-@Table(name = "kategorienfilter")
+@Table(name = "Kategorienfilter")
 public class KategorienfilterEntity {
 	
 	public KategorienfilterEntity() {

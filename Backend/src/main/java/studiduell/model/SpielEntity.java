@@ -12,8 +12,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
-@Table(name = "spiel")
+@Table(name = "Spiel")
 public class SpielEntity {
 	
 	public SpielEntity() {
@@ -41,34 +43,34 @@ public class SpielEntity {
 	@JoinColumn(name = "spielID", unique = true, nullable = false)
 	private int spielID;
 	
-	@JoinColumn(name = "spieltyp_name", nullable = false)
+	@JoinColumn(name = "spieltyp_name", nullable = false, referencedColumnName = "name")
 	@OneToOne
 	private SpieltypEntity spieltyp_name;
 	
-	@JoinColumn(name = "spieler1", nullable = false)
+	@JoinColumn(name = "spieler1", nullable = false, referencedColumnName = "benutzername")
 	@OneToOne
 	private UserEntity spieler1;
 	
-	@JoinColumn(name = "spieler2", nullable = false)
+	@JoinColumn(name = "spieler2", nullable = false, referencedColumnName = "benutzername")
 	@OneToOne
 	private UserEntity spieler2;
 	
-	@JoinColumn(name = "sieger")
+	@JoinColumn(name = "sieger", referencedColumnName = "benutzername")
 	@OneToOne
 	private UserEntity sieger;
 	
-	@JoinColumn(name = "verlierer")
+	@JoinColumn(name = "verlierer", referencedColumnName = "benutzername")
 	@OneToOne
 	private UserEntity verlierer;
 	
-	@JoinColumn(name = "wartenAuf", nullable = false)
+	@JoinColumn(name = "wartenAuf", nullable = false, referencedColumnName = "benutzername")
 	@OneToOne
 	private UserEntity wartenAuf;
 	
 	@Column(name = "aktuelleRunde", nullable = false)
 	private int aktuelleRunde;
 	
-	@JoinColumn(name = "spielstatus_name", nullable = false)
+	@JoinColumn(name = "spielstatus_name", nullable = false, referencedColumnName = "name")
 	@OneToOne
 	private SpielstatusEntity spielstatus_name;
 	
@@ -76,6 +78,7 @@ public class SpielEntity {
 	private Timestamp letzteAktivitaet;
 	
 	// relationships
+	@JsonIgnore
 	@OneToMany(mappedBy = "spiel")
 	private List<RundeEntity> runden;
 
@@ -157,5 +160,9 @@ public class SpielEntity {
 
 	public void setLetzteAktivitaet(Timestamp letzteAktivitaet) {
 		this.letzteAktivitaet = letzteAktivitaet;
+	}
+	
+	public List<RundeEntity> getRunden() {
+		return runden;
 	}
 }

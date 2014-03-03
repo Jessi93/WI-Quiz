@@ -1,6 +1,5 @@
 package studiduell.repository;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 	 * 
 	 * @deprecated correct invoking method's logic
 	 */
-	@Deprecated()
+	@Deprecated
 	@Query("FROM UserEntity u WHERE u.benutzername != :user AND u.letzteAktivitaet > :lstAct")
 	List<UserEntity> findOthersActiveAfter(@Param("user") String benutzername,
 			@Param("lstAct") Timestamp letzteAktivitaet);

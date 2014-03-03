@@ -6,11 +6,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "kategorie")
+@Table(name = "Kategorie")
 public class KategorieEntity {
 	@Id
 	@Column(name = "name", unique = true, nullable = false)
 	private String name;
+
+	public KategorieEntity() {
+	}
+
+	public KategorieEntity(String name) {
+		this.name = name;
+	}
 
 	public String getName() {
 		return name;

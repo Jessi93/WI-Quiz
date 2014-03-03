@@ -11,7 +11,7 @@ import studiduell.model.id.FreundeslisteEntityPk;
 
 @Entity
 @IdClass(FreundeslisteEntityPk.class)
-@Table(name = "freundesliste")
+@Table(name = "Freundesliste")
 public class FreundeslisteEntity {
 	
 	@Id

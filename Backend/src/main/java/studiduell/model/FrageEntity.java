@@ -1,54 +1,82 @@
 package studiduell.model;
 
-//FIXME define as ENTITY
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 //TODO in all entities, remove underscores
+@Entity
+@Table(name = "Frage")
 public class FrageEntity {
 	
+	@Id
+	@GeneratedValue
+	@JoinColumn(name = "fragenID", unique = true, nullable = false)
 	private int fragenID;
 	
-	private String kategorie_name;
+	@JoinColumn(name = "kategorie_name", nullable = false)
+	private String kategorie_name; //XXX as entity
 	
-	private String unterkategorie_name;
+	@JoinColumn(name = "unterkategorie_name")
+	private String unterkategorie_name; //XXX as entity
 	
-	private boolean flag_fragenTyp_mult;
+	@Column(name = "flagFragenTypMult", nullable = false)
+	private boolean flagFragenTypMult;
 	
+	@Column(name = "frage", unique = true, nullable = false)
 	private String frage;
 	 
+	@Column(name = "antwortmoeglichkeit1", nullable = false)
 	private String antwortmoeglichkeit1;
 	
+	@Column(name = "antwortmoeglichkeit2", nullable = false)
 	private String antwortmoeglichkeit2;
 	
+	@Column(name = "antwortmoeglichkeit3", nullable = false)
 	private String antwortmoeglichkeit3;
 	
+	@Column(name = "antwortmoeglichkeit4", nullable = false)
 	private String antwortmoeglichkeit4;
 	
+	@Column(name = "wahrheitAntwortmoeglichkeit1", nullable = false)
 	private boolean wahrheitAntwortmoeglichkeit1;
 	
+	@Column(name = "wahrheitAntwortmoeglichkeit2", nullable = false)
 	private boolean wahrheitAntwortmoeglichkeit2;
 	
+	@Column(name = "wahrheitAntwortmoeglichkeit3", nullable = false)
 	private boolean wahrheitAntwortmoeglichkeit3;
 	
+	@Column(name = "wahrheitAntwortmoeglichkeit4", nullable = false)
 	private boolean wahrheitAntwortmoeglichkeit4;
 	
-	private boolean flag_frageValidiert;
+	@Column(name = "flagFrageValidiert", nullable = false)
+	private boolean flagFrageValidiert;
 
 	public FrageEntity() {
 	}
 
 	public FrageEntity(int fragenID, String kategorie_name,
-			String unterkategorie_name, boolean flag_fragenTyp_mult,
+			String unterkategorie_name, boolean flagFragenTypMult,
 			String frage, String antwortmoeglichkeit1,
 			String antwortmoeglichkeit2, String antwortmoeglichkeit3,
 			String antwortmoeglichkeit4, boolean wahrheitAntwortmoeglichkeit1,
 			boolean wahrheitAntwortmoeglichkeit2,
 			boolean wahrheitAntwortmoeglichkeit3,
-			boolean wahrheitAntwortmoeglichkeit4, boolean flag_frageValidiert) {
-		//XXX only for mock / debugging
-		
+			boolean wahrheitAntwortmoeglichkeit4, boolean flagFrageValidiert) {
 		this.fragenID = fragenID;
 		this.kategorie_name = kategorie_name;
 		this.unterkategorie_name = unterkategorie_name;
-		this.flag_fragenTyp_mult = flag_fragenTyp_mult;
+		this.flagFragenTypMult = flagFragenTypMult;
 		this.frage = frage;
 		this.antwortmoeglichkeit1 = antwortmoeglichkeit1;
 		this.antwortmoeglichkeit2 = antwortmoeglichkeit2;
@@ -58,7 +86,7 @@ public class FrageEntity {
 		this.wahrheitAntwortmoeglichkeit2 = wahrheitAntwortmoeglichkeit2;
 		this.wahrheitAntwortmoeglichkeit3 = wahrheitAntwortmoeglichkeit3;
 		this.wahrheitAntwortmoeglichkeit4 = wahrheitAntwortmoeglichkeit4;
-		this.flag_frageValidiert = flag_frageValidiert;
+		this.flagFrageValidiert = flagFrageValidiert;
 	}
 
 	public int getFragenID() {
@@ -85,12 +113,12 @@ public class FrageEntity {
 		this.unterkategorie_name = unterkategorie_name;
 	}
 
-	public boolean isFlag_fragenTyp_mult() {
-		return flag_fragenTyp_mult;
+	public boolean isFlagFragenTypMult() {
+		return flagFragenTypMult;
 	}
 
-	public void setFlag_fragenTyp_mult(boolean flag_fragenTyp_mult) {
-		this.flag_fragenTyp_mult = flag_fragenTyp_mult;
+	public void setFlagFragenTypMult(boolean flagFragenTypMult) {
+		this.flagFragenTypMult = flagFragenTypMult;
 	}
 
 	public String getFrage() {
@@ -165,11 +193,11 @@ public class FrageEntity {
 		this.wahrheitAntwortmoeglichkeit4 = wahrheitAntwortmoeglichkeit4;
 	}
 
-	public boolean isFlag_frageValidiert() {
-		return flag_frageValidiert;
+	public boolean isFlagFrageValidiert() {
+		return flagFrageValidiert;
 	}
 
-	public void setFlag_frageValidiert(boolean flag_frageValidiert) {
-		this.flag_frageValidiert = flag_frageValidiert;
+	public void setFlagFrageValidiert(boolean flagFrageValidiert) {
+		this.flagFrageValidiert = flagFrageValidiert;
 	}
 }

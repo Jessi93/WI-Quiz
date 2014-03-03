@@ -19,4 +19,4 @@ public enum SpielstatusEntityEnum {
 	}
 }
 
-//TODO use such enums
+//XXX use such enums
