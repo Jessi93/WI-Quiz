@@ -49,9 +49,15 @@ public class AntwortEntityPk implements Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) return false;
-		if (obj == this) return true;
-		if (!(obj instanceof AntwortEntityPk)) return false;
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof AntwortEntityPk)) {
+			return false;
+		}
 		AntwortEntityPk pk = (AntwortEntityPk) obj;
 		return pk.rundenID == rundenID
 				&& pk.benutzer.equals(benutzer)
