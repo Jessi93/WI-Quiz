@@ -64,28 +64,35 @@ public class UserController {
 	 * @return 201/409
 	 */
 	@RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
-					produces = MediaType.TEXT_PLAIN_VALUE, value = "/register")
-	public ResponseEntity<Void> register(@RequestBody UserEntity user) {
-		if(userRepository.findOne(user.getBenutzername()) == null) {
-			// persist user
-			String encryptedPassword = DigestUtils.md5DigestAsHex(user.getPasswortHash().getBytes());
-			user.setPasswortHash(encryptedPassword);
-			user.setPushId(null);
-			user.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
-			
-			userRepository.save(user);
-			
-			// persist user's category settings
-			List<KategorieEntity> categories = kategorieRepository.findAll();
-			for(KategorieEntity c : categories) {
-				KategorienfilterEntity filter = new KategorienfilterEntity(user.getBenutzername(), c.getName(), true);
-				kategorienfilterRepository.save(filter);
+					produces = MediaType.TEXT_PLAIN_VALUE, value = "/register/{name}")
+	public ResponseEntity<Void> register(@PathVariable("name") String name,
+			@RequestBody String password) {
+		if(!password.isEmpty()) {
+			// cannot be null because RequestBody is required by default
+			if(userRepository.findOne(name) == null) {
+				// persist user
+				UserEntity user = new UserEntity(name);
+				String encryptedPassword = DigestUtils.md5DigestAsHex(password.getBytes());
+				user.setPasswortHash(encryptedPassword);
+				user.setPushId(null);
+				user.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
+				
+				userRepository.save(user);
+				
+				// persist user's category settings
+				List<KategorieEntity> categories = kategorieRepository.findAll();
+				for(KategorieEntity c : categories) {
+					KategorienfilterEntity filter = new KategorienfilterEntity(user.getBenutzername(), c.getName(), true);
+					kategorienfilterRepository.save(filter);
+				}
+				//TODO if sth. went wrong: 500 Internal Server Error
+				
+				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
 			}
-			//TODO if sth. went wrong: 500 Internal Server Error
-			
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
 	}
 	
 	/**
