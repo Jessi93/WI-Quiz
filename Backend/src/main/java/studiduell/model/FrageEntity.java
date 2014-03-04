@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 //TODO in all entities, remove underscores
 @Entity
 @Table(name = "Frage")
@@ -53,6 +55,7 @@ public class FrageEntity {
 	@Column(name = "wahrheitAntwortmoeglichkeit4", nullable = false)
 	private boolean wahrheitAntwortmoeglichkeit4;
 	
+	@JsonIgnore // TODO maybe also on different properties, as client is not interested in that property
 	@Column(name = "flagFrageValidiert", nullable = false)
 	private boolean flagFrageValidiert;
 
