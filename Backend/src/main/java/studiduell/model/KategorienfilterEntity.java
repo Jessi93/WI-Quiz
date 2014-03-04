@@ -28,10 +28,10 @@ public class KategorienfilterEntity {
 	private String benutzername;
 	
 	@Id
-	@Column(name = "kategorie_name")
+	@Column(name = "kategorieName")
 	private String kategorieName;
 	
-	@Column(name = "kategorieAusgewaehlt_Check", nullable = false)
+	@Column(name = "kategorieAusgewaehltCheck", nullable = false)
 	private boolean kategorieAusgewaehltCheck = true;
 
 	public String getBenutzername() {

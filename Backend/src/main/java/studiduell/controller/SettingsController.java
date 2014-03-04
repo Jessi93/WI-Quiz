@@ -29,23 +29,11 @@ import studiduell.security.SecurityContextFacade;
 @Transactional(rollbackFor = RuntimeException.class)
 @RequestMapping(value = "/settings")
 public class SettingsController {
-
-	@Autowired
-<<<<<<< HEAD
 	private UserRepository userRepository;
 	@Autowired
 	private KategorienfilterRepository kategorienfilterRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
-=======
-	private UserRepository userRepository; // TODO used?
-	@Autowired
-	private KategorieRepository kategorieRepository; // TODO used?
-	@Autowired
-	private KategorienfilterRepository kategorienfilterRepository; // TODO used?
-	@Autowired
-	private SecurityContextFacade securityContextFacade; // TODO used?
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 	@Autowired
 	private FreundeslisteRepository freundeslisteRepository;
 

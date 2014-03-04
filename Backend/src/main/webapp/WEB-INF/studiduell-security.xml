@@ -13,7 +13,7 @@
 	</http>
 
 	<jdbc-user-service id="userService" data-source-ref="dataSource"
-		users-by-username-query="select benutzername,passwort_hash,true from benutzer where benutzername=?"
+		users-by-username-query="select benutzername,passwortHash,true from benutzer where benutzername=?"
 		authorities-by-username-query="select benutzername,'USER' from benutzer where benutzername=?" />
 
 	<authentication-manager>

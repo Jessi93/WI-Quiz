@@ -20,11 +20,11 @@ public class UserEntity {
 	private String benutzername;
 	
 	@JsonIgnore // don't send password out to user!
-	@Column(name = "passwort_hash", nullable = false)
+	@Column(name = "passwortHash", nullable = false)
 	private String passwortHash;
 	
 	@JsonIgnore
-	@Column(name = "push_id")
+	@Column(name = "pushId")
 	private String pushId;
 	
 	@JsonIgnore

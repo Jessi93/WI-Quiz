@@ -43,7 +43,7 @@ public class SpielEntity {
 	@JoinColumn(name = "spielID", unique = true, nullable = false)
 	private int spielID;
 	
-	@JoinColumn(name = "spieltyp_name", nullable = false, referencedColumnName = "name")
+	@JoinColumn(name = "spieltypName", nullable = false, referencedColumnName = "name")
 	@OneToOne
 	private SpieltypEntity spieltypName;
 	
@@ -70,7 +70,7 @@ public class SpielEntity {
 	@Column(name = "aktuelleRunde", nullable = false)
 	private int aktuelleRunde;
 	
-	@JoinColumn(name = "spielstatus_name", nullable = false, referencedColumnName = "name")
+	@JoinColumn(name = "spielstatusName", nullable = false, referencedColumnName = "name")
 	@OneToOne
 	private SpielstatusEntity spielstatusName;
 	

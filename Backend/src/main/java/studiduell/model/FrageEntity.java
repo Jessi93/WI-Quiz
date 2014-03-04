@@ -1,17 +1,11 @@
 package studiduell.model;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 //TODO in all entities, remove underscores
 @Entity
@@ -23,20 +17,13 @@ public class FrageEntity {
 	@JoinColumn(name = "fragenID", unique = true, nullable = false)
 	private int fragenID;
 	
-<<<<<<< HEAD
-	@JoinColumn(name = "kategorie_name", nullable = false)
-	private String kategorie_name; //XXX as entity
+	@JoinColumn(name = "kategorieName", nullable = false)
+	private String kategorieName; //XXX as entity
 	
-	@JoinColumn(name = "unterkategorie_name")
-	private String unterkategorie_name; //XXX as entity
+	@JoinColumn(name = "unterkategorieName")
+	private String unterkategorieName; //XXX as entity
 	
 	@Column(name = "flagFragenTypMult", nullable = false)
-=======
-	private String kategorieName;
-	
-	private String unterkategorieName;
-	
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 	private boolean flagFragenTypMult;
 	
 	@Column(name = "frage", unique = true, nullable = false)
@@ -66,39 +53,26 @@ public class FrageEntity {
 	@Column(name = "wahrheitAntwortmoeglichkeit4", nullable = false)
 	private boolean wahrheitAntwortmoeglichkeit4;
 	
-<<<<<<< HEAD
 	@Column(name = "flagFrageValidiert", nullable = false)
-=======
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 	private boolean flagFrageValidiert;
 
 	public FrageEntity() {
 	}
 
-<<<<<<< HEAD
-	public FrageEntity(int fragenID, String kategorie_name,
-			String unterkategorie_name, boolean flagFragenTypMult,
-=======
 	public FrageEntity(int fragenID, String kategorieName,
 			String unterkategorieName, boolean flagFragenTypMult,
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 			String frage, String antwortmoeglichkeit1,
 			String antwortmoeglichkeit2, String antwortmoeglichkeit3,
 			String antwortmoeglichkeit4, boolean wahrheitAntwortmoeglichkeit1,
 			boolean wahrheitAntwortmoeglichkeit2,
 			boolean wahrheitAntwortmoeglichkeit3,
 			boolean wahrheitAntwortmoeglichkeit4, boolean flagFrageValidiert) {
-<<<<<<< HEAD
 		this.fragenID = fragenID;
-		this.kategorie_name = kategorie_name;
-		this.unterkategorie_name = unterkategorie_name;
-=======
 		//XXX only for mock / debugging
 		
 		this.fragenID = fragenID;
 		this.kategorieName = kategorieName;
 		this.unterkategorieName = unterkategorieName;
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 		this.flagFragenTypMult = flagFragenTypMult;
 		this.frage = frage;
 		this.antwortmoeglichkeit1 = antwortmoeglichkeit1;

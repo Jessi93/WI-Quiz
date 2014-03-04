@@ -34,76 +34,45 @@ public class AntwortEntity {
 	@JoinColumn(name = "benutzername", nullable = false, referencedColumnName = "benutzername")
 	private UserEntity benutzer; //TODO UserEntity!
 	
-<<<<<<< HEAD
-	@Column(name = "antwortmoeglichkeit1_check", nullable = false)
-	private boolean antwortmoeglichkeit1_check;
-	
-	@Column(name = "antwortmoeglichkeit2_check", nullable = false)
-	private boolean antwortmoeglichkeit2_check;
-	
-	@Column(name = "antwortmoeglichkeit3_check", nullable = false)
-	private boolean antwortmoeglichkeit3_check;
-	
-	@Column(name = "antwortmoeglichkeit4_check", nullable = false)
-	private boolean antwortmoeglichkeit4_check;
-=======
+	@Column(name = "antwortmoeglichkeit1Check", nullable = false)
 	private boolean antwortmoeglichkeit1Check;
 	
+	@Column(name = "antwortmoeglichkeit2Check", nullable = false)
 	private boolean antwortmoeglichkeit2Check;
 	
+	@Column(name = "antwortmoeglichkeit3Check", nullable = false)
 	private boolean antwortmoeglichkeit3Check;
 	
+	@Column(name = "antwortmoeglichkeit4Check", nullable = false)
 	private boolean antwortmoeglichkeit4Check;
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 	
 	@Column(name = "flagFrageAngezeigt", nullable = false)
 	private boolean flagFrageAngezeigt;
 	
-<<<<<<< HEAD
-	@Column(name = "ergebnis_check", nullable = false)
-	private boolean ergebnis_check; // Has the user answered correctly?
-=======
+	@Column(name = "ergebnisCheck", nullable = false)
 	private boolean ergebnisCheck; // Has the user answered correctly?
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 
 	public AntwortEntity() {
 	}
 
-<<<<<<< HEAD
-	public AntwortEntity(FrageEntity frage, RundeEntity rundenID, UserEntity benutzer,
-			boolean antwortmoeglichkeit1_check,
-			boolean antwortmoeglichkeit2_check,
-			boolean antwortmoeglichkeit3_check,
-			boolean antwortmoeglichkeit4_check, boolean flagFrageAngezeigt,
-			boolean ergebnis_check) {
-=======
-	public AntwortEntity(int fragenID, int rundenID, String benutzername,
-			boolean antwortmoeglichkeit1Check,
+	public AntwortEntity(FrageEntity frage, RundeEntity rundenID,
+			UserEntity benutzer, boolean antwortmoeglichkeit1Check,
 			boolean antwortmoeglichkeit2Check,
 			boolean antwortmoeglichkeit3Check,
 			boolean antwortmoeglichkeit4Check, boolean flagFrageAngezeigt,
 			boolean ergebnisCheck) {
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
-		//XXX only for Mock / Debugging
+		//XXX
 		this.frage = frage;
 		this.rundenID = rundenID;
-<<<<<<< HEAD
 		this.benutzer = benutzer;
-		this.antwortmoeglichkeit1_check = antwortmoeglichkeit1_check;
-		this.antwortmoeglichkeit2_check = antwortmoeglichkeit2_check;
-		this.antwortmoeglichkeit3_check = antwortmoeglichkeit3_check;
-		this.antwortmoeglichkeit4_check = antwortmoeglichkeit4_check;
-=======
-		this.benutzername = benutzername;
 		this.antwortmoeglichkeit1Check = antwortmoeglichkeit1Check;
 		this.antwortmoeglichkeit2Check = antwortmoeglichkeit2Check;
 		this.antwortmoeglichkeit3Check = antwortmoeglichkeit3Check;
 		this.antwortmoeglichkeit4Check = antwortmoeglichkeit4Check;
->>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 		this.flagFrageAngezeigt = flagFrageAngezeigt;
 		this.ergebnisCheck = ergebnisCheck;
 	}
-
+	
 	public FrageEntity getFrage() {
 		return frage;
 	}
