@@ -39,9 +39,15 @@ public class FreundeslisteEntityPk implements Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) return false;
-		if (obj == this) return true;
-		if (!(obj instanceof FreundeslisteEntityPk)) return false;
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof FreundeslisteEntityPk)) {
+			return false;
+		}
 		FreundeslisteEntityPk pk = (FreundeslisteEntityPk) obj;
 		return pk.benutzername.equals(benutzername)
 				&& pk.befreundetMit.equals(befreundetMit);

@@ -23,6 +23,7 @@ public class FrageEntity {
 	@JoinColumn(name = "fragenID", unique = true, nullable = false)
 	private int fragenID;
 	
+<<<<<<< HEAD
 	@JoinColumn(name = "kategorie_name", nullable = false)
 	private String kategorie_name; //XXX as entity
 	
@@ -30,6 +31,12 @@ public class FrageEntity {
 	private String unterkategorie_name; //XXX as entity
 	
 	@Column(name = "flagFragenTypMult", nullable = false)
+=======
+	private String kategorieName;
+	
+	private String unterkategorieName;
+	
+>>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 	private boolean flagFragenTypMult;
 	
 	@Column(name = "frage", unique = true, nullable = false)
@@ -59,23 +66,39 @@ public class FrageEntity {
 	@Column(name = "wahrheitAntwortmoeglichkeit4", nullable = false)
 	private boolean wahrheitAntwortmoeglichkeit4;
 	
+<<<<<<< HEAD
 	@Column(name = "flagFrageValidiert", nullable = false)
+=======
+>>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 	private boolean flagFrageValidiert;
 
 	public FrageEntity() {
 	}
 
+<<<<<<< HEAD
 	public FrageEntity(int fragenID, String kategorie_name,
 			String unterkategorie_name, boolean flagFragenTypMult,
+=======
+	public FrageEntity(int fragenID, String kategorieName,
+			String unterkategorieName, boolean flagFragenTypMult,
+>>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 			String frage, String antwortmoeglichkeit1,
 			String antwortmoeglichkeit2, String antwortmoeglichkeit3,
 			String antwortmoeglichkeit4, boolean wahrheitAntwortmoeglichkeit1,
 			boolean wahrheitAntwortmoeglichkeit2,
 			boolean wahrheitAntwortmoeglichkeit3,
 			boolean wahrheitAntwortmoeglichkeit4, boolean flagFrageValidiert) {
+<<<<<<< HEAD
 		this.fragenID = fragenID;
 		this.kategorie_name = kategorie_name;
 		this.unterkategorie_name = unterkategorie_name;
+=======
+		//XXX only for mock / debugging
+		
+		this.fragenID = fragenID;
+		this.kategorieName = kategorieName;
+		this.unterkategorieName = unterkategorieName;
+>>>>>>> 60880f5b173340775dcef336f3286fe1b67a1384
 		this.flagFragenTypMult = flagFragenTypMult;
 		this.frage = frage;
 		this.antwortmoeglichkeit1 = antwortmoeglichkeit1;
@@ -97,20 +120,20 @@ public class FrageEntity {
 		this.fragenID = fragenID;
 	}
 
-	public String getKategorie_name() {
-		return kategorie_name;
+	public String getKategorieName() {
+		return kategorieName;
 	}
 
-	public void setKategorie_name(String kategorie_name) {
-		this.kategorie_name = kategorie_name;
+	public void setKategorieName(String kategorieName) {
+		this.kategorieName = kategorieName;
 	}
 
-	public String getUnterkategorie_name() {
-		return unterkategorie_name;
+	public String getUnterkategorieName() {
+		return unterkategorieName;
 	}
 
-	public void setUnterkategorie_name(String unterkategorie_name) {
-		this.unterkategorie_name = unterkategorie_name;
+	public void setUnterkategorieName(String unterkategorieName) {
+		this.unterkategorieName = unterkategorieName;
 	}
 
 	public boolean isFlagFragenTypMult() {

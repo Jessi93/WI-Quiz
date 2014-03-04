@@ -21,20 +21,20 @@ public class SpielEntity {
 	public SpielEntity() {
 	}
 
-	public SpielEntity(int spielID, SpieltypEntity spieltyp_name,
+	public SpielEntity(int spielID, SpieltypEntity spieltypName,
 			UserEntity spieler1, UserEntity spieler2, UserEntity sieger,
 			UserEntity verlierer, UserEntity wartenAuf, int aktuelleRunde,
-			SpielstatusEntity spielstatus_name, Timestamp letzteAktivitaet) {
+			SpielstatusEntity spielstatusName, Timestamp letzteAktivitaet) {
 		//XXX constructor
 		this.spielID = spielID;
-		this.spieltyp_name = spieltyp_name;
+		this.spieltypName = spieltypName;
 		this.spieler1 = spieler1;
 		this.spieler2 = spieler2;
 		this.sieger = sieger;
 		this.verlierer = verlierer;
 		this.wartenAuf = wartenAuf;
 		this.aktuelleRunde = aktuelleRunde;
-		this.spielstatus_name = spielstatus_name;
+		this.spielstatusName = spielstatusName;
 		this.letzteAktivitaet = letzteAktivitaet;
 	}
 	
@@ -45,7 +45,7 @@ public class SpielEntity {
 	
 	@JoinColumn(name = "spieltyp_name", nullable = false, referencedColumnName = "name")
 	@OneToOne
-	private SpieltypEntity spieltyp_name;
+	private SpieltypEntity spieltypName;
 	
 	@JoinColumn(name = "spieler1", nullable = false, referencedColumnName = "benutzername")
 	@OneToOne
@@ -72,7 +72,7 @@ public class SpielEntity {
 	
 	@JoinColumn(name = "spielstatus_name", nullable = false, referencedColumnName = "name")
 	@OneToOne
-	private SpielstatusEntity spielstatus_name;
+	private SpielstatusEntity spielstatusName;
 	
 	@Column(name = "letzteAktivitaet", nullable = false)
 	private Timestamp letzteAktivitaet;
@@ -90,12 +90,12 @@ public class SpielEntity {
 		this.spielID = spielID;
 	}
 
-	public SpieltypEntity getSpieltyp_name() {
-		return spieltyp_name;
+	public SpieltypEntity getSpieltypName() {
+		return spieltypName;
 	}
 
-	public void setSpieltyp_name(SpieltypEntity spieltyp_name) {
-		this.spieltyp_name = spieltyp_name;
+	public void setSpieltypName(SpieltypEntity spieltypName) {
+		this.spieltypName = spieltypName;
 	}
 
 	public UserEntity getSpieler1() {
@@ -146,12 +146,12 @@ public class SpielEntity {
 		this.aktuelleRunde = aktuelleRunde;
 	}
 
-	public SpielstatusEntity getSpielstatus_name() {
-		return spielstatus_name;
+	public SpielstatusEntity getSpielstatusName() {
+		return spielstatusName;
 	}
 
-	public void setSpielstatus_name(SpielstatusEntity spielstatus_name) {
-		this.spielstatus_name = spielstatus_name;
+	public void setSpielstatusName(SpielstatusEntity spielstatusName) {
+		this.spielstatusName = spielstatusName;
 	}
 
 	public Timestamp getLetzteAktivitaet() {

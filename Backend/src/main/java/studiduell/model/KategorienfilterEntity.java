@@ -16,11 +16,11 @@ public class KategorienfilterEntity {
 	public KategorienfilterEntity() {
 	}
 
-	public KategorienfilterEntity(String benutzername, String kategorie_name,
-			boolean kategorieAusgewaehlt_Check) {
+	public KategorienfilterEntity(String benutzername, String kategorieName,
+			boolean kategorieAusgewaehltCheck) {
 		this.benutzername = benutzername;
-		this.kategorie_name = kategorie_name;
-		this.kategorieAusgewaehlt_Check = kategorieAusgewaehlt_Check;
+		this.kategorieName = kategorieName;
+		this.kategorieAusgewaehltCheck = kategorieAusgewaehltCheck;
 	}
 
 	@Id
@@ -29,10 +29,10 @@ public class KategorienfilterEntity {
 	
 	@Id
 	@Column(name = "kategorie_name")
-	private String kategorie_name;
+	private String kategorieName;
 	
 	@Column(name = "kategorieAusgewaehlt_Check", nullable = false)
-	private boolean kategorieAusgewaehlt_Check = true;
+	private boolean kategorieAusgewaehltCheck = true;
 
 	public String getBenutzername() {
 		return benutzername;
@@ -42,19 +42,19 @@ public class KategorienfilterEntity {
 		this.benutzername = benutzername;
 	}
 
-	public String getKategorie_name() {
-		return kategorie_name;
+	public String getKategorieName() {
+		return kategorieName;
 	}
 
-	public void setKategorie_name(String kategorie_name) {
-		this.kategorie_name = kategorie_name;
+	public void setKategorieName(String kategorieName) {
+		this.kategorieName = kategorieName;
 	}
 
-	public boolean isKategorieAusgewaehlt_Check() {
-		return kategorieAusgewaehlt_Check;
+	public boolean isKategorieAusgewaehltCheck() {
+		return kategorieAusgewaehltCheck;
 	}
 
-	public void setKategorieAusgewaehlt_Check(boolean kategorieAusgewaehlt_Check) {
-		this.kategorieAusgewaehlt_Check = kategorieAusgewaehlt_Check;
+	public void setKategorieAusgewaehltCheck(boolean kategorieAusgewaehltCheck) {
+		this.kategorieAusgewaehltCheck = kategorieAusgewaehltCheck;
 	}
 }

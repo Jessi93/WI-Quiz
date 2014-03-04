@@ -21,11 +21,11 @@ public class UserEntity {
 	
 	@JsonIgnore // don't send password out to user!
 	@Column(name = "passwort_hash", nullable = false)
-	private String passwort_hash;
+	private String passwortHash;
 	
 	@JsonIgnore
 	@Column(name = "push_id")
-	private String push_id;
+	private String pushId;
 	
 	@JsonIgnore
 	@Column(name = "letzteAktivitaet", nullable = false)
@@ -51,20 +51,20 @@ public class UserEntity {
 		this.benutzername = benutzername;
 	}
 
-	public String getPasswort_hash() {
-		return passwort_hash;
+	public String getPasswortHash() {
+		return passwortHash;
 	}
 
-	public void setPasswort_hash(String passwort_hash) {
-		this.passwort_hash = passwort_hash;
+	public void setPasswortHash(String passwortHash) {
+		this.passwortHash = passwortHash;
 	}
 
-	public String getPush_id() {
-		return push_id;
+	public String getPushId() {
+		return pushId;
 	}
 
-	public void setPush_id(String push_id) {
-		this.push_id = push_id;
+	public void setPushId(String pushId) {
+		this.pushId = pushId;
 	}
 
 	public Timestamp getLetzteAktivitaet() {
