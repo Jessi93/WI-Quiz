@@ -31,6 +31,8 @@ public class RootController {
 		String pageContent = "<!DOCTYPE html>"
 				+ "<html><body><h1>" + projectName + " Server Information!</h1>"
 				+ "<p>The services of " + projectName + " are available.</p></body></html>";
+		
+		// no need for CORS support. This ReST resource is never called directly from the app client.
 		return new ResponseEntity<>(pageContent, HttpStatus.OK);
 	}
 }

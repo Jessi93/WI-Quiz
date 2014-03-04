@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import studiduell.constants.entity.SpielstatusEntityEnum;
 import studiduell.constants.entity.SpieltypEntityEnum;
+import studiduell.constants.httpheader.HttpHeaderDefaults;
 import studiduell.model.AntwortEntity;
 import studiduell.model.FrageEntity;
 import studiduell.model.KategorieEntity;
@@ -55,6 +56,8 @@ public class SpielController {
 	private FrageRepository frageRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
+	@Autowired
+	private HttpHeaderDefaults httpHeaderDefaults;
 	
 	private Random random = new Random();
 	
@@ -87,9 +90,10 @@ public class SpielController {
 			
 			//TODO Push notification for opponent here
 			
-			return new ResponseEntity<>(opponentUserEntity.getBenutzername(), HttpStatus.CREATED);
+			return new ResponseEntity<>(opponentUserEntity.getBenutzername(), httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+					HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -110,12 +114,12 @@ public class SpielController {
 				SpielEntity game = createGame(userUserEntity, opponentUserEntity,
 						SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
 				spielRepository.save(game);
-				return new ResponseEntity<>(HttpStatus.CREATED);
+				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
 			} else {
-				return new ResponseEntity<>(HttpStatus.CONFLICT);
+				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
 			}
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -135,7 +139,8 @@ public class SpielController {
 		
 		json.putPOJO("rounds", roundsArray);
 		
-		return new ResponseEntity<>(json, HttpStatus.OK);
+		return new ResponseEntity<>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+				HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
@@ -150,7 +155,7 @@ public class SpielController {
 		} else if (flag.equalsIgnoreCase("false")) {
 			flagVal = false;
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
 		}
 		// TODO LOW: If server breaks down before commit, the roundID is
 		// incremented, too. Prevent that?
@@ -177,12 +182,12 @@ public class SpielController {
 				}
 				spielRepository.save(gameSpielEntity);
 
-				return new ResponseEntity<>(HttpStatus.OK);
+				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
 			}
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
 		}
 
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
@@ -232,11 +237,8 @@ public class SpielController {
 		json.add(obj2);
 		json.add(obj3);
 		
-		//TODO Header in jeden Response
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Access-Control-Allow-Origin", "*");
-		
-		return new ResponseEntity<>(json, headers, HttpStatus.OK);
+		return new ResponseEntity<>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+				HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
@@ -272,13 +274,14 @@ public class SpielController {
 		obj.put("questions", arr1);
 		obj.put("answers", arr2);
 		
-		return new ResponseEntity<>(obj, HttpStatus.OK);
+		return new ResponseEntity<>(obj, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+				HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
 			value = "/sendRoundResult")
 	public ResponseEntity<Void> sendRoundResult(@RequestBody AntwortEntity answer) {
-		return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_IMPLEMENTED);
 	}
 	
 	private SpielEntity createGame(UserEntity user, UserEntity opponent, SpieltypEntity type, SpielstatusEntity status) {
