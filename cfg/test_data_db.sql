@@ -17,6 +17,38 @@ INSERT INTO Benutzer VALUES
 ('Kevin06', '5ebe2294ecd0e0f08eab7690d2a6ee69', 'hasdfey', '2014-02-18 14:56:32'),
 ('Kevin09', '5ebe2294ecd0e0f08eab7690d2a6ee69', NULL, '2014-02-18 15:26:44');
 
+INSERT INTO Kategorienfilter VALUES
+('admin', 'IT-Management', true),
+('admin', 'Logik und Algebra', true),
+('admin', 'Programmierung', true),
+('admin', 'Projektmanagement', true),
+('admin', 'Wissenschaftliches Arbeiten', true),
+('Kevin01', 'IT-Management', true),
+('Kevin01', 'Logik und Algebra', true),
+('Kevin01', 'Programmierung', true),
+('Kevin01', 'Projektmanagement', true),
+('Kevin01', 'Wissenschaftliches Arbeiten', true),
+('Kevin02', 'IT-Management', true),
+('Kevin02', 'Logik und Algebra', true),
+('Kevin02', 'Programmierung', true),
+('Kevin02', 'Projektmanagement', true),
+('Kevin02', 'Wissenschaftliches Arbeiten', true),
+('Kevin04', 'IT-Management', true),
+('Kevin04', 'Logik und Algebra', true),
+('Kevin04', 'Programmierung', true),
+('Kevin04', 'Projektmanagement', true),
+('Kevin04', 'Wissenschaftliches Arbeiten', true),
+('Kevin06', 'IT-Management', true),
+('Kevin06', 'Logik und Algebra', true),
+('Kevin06', 'Programmierung', true),
+('Kevin06', 'Projektmanagement', true),
+('Kevin06', 'Wissenschaftliches Arbeiten', true),
+('Kevin09', 'IT-Management', true),
+('Kevin09', 'Logik und Algebra', true),
+('Kevin09', 'Programmierung', true),
+('Kevin09', 'Projektmanagement', true),
+('Kevin09', 'Wissenschaftliches Arbeiten', true);
+
 INSERT INTO freundesliste VALUES
 ('Kevin01', 'admin'),
 ('Kevin01', 'Kevin02'),
