@@ -4,8 +4,8 @@ USE studiduell;
 
 CREATE TABLE Benutzer (
     	benutzername VARCHAR(50) PRIMARY KEY, -- TODO or varbinary?
-    	passwort_hash CHAR(32) NOT NULL,
-    	push_id VARCHAR(100),
+    	passwortHash CHAR(32) NOT NULL,
+    	pushId VARCHAR(100),
     	letzteAktivitaet TIMESTAMP NOT NULL
 );
 
@@ -37,49 +37,49 @@ CREATE TABLE Kategorie (
 
 CREATE TABLE Unterkategorie (
 	name VARCHAR(50),
-	kategorie_name VARCHAR(50),
-	PRIMARY KEY (name,kategorie_name),
-	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name) 
+	kategorieName VARCHAR(50),
+	PRIMARY KEY (name,kategorieName),
+	FOREIGN KEY(kategorieName) REFERENCES Kategorie(name) 
 );
 
-CREATE TABLE Kategorie_Studiengang_Mapping (
-	kategorie_name VARCHAR(50),
-	studiengang_name VARCHAR(40),
+CREATE TABLE KategorieStudiengangMapping (
+	kategorieName VARCHAR(50),
+	studiengangName VARCHAR(40),
 	
-	PRIMARY KEY(kategorie_name, studiengang_name),
-	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name),
-	FOREIGN KEY(studiengang_name) REFERENCES Studiengang(name)
+	PRIMARY KEY(kategorieName, studiengangName),
+	FOREIGN KEY(kategorieName) REFERENCES Kategorie(name),
+	FOREIGN KEY(studiengangName) REFERENCES Studiengang(name)
 );
 
 CREATE TABLE Kategorienfilter (
 	benutzername VARCHAR(50),
-	kategorie_name VARCHAR(50),
-	kategorieAusgewaehlt_Check BOOLEAN NOT NULL DEFAULT TRUE,
+	kategorieName VARCHAR(50),
+	kategorieAusgewaehltCheck BOOLEAN NOT NULL DEFAULT TRUE,
 	
-	PRIMARY KEY(benutzername, kategorie_name),
+	PRIMARY KEY(benutzername, kategorieName),
 	FOREIGN KEY(benutzername) REFERENCES Benutzer(benutzername),
-	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name)
+	FOREIGN KEY(kategorieName) REFERENCES Kategorie(name)
 );
 
 CREATE TABLE Spiel (
 	spielID INTEGER PRIMARY KEY AUTO_INCREMENT,
-	spieltyp_name CHAR NOT NULL,
+	spieltypName CHAR NOT NULL,
 	spieler1 VARCHAR(50) NOT NULL,
 	spieler2 VARCHAR(50) NOT NULL,
 	sieger VARCHAR(50),
 	verlierer VARCHAR(50),
 	wartenAuf VARCHAR(50) NOT NULL,
 	aktuelleRunde INTEGER NOT NULL,
-	spielstatus_name CHAR NOT NULL,
+	spielstatusName CHAR NOT NULL,
 	letzteAktivitaet TIMESTAMP NOT NULL,
 	
-	FOREIGN KEY(spieltyp_name) REFERENCES Spieltyp(name),
+	FOREIGN KEY(spieltypName) REFERENCES Spieltyp(name),
 	FOREIGN KEY(spieler1) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(spieler2) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(sieger) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(verlierer) REFERENCES Benutzer(benutzername),
 	FOREIGN KEY(wartenAuf) REFERENCES Benutzer(benutzername),
-	FOREIGN KEY(spielstatus_name) REFERENCES Spielstatus(name)
+	FOREIGN KEY(spielstatusName) REFERENCES Spielstatus(name)
 );
 
 CREATE TABLE Runde (
@@ -92,8 +92,8 @@ CREATE TABLE Runde (
 
 CREATE TABLE Frage (
 	fragenID INTEGER PRIMARY KEY AUTO_INCREMENT,
-	kategorie_name VARCHAR(50) NOT NULL,
-	unterkategorie_name VARCHAR(50),
+	kategorieName VARCHAR(50) NOT NULL,
+	unterkategorieName VARCHAR(50),
 	flagFragenTypMult BOOLEAN NOT NULL,
 	frage VARCHAR(100) UNIQUE NOT NULL,
 	antwortmoeglichkeit1 VARCHAR(50) NOT NULL,
@@ -106,20 +106,20 @@ CREATE TABLE Frage (
 	wahrheitAntwortmoeglichkeit4 BOOLEAN NOT NULL,
 	flagFrageValidiert BOOLEAN NOT NULL,
 	
-	FOREIGN KEY(kategorie_name) REFERENCES Kategorie(name),
-	FOREIGN KEY(unterkategorie_name) REFERENCES Unterkategorie(name)
+	FOREIGN KEY(kategorieName) REFERENCES Kategorie(name),
+	FOREIGN KEY(unterkategorieName) REFERENCES Unterkategorie(name)
 );
 
 CREATE TABLE Antwort (
 	fragenID INTEGER NOT NULL,
 	rundenID INTEGER NOT NULL,
 	benutzername VARCHAR(50) NOT NULL,
-	antwortmoeglichkeit1_check BOOLEAN NOT NULL,
-	antwortmoeglichkeit2_check BOOLEAN NOT NULL,
-	antwortmoeglichkeit3_check BOOLEAN NOT NULL,
-	antwortmoeglichkeit4_check BOOLEAN NOT NULL,
+	antwortmoeglichkeit1Check BOOLEAN NOT NULL,
+	antwortmoeglichkeit2Check BOOLEAN NOT NULL,
+	antwortmoeglichkeit3Check BOOLEAN NOT NULL,
+	antwortmoeglichkeit4Check BOOLEAN NOT NULL,
 	flagFrageAngezeigt BOOLEAN NOT NULL,
-	ergebnis_check BOOLEAN,
+	ergebnisCheck BOOLEAN,
 	
 	PRIMARY KEY(fragenID, rundenID, benutzername),
 	FOREIGN KEY(fragenID) REFERENCES Frage(fragenID),
