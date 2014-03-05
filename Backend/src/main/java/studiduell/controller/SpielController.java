@@ -190,6 +190,9 @@ public class SpielController {
 					gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.D
 							.getEntity());
 				}
+				// set last activity to now
+				gameSpielEntity.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
+				
 				spielRepository.save(gameSpielEntity);
 
 				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
