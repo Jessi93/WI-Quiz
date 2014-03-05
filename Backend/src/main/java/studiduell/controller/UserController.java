@@ -102,12 +102,12 @@ public class UserController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
 					produces = MediaType.APPLICATION_JSON_VALUE, value = "/sync")
-	public ResponseEntity<List<SpielEntity>> sync(@RequestBody String pushID) {
+	public ResponseEntity<List<SpielEntity>> sync(@RequestBody(required = false) String pushID) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		// null check not required as spring security guarantees this code to be executed only for authorized users
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		
-		// Save regid for push messaging service
+		// Save regid for push messaging service - may be null
 		userUserEntity.setPushId(pushID);
 		// Set last activity to now
 		userUserEntity.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
