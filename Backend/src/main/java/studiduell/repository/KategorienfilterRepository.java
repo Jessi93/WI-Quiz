@@ -11,7 +11,6 @@ import studiduell.model.UserEntity;
 import studiduell.model.id.KategorienfilterEntityPk;
 
 public interface KategorienfilterRepository extends JpaRepository<KategorienfilterEntity, KategorienfilterEntityPk> {
-	//FIXME wrong result and regard status (WHERE: AND category is selected!)
 	@Query("FROM KategorienfilterEntity k WHERE k.benutzername IN (:player1, :player2) GROUP BY k.kategorieName HAVING SUM(k.kategorieAusgewaehltCheck) = 2")
 	Set<KategorienfilterEntity> commonCategories(@Param("player1") UserEntity player1, @Param("player2") UserEntity player2);
 }
