@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
@@ -28,13 +29,16 @@ import studiduell.constants.httpheader.HttpHeaderDefaults;
 import studiduell.model.AntwortEntity;
 import studiduell.model.FrageEntity;
 import studiduell.model.KategorieEntity;
+import studiduell.model.KategorienfilterEntity;
 import studiduell.model.RundeEntity;
 import studiduell.model.SpielEntity;
 import studiduell.model.SpielstatusEntity;
 import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
+import studiduell.model.id.KategorienfilterEntityPk;
 import studiduell.repository.AntwortRepository;
 import studiduell.repository.FrageRepository;
+import studiduell.repository.KategorienfilterRepository;
 import studiduell.repository.RundeRepository;
 import studiduell.repository.SpielRepository;
 import studiduell.repository.UserRepository;
@@ -54,6 +58,8 @@ public class SpielController {
 	private AntwortRepository antwortRepository;
 	@Autowired
 	private FrageRepository frageRepository;
+	@Autowired
+	private KategorienfilterRepository kategorienfilterRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
 	@Autowired
@@ -104,17 +110,21 @@ public class SpielController {
 		UserEntity opponentUserEntity = userRepository.findOne(opponent);
 		
 		if(opponentUserEntity != null) {
-			// does I challenge myself?
+			// do I challenge myself?
 			// does an active game with the opponent exist at the time?
 			if(!userUserEntity.getBenutzername().equals(opponent)
 					&& spielRepository.getWithUserAndOpponentInStatus(userUserEntity,
 					opponentUserEntity,
 					Arrays.asList(new SpielstatusEntity[] {SpielstatusEntityEnum.A.getEntity(), SpielstatusEntityEnum.P.getEntity()})) == 0) {
-				//TODO category intersection? + own error code
-				SpielEntity game = createGame(userUserEntity, opponentUserEntity,
-						SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
-				spielRepository.save(game);
-				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
+				// do we have at least three categories in common
+				Set<KategorienfilterEntity> commonCategories = kategorienfilterRepository.commonCategories(userUserEntity, opponentUserEntity);
+				if(commonCategories.size() >= 3) {
+					SpielEntity game = createGame(userUserEntity, opponentUserEntity,
+							SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
+					spielRepository.save(game);
+					return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
+				} else
+					return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
 			} else {
 				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
 			}

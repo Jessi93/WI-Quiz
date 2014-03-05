@@ -82,7 +82,7 @@ public class UserController {
 				// persist user's category settings
 				List<KategorieEntity> categories = kategorieRepository.findAll();
 				for(KategorieEntity c : categories) {
-					KategorienfilterEntity filter = new KategorienfilterEntity(user.getBenutzername(), c.getName(), true);
+					KategorienfilterEntity filter = new KategorienfilterEntity(user, c, true);
 					kategorienfilterRepository.save(filter);
 				}
 				//TODO if sth. went wrong: 500 Internal Server Error
