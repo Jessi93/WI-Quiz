@@ -6,3 +6,5 @@ Screenspezifische Funktionen werden in den jeweiligen 'screenname.js' files besc
 /*Anzeige Titel*/
 
 steroids.view.navigationBar.show("Studiduell");
+
+var serverURL = "http://192.168.0.108:8090/Studiduell/";
