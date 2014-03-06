@@ -1,5 +1,5 @@
 function init() {
-	$("#search_username_input").clear;
+	
 }
 
 
@@ -12,7 +12,7 @@ function spielerSuchen() {
 		}); */
 		
 		//Test (Testdaten ohne Serveranbindung!)
-	tmpServerData = new Array("Anita", "Bettina", "Christa", "Doris");
+	var tmpServerData = new Array("Anita", "Bettina", "Christa", "Doris");
 	addResultToList(tmpServerData);
   }
 
@@ -23,7 +23,7 @@ function addResultToList(obj){
 	$("#ergebnislisteErweitern").append("<li class='topcoat-list__item custom_List_item' ontouchend='createNewGame(gegnerName)'>"+obj[i]+"</li>");
 	}
 	
-	/* Zeige Ergebnisliste an*/
+	// Zeige Ergebnisliste an TODO
 	$("#ergebnislisteDiv").css("visibility","visible");
 }
 

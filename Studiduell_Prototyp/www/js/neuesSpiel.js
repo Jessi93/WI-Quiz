@@ -19,7 +19,7 @@ function loadFriendslistFromServer() {
 	}); */
 	
 	//Test (Testdaten ohne Serveranbindung!)
-	tmpServerData = new Array("Anita", "Bettina", "Christa", "Doris");
+	var tmpServerData = new Array("Anita", "Bettina", "Christa", "Doris");
 	addFriendToList(tmpServerData);
 }
 
