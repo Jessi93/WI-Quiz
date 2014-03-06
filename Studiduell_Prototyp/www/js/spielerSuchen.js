@@ -4,16 +4,16 @@ function init() {
 
 
 function spielerSuchen() {
-/* $.ajax( {
-		url:"http://192.168.0.105:8090/Studiduell/user/search/" + $("#search_username_input").val(),
+$.ajax( {
+		url:serverURL + "user/search/" + $("#search_username_input").val(),
 		type:"GET",
 		success:function(obj){addResultToList(obj);},
 		error:function(obj){alert(JSON.stringify(obj));}
-		}); */
+		});
 		
-		//Test (Testdaten ohne Serveranbindung!)
+/* 		//Test (Testdaten ohne Serveranbindung!)
 	var tmpServerData = new Array("Anita", "Bettina", "Christa", "Doris");
-	addResultToList(tmpServerData);
+	addResultToList(tmpServerData); */
   }
 
 function addResultToList(obj){
@@ -23,20 +23,20 @@ function addResultToList(obj){
 	$("#ergebnislisteErweitern").append("<li class='topcoat-list__item custom_List_item' ontouchend='createNewGame(gegnerName)'>"+obj[i]+"</li>");
 	}
 	
-	// Zeige Ergebnisliste an TODO
-	$("#ergebnislisteDiv").css("visibility","visible");
+	// Zeige Ergebnisliste an nur wenn es welche gibt TODO
+	//$("#ergebnislisteDiv").css("visibility","visible");
 }
 
 function createNewGame(gegnerName){
-/* $.ajax( {
-		url:"http://192.168.0.105:8090/Studiduell/game/create/with/" + gegnerName,
+$.ajax( {
+		url:serverURL + "game/create/with/" + gegnerName,
 		type:"POST",
 		success:function(){openHomeView();},
 		error:function(obj){alert(JSON.stringify(obj));}
-		}); */
+		});
 		
 		//Test
-		openHomeView();
+		//openHomeView();
 }
 
 
