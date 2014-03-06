@@ -1,0 +1,61 @@
+
+#neuesSpielStartenButton {
+	background-image: url("../images/plus.png");
+}
+
+#rundenuebersichtButton {
+	background-image: url("../images/lupe.png");
+}
+
+.yourTurnButton {
+	background-image: url("../images/profilbild.png");
+	
+}
+
+.custom_icon_button_left {
+	margin-bottom: 1em;
+	width: 100%; 
+	background-repeat: no-repeat;
+	background-position: left;
+	background-size: 2em;
+}
+
+.custom_icon_button_right {
+	margin-bottom: 1em;
+	width: 100%; 
+	background-repeat: no-repeat;
+	background-position: right;
+	background-size: 2em;
+}
+.RechteckWartenAuf {
+	border: 1px solid black;
+	width: 100%;
+	height: 50px;
+	border-radius: 3px;
+	margin-left: 0.1em;
+	margin-right: 0.1em;
+	background-color: grey;
+}
+
+.textmid {
+	text-align: center;
+    color: white;
+	font-size: 20px;
+}
+.textklein {
+	font-size: 11px;
+}
+
+.Rand1{
+border: 1px solid black;
+margin: -8px;
+}
+
+.Rand2{
+margin: -8px;
+}
+
+.pictureleft {
+text-align: left;
+background-image: url("../images/profilbild.png">);
+}

@@ -1,0 +1,69 @@
+#tableDiv {
+	display: table;
+	width: 95%;
+}
+
+#tableDiv>div {
+	display: table-row;
+}
+
+.leftColumn, .rightColumn, .middleColumn {
+	display: table-cell;
+	padding-bottom: 0.8em;
+}
+
+.leftColumn, .rightColumn {
+	width: 40%;
+}
+
+.leftColumn {
+	text-align: left;
+}
+
+.middleColumn {
+	width: 15%;
+	text-align: center;
+}
+
+.rightColumn {
+	text-align: right;
+}
+
+.spielernameDiv {
+	font-size: 1.3em;
+}
+
+#scoreDiv {
+	font-size: 1.4em;
+	padding-bottom: 1em;
+}
+
+/* Runden */
+.rundenInline {
+	/* marker class */
+}
+
+.rundenInline>div {
+	display: inline-block;
+}
+
+.quadrat {
+	border: 1px solid black;
+	width: 2em;
+	height: 2em;
+	border-radius: 3px;
+	margin-left: 0.1em;
+	margin-right: 0.1em;
+}
+
+.greenBackground {
+	background-color: green !important;
+}
+.redBackground {
+	background-color: red !important;
+}
+
+.rundeDetailText {
+	font-size:13px;
+	vertical-align: middle;
+}

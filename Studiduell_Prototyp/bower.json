@@ -1,0 +1,17 @@
+{
+  "name": "Testapp_1",
+  "version": "0.0.1",
+  "authors": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "www/components",
+    "www/spec",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "steroids-js": "3.1.x",
+    "steroids-addons": "https://17201:GAWQEFD7SD6WCWCLHYM4P5VM6CWV94JJS5K9XLYCCUA98VBG29NR378N7S29VGBQ75HV8RULZMTQ@addons.appgyver.com/steroids-addons.js?version=3.1.0"
+  }
+}

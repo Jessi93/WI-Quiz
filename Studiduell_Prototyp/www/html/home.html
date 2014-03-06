@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <meta charset="utf8">
+	  <meta name="viewport" content="width=device-width">
+	  <title>My Steroids App</title>
+
+
+	  <link rel="stylesheet" href="../vendor/topcoat/css/topcoat-mobile-light.css" />
+	  <link rel="stylesheet" href="../css/application.css" />
+	  <link rel="stylesheet" href="../css/rundenuebersicht.css" />
+		<link rel="stylesheet" href="../css/home.css" />
+
+	  <script src="../js/onerror.js"></script>
+	  <script src="../js/console.log.js"></script>
+
+
+	<script src="../js/jquery-1.11.0.min.js"></script>
+	  <!-- cordova.js is served from localhost to ensure the correct version -->
+	  <script src="http://localhost/cordova.js"></script>
+	  <script src="../components/steroids-js/steroids.js"></script>
+
+	  <script src="../js/rundenuebersicht.js"></script>
+		<script src="../js/application.js"></script>
+			<script src="../js/homescreen.js"></script>
+			<script src="/components/steroids-addons/index.js"></script>
+	</head>
+
+	<body>
+		<h2>Homescreen</h2>
+				
+		<img src="../images/profilbild.png">
+		<div id="username_div">Mein Username</div>
+
+		
+		<div class="content-padded">
+			<button id="neuesSpielStartenButton" class="topcoat-button--large--cta center full custom_icon_button_right " ontouchend="openNeuesSpielScreen()">Neues Spiel starten</button>
+		</div> 
+		
+		<div id="ActionRequiredGames_div">
+			<!-- Hier werden in der "SYNC" methode die Spiele eingefügt, bei deinen der Nutzer dran ist!
+			<div class="content-padded">
+				<button class="topcoat-button--large center full custom_icon_button_left Rand2 textklein yourTurnButton" ontouchend ="openRundenuebersicht(1234)" >Du bist an der Reihe gegen <b>Spieler 1</b> </a>
+			</div>
+			-->
+		</div>	
+		
+		
+		<h2>Warten auf:</h2>
+		<div id="WaitingForGames_div">
+		<!-- Hier werden in der "SYNC" methode die Spiele eingefügt, bei deinen auf den Gegner gewartet wird!
+			<div class="content-padded">
+				<button class="topcoat-button--large--quiet center full custom_icon_button_left Rand1 textklein yourTurnButton" ontouchend="openRundenuebersicht(1234)" >Paul Kotte</b> </a>
+			</div>
+			-->
+		</div>
+	</body>
+</html>

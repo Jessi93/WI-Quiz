@@ -1,0 +1,6 @@
+.DS_Store
+/dist
+node_modules
+sonar-project.properties
+RunSonarScan.bat
+.sonar

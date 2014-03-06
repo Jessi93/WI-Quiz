@@ -1,0 +1,47 @@
+body {
+	background-color: #1C1C1C;
+}
+
+.custom_List_item {
+	/*
+	margin-left: 60px; 
+	vertical-align: middle;
+	list-style-image: url('../images/profilbild_Klein.jpg'); 
+	list-style-type: none;
+	*/
+}
+.custom_icon_button {
+	margin-bottom: 1em;
+	width: 100%; 
+	background-repeat: no-repeat;
+	background-position: right;
+	background-size: 3em;
+}
+
+#ergebnislisteDiv {
+	visibility: hidden;
+}
+
+#search_username_input{
+ background-image: url("../images/Lupe.png");
+ 
+}
+#sucheButton{
+background-image: url("../images/Lupe.png");
+width: 3.4em;
+height: 95%;
+margin-top: 0.4em;
+}
+
+#SuchTabelle_div {
+	display: table;
+	width: 100%;
+}
+
+.row {
+	display: table-row;
+}
+
+.row>div {
+	display: table-cell;
+}

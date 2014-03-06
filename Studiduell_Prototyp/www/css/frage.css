@@ -1,0 +1,66 @@
+body {
+	background-color: #1C1C1C;
+}
+
+#kategorieDiv {
+	margin-top: 0.3em;
+	color: white;
+	background-color: #00BFFF;
+	opacity: 0.9;
+	font-size: 2em;
+}
+
+#frageDiv {
+	color: white;
+	background-color: #A4A4A4;
+	opacity: 0.7;
+	font-size: 2em;
+	padding: 2em;
+	margin: 0.5em;
+	border-radius: 16px;
+}
+
+#antwortTabelle {
+	display: table;
+	color: white;
+	width: 100%;
+}
+
+.row {
+	display: table-row;
+}
+
+.row>button {
+	display: table-cell;
+	width: 45%;
+}
+
+.antwortButton {
+	margin: 0.2em;
+	width: 100%;
+}
+
+.buttonAusgewaehlt {
+	background-color: blue !important;
+	color: white !important;
+}
+
+.buttonFalsch {
+	background-color: red !important;
+}
+
+.buttonRichtig {
+	background-color: green !important;
+}
+
+.buttonRand {
+	border: 2px solid #819FF7;
+}
+
+/*TODO*/
+.antwortGegner{
+}
+
+#nextButtonDiv {
+	margin-top: 2em;
+}

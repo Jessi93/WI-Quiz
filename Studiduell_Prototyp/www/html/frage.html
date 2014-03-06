@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <meta charset="utf8">
+	  <meta name="viewport" content="width=device-width">
+	  <title>Studiduell</title>
+	  
+	  <link rel="stylesheet" href="../vendor/topcoat/css/topcoat-mobile-light.css" />
+	  <link rel="stylesheet" href="../css/frage.css" />
+	  
+	  <script src="../js/jquery-1.11.0.min.js"></script>
+	  <!-- cordova.js is served from localhost to ensure the correct version -->
+	  <script src="http://localhost/cordova.js"></script>
+	  <script src="../components/steroids-js/steroids.js"></script>
+	  
+	  <script src="../js/frage.js"></script>
+	  <script src="../js/application.js"></script>
+	  <script src="/components/steroids-addons/index.js"></script>
+	</head>
+	<body>
+		<div id="kategorieDiv"></div>
+		<div id="frageDiv"></div>
+		
+		<div id="antwortTabelle">
+			<div class="row">
+				<button id="antwort1" class="topcoat-button--large antwortButton" ontouchend="markiereAntwort(this);"></button>
+				<button id="antwort2" class="topcoat-button--large antwortButton" ontouchend="markiereAntwort(this);"></button>
+			</div>
+			<div class="row">
+				<button id="antwort3" class="topcoat-button--large antwortButton" ontouchend="markiereAntwort(this);"></button>
+				<button id="antwort4" class="topcoat-button--large antwortButton" ontouchend="markiereAntwort(this);"></button>
+			</div>
+		</div>
+		
+		<div id="nextButtonDiv" class="center">
+			<button id="nextButton" class="topcoat-button--large" ontouchend="weiter();">Weiter</button>
+		</div>
+	</body>
+</html>
