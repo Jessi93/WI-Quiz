@@ -35,12 +35,13 @@ function fetchServerData() {
 	
 	/*
 	$.ajax( {
-			url:"http://192.168.0.105:8090/Studiduell/user/sync",
+			url:"http://192.168.0.108:8090/Studiduell/user/sync",
 			type:"POST",
 			success:function(obj){handleServerData(obj);},
 			error:function(obj){alert(JSON.stringify(obj));},
 			username:v_username,
-			passwort:v_password
+			passwort:v_password,
+			data:"0123456789"
 			}); 
 	*/
 	
