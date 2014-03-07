@@ -3,6 +3,7 @@ body {
 }
 
 .custom_List_item {
+	
 	/*
 	margin-left: 60px; 
 	vertical-align: middle;
@@ -29,8 +30,16 @@ body {
 #sucheButton{
 background-image: url("../images/Lupe.png");
 width: 3.4em;
-height: 95%;
+height: 3.4em;
 margin-top: 0.4em;
+}
+
+#addFriendButton{
+background-image: url("../images/addicon.png");
+background-position: center;
+width: 2.5em;
+height: 2.5em;
+border-radius: 50%;
 }
 
 #SuchTabelle_div {

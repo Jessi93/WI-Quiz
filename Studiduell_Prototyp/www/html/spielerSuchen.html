@@ -18,6 +18,7 @@
 		<script src="../js/jquery-1.11.0.min.js"></script>
 		<script src="../js/application.js"></script>
 		<script src="../js/spielerSuchen.js"></script>
+		<script src="/components/steroids-addons/index.js"></script>
 	</head>
 	<body>
 		<div class="content-padded">
@@ -36,7 +37,7 @@
 
 				<!-- Ergebnisliste -->
 			<div id="ergebnislisteDiv" class="topcoat-list">
-				<h3 class="topcoat-list__header">Suchergebnis</h3>
+				<h1 class="topcoat-list__header">Suchergebnis</h1>
 				<ul class="topcoat-list__container" id="ergebnislisteErweitern">
 					<!--tbd:  Profilbild! -->
 				<!--obsolet
@@ -49,10 +50,11 @@
 				<li class="topcoat-list__item custom_List_item" ontouchend="test()">
 					Phil
 				</li>
-				<li class="topcoat-list__item custom_List_item" ontouchend ="test()">
-					Phil123
+				<li class="topcoat-list__item custom_List_item" ontouchend ="createNewGame(this)">
+					Phil123<button id="addFriendButton" class="topcoat-icon-button custom_icon_button" onclick="addAsFriend('Phil123')"></button>
 				</li>
 				-->
+				
 			  </ul>
 			</div>
 		</div>
