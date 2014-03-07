@@ -16,7 +16,7 @@ function setKategorien(obj) {
 
 function loadCategoriesFromServer() {
 	$.ajax( {
-		url:"http://192.168.0.105:8090/Studiduell/game/randomCategoriesFor/123",
+		url:serverURL + "game/randomCategoriesFor/123",
 		type:"POST",
 		success:function(obj){setKategorien(obj);},
 		error:function(obj){alert(JSON.stringify(obj));}

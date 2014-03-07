@@ -11,16 +11,16 @@ function loadFriendslistFromServer() {
 /* 	1. hole die Freundesliste des Users vom Server
 		2. füge dem html Dokument für jeden user in der Freundesliste einen Eintrag "Freund" hinzu.
 	*/
-	/* 	$.ajax( {
-		url:"http://192.168.0.105:8090/Studiduell/settings/friends",
+		$.ajax( {
+		url:serverURL + "Studiduell/settings/friends",
 		type:"GET",
 		success:function(obj){addFriendToScreen(obj);},
 		error:function(obj){alert(JSON.stringify(obj));}
-	}); */
+	});
 	
-	//Test (Testdaten ohne Serveranbindung!)
+	/* //Test (Testdaten ohne Serveranbindung!)
 	var tmpServerData = new Array("Anita", "Bettina", "Christa", "Doris");
-	addFriendToList(tmpServerData);
+	addFriendToList(tmpServerData); */
 }
 
 function addFriendToList(obj){
@@ -33,15 +33,15 @@ function addFriendToList(obj){
 
 
 function createNewGameFriendlist(friendName){
-/* $.ajax( {
-		url:"http://192.168.0.105:8090/Studiduell/game/create/with/" + friendName,
+$.ajax( {
+		url:serverURL + "game/create/with/" + friendName,
 		type:"POST",
 		success:function(){openHomeView();},
 		error:function(obj){alert(JSON.stringify(obj));}
-		}); */
+		});
 		
 		//Test
-		openHomeView();
+		//openHomeView();
 		
 }
 
@@ -54,15 +54,15 @@ Wenn kein passendes Spiel vorhanden ist, starte ein neues Spiel gegen "Unbekannt
 --> beim laden des homescreens wird das Spiel angezeigt!*/
 
 	// Schicke Anfrage an Server
-	/* $.ajax( {
-		url:"http://192.168.0.105:8090/Studiduell/game/create/random",
+	$.ajax( {
+		url:serverURL + "Studiduell/game/create/random",
 		type:"POST",
 		success:function(){openHomeView();},
 		error:function(obj){alert(JSON.stringify(obj));}
-		}); */
+		});
 		
 		//Test
-		openHomeView();
+		//openHomeView();
 }
 
 

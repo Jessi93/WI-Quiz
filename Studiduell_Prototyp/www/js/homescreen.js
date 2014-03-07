@@ -35,7 +35,8 @@ function fetchServerData() {
 	
 	/*
 	$.ajax( {
-			url:"http://192.168.0.108:8090/Studiduell/user/sync",
+			url:serverURL + "user/sync",
+
 			type:"POST",
 			success:function(obj){handleServerData(obj);},
 			error:function(obj){alert(JSON.stringify(obj));},
