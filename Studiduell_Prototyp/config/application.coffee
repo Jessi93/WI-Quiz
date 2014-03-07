@@ -1,10 +1,10 @@
 # For an explanation of the steroids.config properties, see the guide at
 # http://guides.appgyver.com/steroids/guides/project_configuration/config-application-coffee/
 
-steroids.config.name = "Testapp_1"
+steroids.config.name = "Studiduell"
 
 # -- Initial Location --
-steroids.config.location = "http://localhost/index.html"
+steroids.config.location = "http://localhost/html/login.html"
 # -- "http://localhost/tutorial.html"
 # -- "cameraExample.html"
 

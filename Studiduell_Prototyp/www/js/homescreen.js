@@ -17,8 +17,8 @@ function sync() {
 //alert("sync wurde aufgerufen");
 
 //zu testzwecken: setze username & password im local storage (normalerweise geschieht das im login!)
-localStorage.setItem("username", "Kevin01");
-localStorage.setItem("password", "secret");
+//localStorage.setItem("username", "Kevin01");
+//localStorage.setItem("password", "secret");
 
 //Setze Usernamen
 $("#username_div").text(localStorage.getItem("username"));
@@ -36,7 +36,6 @@ function fetchServerData() {
 	/*
 	$.ajax( {
 			url:serverURL + "user/sync",
-
 			type:"POST",
 			success:function(obj){handleServerData(obj);},
 			error:function(obj){alert(JSON.stringify(obj));},
@@ -233,15 +232,39 @@ function showDuelRequest(gameData){
 function onConfirmDuelRequest(buttonIndex, gameData){
 	//alert("gameData transferred"+JSON.stringify(gameData));
 
+	var v_username = localStorage.getItem("username");
+	var v_password = localStorage.getItem("password");
+	
 	switch (buttonIndex) {
 		case 1: //Duell wurde angenommen!
+		//Zeige button für dieses Spiel im Homescreen
 		addActionRequirendGame(gameData);
-		//TODO  bestätige Duellannahme bei Server
-		alert("TODO: Duellannahme bei Server bestätigt");
+		// bestätige Duellannahme bei Server
+		//alert("TODO: Duellannahme bei Server bestätigt");
+				
+		$.ajax( {
+			url:serverURL + "game/answerInvite/"+gameData.spielID,
+			type:"POST",
+			success:function(obj){alert("Duellannahme bei Server erfolgreich bestätigt!");},
+			error:function(obj){alert("Fehler bei Bestätigung der Duellannahme"+JSON.stringify(obj));},
+			username:v_username,
+			passwort:v_password,
+			data:"true"
+			}); 
+			
 			break;
 		case 2: //Duellanfrage wurde abgelehnt!
-		//TODO: --> bestätige Duellablehnung bei Server
-		alert("TODO: Duellablehnung bei Server bestätigt");
+		//bestätige Duellablehnung bei Server
+		//alert("TODO: Duellablehnung bei Server bestätigt");		
+		$.ajax( {
+			url:serverURL + "game/answerInvite/"+gameData.spielID,
+			type:"POST",
+			success:function(obj){alert("Duellablehnung bei Server erfolgreich bestätigt!");},
+			error:function(obj){alert("Fehler bei Bestätigung der Duellablehnung"+JSON.stringify(obj));},
+			username:v_username,
+			passwort:v_password,
+			data:"false"
+			});
 			break;
 	}
 }
