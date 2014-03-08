@@ -59,3 +59,10 @@ margin: -8px;
 text-align: left;
 background-image: url("../images/profilbild.png">);
 }
+
+#AbmeldenButton{
+color: white;
+text-shadow: 0 0px rgba(0,0,0,0.36);
+background-position: 0px 0px;
+background-color: #ec514e;
+}

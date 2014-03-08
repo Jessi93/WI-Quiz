@@ -2,8 +2,7 @@ function init() {
 	$("#ausgewaehlteKategorie").text("Kategorie: " + localStorage.getItem("selectedCategory"));
 }
 function starteSpiel() {
-	var newView = new steroids.views.WebView("html/frage.html");
-	steroids.layers.push(newView);
+	popViewPushView("html/frage.html");
 }
 
 document.addEventListener("deviceready", init, false);

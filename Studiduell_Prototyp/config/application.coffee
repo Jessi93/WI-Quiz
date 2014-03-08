@@ -4,7 +4,7 @@
 steroids.config.name = "Studiduell"
 
 # -- Initial Location --
-steroids.config.location = "http://localhost/html/login.html"
+steroids.config.location = "http://localhost/html/home.html"
 # -- "http://localhost/tutorial.html"
 # -- "cameraExample.html"
 

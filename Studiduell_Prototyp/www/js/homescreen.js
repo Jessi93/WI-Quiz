@@ -1,11 +1,29 @@
+checkCredentials();
+
+function checkCredentials() {
+	//alert("checkCredentials wurde aufgerufen!");
+	//zu testzwecken: setze localstorage username & pw auf leer! --> zeige login screen immer an!
+	localStorage.removeItem("username");
+	//zu testzwecken: setze username --> gehe direkt in den home screen!
+	//localStorage.setItem("username", "Kevin01");
+	//localStorage.setItem("password", "secret");
+	
+	if(isEmpty(localStorage.getItem("username"))) {
+	//im localstorage gibt es keinen Username --> gehe zum Login Screen 
+	var newView = new steroids.views.WebView("html/login.html");
+	steroids.layers.push(newView);
+	
+	}else{
+	//im localstorage gibt es einen Username --> home screen muss geladen werden! (mit sync call!)
+	}
+}
+
 function openRundenuebersicht(spielID) {
 	//TODO PHIL:
 	//hole daten für rundenübersicht für Spiel ID vom Server 
 	//schreibe Rundenüberischtsdaten in localstorage, damit "rundenübersicht" screen die richtigen Daten anzeigen kann
 	var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
 	steroids.layers.push(rundenuebersichtView);
-	
-	
 }
 
 function openNeuesSpielScreen() {
@@ -14,17 +32,31 @@ function openNeuesSpielScreen() {
 }
 
 function sync() {
-//alert("sync wurde aufgerufen");
+	var credentialsAvailable;
+	if(isEmpty(localStorage.getItem("username"))) {
+	//im localstorage gibt es keinen Username 
+	credentialsAvailable = false;
+	}else{
+	//im localstorage gibt es einen Username 
+	credentialsAvailable = true;
+	}
+	
 
 //zu testzwecken: setze username & password im local storage (normalerweise geschieht das im login!)
-//localStorage.setItem("username", "Kevin01");
-//localStorage.setItem("password", "secret");
+	localStorage.setItem("username", "Kevin01");
+	localStorage.setItem("password", "secret");
 
-//Setze Usernamen
-$("#username_div").text(localStorage.getItem("username"));
+//Sync darf nur ausgeführt wrden, wenn nicht direkt zum Login screen weitergeleitet wird (username vorhanden ist!)
+	if(credentialsAvailable){
+	
+	//alert("sync wurde aufgerufen");
+	
+	//Setze Usernamen
+	$("#username_div").text(localStorage.getItem("username"));
 
-//lade Hauptmenüdaten vom Server & fügre die entsprechenden HTML Elemente hinzu
-fetchServerData();
+	//lade Hauptmenüdaten vom Server & fügre die entsprechenden HTML Elemente hinzu
+	fetchServerData();
+	}
 }
 
 function fetchServerData() {
@@ -189,7 +221,6 @@ function handleServerData(serverSyncData){
 
 }
 
-
 function addActionRequirendGame(gameData){
 	//alert("addActionRequirendGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
@@ -268,5 +299,17 @@ function onConfirmDuelRequest(buttonIndex, gameData){
 			break;
 	}
 }
+
+function abmelden(){
+//lösche credentials in localstorage
+localStorage.removeItem("username");
+localStorage.removeItem("username");
+//zeige login screen (neuladen der seite --> username nicht gesetzt --> Login öffnet sich!
+window.location.reload();
+
+}
+
+
 //sobald das Dokument rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
 document.addEventListener("deviceready", sync, false);
+document.addEventListener("resume", test, false);

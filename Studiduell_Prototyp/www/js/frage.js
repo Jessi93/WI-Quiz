@@ -5,7 +5,7 @@ function init() {
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
 	setAntworten(questions[questionCounter]);
-	alert(JSON.stringify(questions[questionCounter]));
+	//alert(JSON.stringify(questions[questionCounter]));
 	
 }
 
