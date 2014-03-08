@@ -1,5 +1,10 @@
 function init() {
-	$("#ausgewaehlteKategorie").text("Kategorie: " + localStorage.getItem("selectedCategory"));
+	var tmpGameInfo = JSON.parse(localStorage.getItem("gameInfo"));
+	var round = tmpGameInfo.aktuelleRunde;
+	var opponent = (tmpGameInfo.spieler1.benutzername == tmpGameInfo.wartenAuf.benutzername) ? tmpGameInfo.spieler2.benutzername : tmpGameInfo.spieler1.benutzername; // in this screen, it is my turn!
+	var category = localStorage.getItem("selectedCategory");
+	$("#spielBeschreibung").text("Runde " + round + " gegen " + opponent);
+	$("#ausgewaehlteKategorie").text("Kategorie: " + category);
 }
 function starteSpiel() {
 	popViewPushView("html/frage.html");
