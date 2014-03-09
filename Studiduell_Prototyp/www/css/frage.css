@@ -83,6 +83,5 @@ body {
 }
 
 #nextButton {
-	height: 1.5em;
-	text-align: center;
+	margin-top: 0.75em;
 }
