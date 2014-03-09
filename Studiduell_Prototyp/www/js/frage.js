@@ -1,8 +1,10 @@
+var gameInfo;
 var roundStart;
 var questions;
 var questionCounter;
 
 function init() {
+	gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 	roundStart = localStorage.getItem("gameQuestionContinue") === null;
 	questions = roundStart ? JSON.parse(localStorage.getItem("questions")) : JSON.parse(localStorage.getItem("gameQuestionContinue")).questions;
 	questionCounter = localStorage.getItem("questionCounter");
@@ -69,7 +71,34 @@ function weiter() {
 		correctlyAnswered = false;
 	}
 	
-	alert("Bewertung: " + correctlyAnswered);
+	var answers;
+	if(questionCounter == 0) {
+		// create new answer array
+		answers = new Array();
+	} else {
+		answers = JSON.parse(localStorage.getItem("answers"));
+	}
+	
+	var submitData = {
+		"spielID" : gameInfo.spielID,
+		"runde" : gameInfo.aktuelleRunde,
+		"fragenID" : question.fragenID,
+		"richtig" : correctlyAnswered
+	};
+	answers.push(submitData);
+	
+	alert("Vorbereitet: " + JSON.stringify(answers));
+	
+	localStorage.setItem("questionCounter", ++questionCounter);
+	
+	if(questionCounter != 3) {
+		localStorage.setItem("answers", JSON.stringify(answers));
+		popViewPushView("html/frage.html");
+	} else {
+		//TODO send data to server
+		localStorage.removeItem("answers");
+		popViewPushView("html/rundenuebersicht.html");
+	}
 }
 
 document.addEventListener("deviceready", init, false);
