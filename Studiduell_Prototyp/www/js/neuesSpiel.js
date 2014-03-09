@@ -5,8 +5,7 @@ function init() {
 }
 
 function spielerSuchenSeite() {
-	var SpielerSuchenView = new steroids.views.WebView("html/spielerSuchen.html");
-	steroids.layers.push(SpielerSuchenView);
+	popViewPushView("html/spielerSuchen.html");
 }
 
 function loadFriendslistFromServer() {
@@ -28,7 +27,7 @@ function loadFriendslistFromServer() {
 function addFriendToList(obj){
 	//Freundesliste befüllen
 	for(var i=0;i<obj.length;i++){
-	$("#freundeslisteErweitern").append("<li class='topcoat-list__item custom_List_item' onclick='createNewGameFriendlist(this)'>"+obj[i]+"</li>");
+	$("#freundeslisteErweitern").append("<li class='topcoat-list__item custom_List_item' ontouchend='createNewGameFriendlist(this)'>"+obj[i]+"</li>");
 	}
 }
 
@@ -68,8 +67,7 @@ Wenn kein passendes Spiel vorhanden ist, starte ein neues Spiel gegen "Unbekannt
 
 
 function openHomeView(){
-var homeScreenView = new steroids.views.WebView("html/home.html");
-	steroids.layers.push(homeScreenView);
+popViewPushView("html/home.html");
 }
 
 //document.addEventListener("deviceready", init, false);

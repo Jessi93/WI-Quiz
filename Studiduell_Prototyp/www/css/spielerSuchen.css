@@ -2,7 +2,7 @@ body {
 	background-color: #1C1C1C;
 }
 
-.custom_List_item {
+.custom_List_item 
 	
 	/*
 	margin-left: 60px; 
@@ -11,38 +11,43 @@ body {
 	list-style-type: none;
 	*/
 }
-.custom_icon_button {
-	margin-bottom: 1em;
-	width: 100%; 
+
+#search_username_input{
+	background-image: url("../images/Lupe.png"); 
+}
+#sucheButton{
+	background-image: url("../images/Lupe.png");
 	background-repeat: no-repeat;
 	background-position: right;
 	background-size: 3em;
-}
+	
+	width: 3.4em;
+	height: 3.4em;
+	
+	margin-top: 1em;
+	padding-bottom: 1.6em;
 
-#ergebnislisteDiv {
-	visibility: hidden;
-}
-
-#search_username_input{
- background-image: url("../images/Lupe.png");
- 
-}
-#sucheButton{
-background-image: url("../images/Lupe.png");
-width: 3.4em;
-height: 3.4em;
-margin-top: 0.4em;
 }
 
 #addFriendButton{
-background-image: url("../images/addicon.png");
-background-position: center;
-width: 2.5em;
-height: 2.5em;
-border-radius: 50%;
+	background-image: url("../images/addicon.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 3em;
+	
+	width: 2.4em;
+	height: 2.4em;
+	border-radius: 50%;
+	padding-top: 0.7em;
 }
 
-#SuchTabelle_div {
+#suchTabelle_div {
+	display: table;
+	width: 100%; 
+}
+
+#ergebnislisteDiv{
+	visibility: hidden;
 	display: table;
 	width: 100%;
 }
@@ -53,4 +58,20 @@ border-radius: 50%;
 
 .row>div {
 	display: table-cell;
+}
+
+.leftColumn, .rightColumn {
+	display: table-cell;
+}
+
+.leftColumn {
+    display: table-cell;
+	text-align: left;
+	width: 90%;
+}
+
+.rightColumn {
+	display: table-cell;
+	text-align: middle;
+	width: 10%;
 }

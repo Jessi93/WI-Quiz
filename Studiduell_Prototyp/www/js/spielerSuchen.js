@@ -54,13 +54,12 @@ arrayToSort.sort(sortAlphaNum);
 }
 
 
-
 function addResultToList(obj){
 	sortRight(obj);
 	// Ergebnisliste befüllen
 	for(var i=0;i<obj.length;i++){
 	//Button zum befreunden ergänzen
-	$("#ergebnislisteErweitern").append('<li class="topcoat-list__item custom_List_item" ontouchend="createNewGame(this)">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button custom_icon_button" ontouchend="addAsFriend(\''+obj[i]+'\')"></button>');
+	$("#ergebnislisteErweitern").append('<div class="row"><li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGame(this)">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button rightColumn" ontouchend="addAsFriend(\''+obj[i]+'\')"></button></div>');
 	}
 	
 	// Zeige Ergebnisliste an
@@ -68,11 +67,12 @@ function addResultToList(obj){
 
 }
 
+
 function addAsFriend(fName) {
 /*$.ajax( {
 		url:serverURL + "settings/friends/" + fName,
 		type:"PUT",
-		success:alert("Sie sind jetzt mit " + fName + " befreundet");
+		success:navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
 		*/
@@ -95,8 +95,7 @@ function createNewGame(gegnerName){
 
 
 function openHomeView(){
-var homeScreenView = new steroids.views.WebView("html/home.html");
-	steroids.layers.push(homeScreenView);
+popViewPushView("html/home.html");
 }
  
 

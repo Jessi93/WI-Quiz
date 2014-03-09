@@ -23,13 +23,13 @@
 	<body>
 		<div class="content-padded">
 			<!-- Spieler suchen -->
-			<div id="SuchTabelle_div">
-				<div id= "Such_Tabellen_Zeile_div" class="row">
+			<div id="suchTabelle_div">
+				<div id= "such_Tabellen_Zeile_div" class="row">
 					<div>
 					<input id="search_username_input" type="search" value="" placeholder="Username" class="topcoat-search-input">
 					</div>
 					<div>
-					<button id="sucheButton" class="topcoat-icon-button custom_icon_button" ontouchend="spielerSuchen()"></button>
+					<button id="sucheButton" class="topcoat-icon-button" ontouchend="spielerSuchen()"></button>
 					</div>
 				</div>
 			</div>
@@ -50,11 +50,13 @@
 				<li class="topcoat-list__item custom_List_item" ontouchend="test()">
 					Phil
 				</li>
-				<li class="topcoat-list__item custom_List_item" ontouchend ="createNewGame(this)">
-					Phil123<button id="addFriendButton" class="topcoat-icon-button custom_icon_button" onclick="addAsFriend('Phil123')"></button>
+				<div class="row">
+				<li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGame(this)">
+					Phil123
 				</li>
+				<button id="addFriendButton" class="topcoat-icon-button custom_icon_button rightColumn" ontouchend="addAsFriend('Phil123')"></button>
+				</div>
 				-->
-				
 			  </ul>
 			</div>
 		</div>
