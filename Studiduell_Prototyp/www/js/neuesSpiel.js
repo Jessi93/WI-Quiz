@@ -1,5 +1,3 @@
-init();
-
 function init() {
 	loadFriendslistFromServer();
 }
@@ -70,4 +68,4 @@ function openHomeView(){
 popViewPushView("html/home.html");
 }
 
-//document.addEventListener("deviceready", init, false);
+document.addEventListener("deviceready", init, false);
