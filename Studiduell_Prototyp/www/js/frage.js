@@ -3,11 +3,16 @@ var roundStart;
 var questions;
 var questionCounter;
 
+var opponentAnswers;
+
 function init() {
 	gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 	roundStart = localStorage.getItem("gameQuestionContinue") === null;
 	questions = roundStart ? JSON.parse(localStorage.getItem("questions")) : JSON.parse(localStorage.getItem("gameQuestionContinue")).questions;
 	questionCounter = localStorage.getItem("questionCounter");
+	// continue-specific
+	opponentAnswers = roundStart ? null : JSON.parse(localStorage.getItem("gameQuestionContinue")).answers;
+	
 	
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
@@ -152,6 +157,11 @@ function nextShowResult() {
 		}
 	}
 	
+	// show opponent's answer if user finishes the current round
+	if(!roundStart) {
+		animateOpponentsAnswers();
+	}
+	
 	return correctlyAnswered;
 }
 
@@ -186,6 +196,53 @@ function nextNextQuestion(correctlyAnswered) {
 		localStorage.removeItem("answers");
 		popViewPushView("html/rundenuebersicht.html");
 	}
+}
+
+function animateOpponentsAnswers() {
+	var opponentName = opponentAnswers[0].benutzername;
+	
+	// apply opponent's name on those popup divs that represent the opponent's answer
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit1_check) {
+		$("#antwort1Popup").text(opponentName);
+	}
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit2_check) {
+		$("#antwort2Popup").text(opponentName);
+	}
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit3_check) {
+		$("#antwort3Popup").text(opponentName);
+	}
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit4_check) {
+		$("#antwort4Popup").text(opponentName);
+	}
+	
+	// align popup divs
+	var posA = $("#antwort1").position();
+	var posB = $("#antwort2").position();
+	var posC = $("#antwort3").position();
+	var posD = $("#antwort4").position();
+	
+	var calcATop = ($("#antwort1").height() / 2) + posA.top - ($("#antwort1Popup").height() / 2);
+	var calcALeft = ($("#antwort1").width() / 2) + posA.left - ($("#antwort1Popup").width() / 2);
+	var calcBTop = ($("#antwort2").height() / 2) + posB.top - ($("#antwort2Popup").height() / 2);
+	var calcBLeft = ($("#antwort2").width() / 2) + posB.left - ($("#antwort2Popup").width() / 2);
+	var calcCTop = ($("#antwort3").height() / 2) + posC.top - ($("#antwort3Popup").height() / 2);
+	var calcCLeft = ($("#antwort3").width() / 2) + posC.left - ($("#antwort3Popup").width() / 2);
+	var calcDTop = ($("#antwort4").height() / 2) + posD.top - ($("#antwort4Popup").height() / 2);
+	var calcDLeft = ($("#antwort4").width() / 2) + posD.left - ($("#antwort4Popup").width() / 2);
+	
+	$("#antwort1Popup").css({"top" : calcATop, "left" : calcALeft});
+	$("#antwort2Popup").css({"top" : calcBTop, "left" : calcBLeft});
+	$("#antwort3Popup").css({"top" : calcCTop, "left" : calcCLeft});
+	$("#antwort4Popup").css({"top" : calcDTop, "left" : calcDLeft});
+	
+	// animate all popup divs
+	$(".popupDiv").animate( {
+		"font-size" : "60px",
+		"opacity" : 0
+	}, 600, function() {
+		// on completion
+		$(this).remove();
+	});
 }
 
 document.addEventListener("deviceready", init, false);
