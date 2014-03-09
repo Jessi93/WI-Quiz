@@ -23,17 +23,17 @@
 		
 		<div id="antwortTabelle">
 			<div class="row">
-				<button id="antwort1" class="topcoat-button--large antwortButton" ontouchend="markiereAntwort(this);"></button>
-				<button id="antwort2" class="topcoat-button--large antwortButton" ontouchend="markiereAntwort(this);"></button>
+				<button id="antwort1" class="topcoat-button--large antwortButton" ontouchend="markAnswer(this);"></button>
+				<button id="antwort2" class="topcoat-button--large antwortButton" ontouchend="markAnswer(this);"></button>
 			</div>
 			<div class="row">
-				<button id="antwort3" class="topcoat-button--large antwortButton" ontouchend="markiereAntwort(this);"></button>
-				<button id="antwort4" class="topcoat-button--large antwortButton" ontouchend="markiereAntwort(this);"></button>
+				<button id="antwort3" class="topcoat-button--large antwortButton" ontouchend="markAnswer(this);"></button>
+				<button id="antwort4" class="topcoat-button--large antwortButton" ontouchend="markAnswer(this);"></button>
 			</div>
 		</div>
 		
 		<div class="center">
-			<button id="nextButton" class="topcoat-button--large" ontouchend="weiter();">Weiter</button>
+			<button id="nextButton" class="topcoat-button--large" disabled ontouchend="next();">Weiter</button>
 		</div>
 	</body>
 </html>

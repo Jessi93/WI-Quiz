@@ -31,20 +31,64 @@ function setAntworten(question) {
 	$("#antwort4").text(question.antwortmoeglichkeit4);
 }
 
-function markiereAntwort(button) {
+function markAnswer(button) {
 	var btn = $(button);
 	if (!btn.hasClass("buttonAusgewaehlt")) {
-	// Der Button wird ausgewählt
+		// Weiter-Button aktivieren, falls bisher keine Antworten ausgewählt wurden.
+		if(getSelectedButtonCount() == 0) {
+			$("#nextButton").removeAttr("disabled");
+		}
+	
+		// Der Button wird ausgewählt
 		btn.addClass("buttonAusgewaehlt");
 		btn.addClass("buttonRand");
+		
+		
  	}else {
-	// Button wird abgewählt
+		// Weiter-Button deaktivieren, wenn keine Antwortmöglichkeit ausgewählt ist
+		if(getSelectedButtonCount() == 1) {
+			$("#nextButton").attr("disabled", "");
+		}
+		
+		// Button wird abgewählt
 		btn.removeClass("buttonAusgewaehlt");
 		btn.removeClass("buttonRand");
 	}
 }
 
-function weiter() {
+function getSelectedButtonCount() {
+	var count = 0;
+	if($("#antwort1").hasClass("buttonAusgewaehlt")) {
+		count++;
+	}
+	if($("#antwort2").hasClass("buttonAusgewaehlt")) {
+		count++;
+	}
+	if($("#antwort3").hasClass("buttonAusgewaehlt")) {
+		count++;
+	}
+	if($("#antwort4").hasClass("buttonAusgewaehlt")) {
+		count++;
+	}
+	
+	return count;
+}
+
+var result = null;
+function next() {
+	if(result === null) {
+		// Color buttons
+		result = nextShowResult();
+	} else {
+		// Move to next screen
+		nextNextQuestion(result);
+	}
+}
+
+/**
+  * @return whether the user has answered the question correctly.
+  */
+function nextShowResult() {
 	var correctlyAnswered = true;
 	
 	// Auswertung
@@ -53,9 +97,10 @@ function weiter() {
 	var answer2 = $("#antwort2");
 	var answer3 = $("#antwort3");
 	var answer4 = $("#antwort4");
-	//fragenid, rundenid, antwortrichtig? übergeben
+	
 	question = questions[questionCounter];
 	
+	// Evaluate whether the question was answered correctly
 	if(((answer1.hasClass("buttonAusgewaehlt") && !question.wahrheitAntwortmoeglichkeit1) ||
 		(!answer1.hasClass("buttonAusgewaehlt") && question.wahrheitAntwortmoeglichkeit1)) ||
 		
@@ -71,7 +116,49 @@ function weiter() {
 		correctlyAnswered = false;
 	}
 	
+	// remove actions of answer buttons
+	answer1.attr("ontouchend", "");
+	answer2.attr("ontouchend", "");
+	answer3.attr("ontouchend", "");
+	answer4.attr("ontouchend", "");
+	
+	// Color the buttons
+	if(question.wahrheitAntwortmoeglichkeit1) {
+		answer1.addClass("buttonRichtig");
+	} else {
+		if(answer1.hasClass("buttonAusgewaehlt")) {
+			answer1.addClass("buttonFalsch");
+		}
+	}
+	if(question.wahrheitAntwortmoeglichkeit2) {
+		answer2.addClass("buttonRichtig");
+	} else {
+		if(answer2.hasClass("buttonAusgewaehlt")) {
+			answer2.addClass("buttonFalsch");
+		}
+	}
+	if(question.wahrheitAntwortmoeglichkeit3) {
+		answer3.addClass("buttonRichtig");
+	} else {
+		if(answer3.hasClass("buttonAusgewaehlt")) {
+			answer3.addClass("buttonFalsch");
+		}
+	}
+	if(question.wahrheitAntwortmoeglichkeit4) {
+		answer4.addClass("buttonRichtig");
+	} else {
+		if(answer4.hasClass("buttonAusgewaehlt")) {
+			answer4.addClass("buttonFalsch");
+		}
+	}
+	
+	return correctlyAnswered;
+}
+
+function nextNextQuestion(correctlyAnswered) {
+	var question = questions[questionCounter];
 	var answers;
+	
 	if(questionCounter == 0) {
 		// create new answer array
 		answers = new Array();
@@ -95,7 +182,7 @@ function weiter() {
 		localStorage.setItem("answers", JSON.stringify(answers));
 		popViewPushView("html/frage.html");
 	} else {
-		//TODO send data to server
+		//TODO send data to server at the end of round
 		localStorage.removeItem("answers");
 		popViewPushView("html/rundenuebersicht.html");
 	}
