@@ -3,13 +3,12 @@ function init() {
 }
 
 function spielerSuchenSeite() {
-	popViewPushView("html/spielerSuchen.html");
+	var newView = new steroids.views.WebView("html/spielerSuchen.html");
+		steroids.layers.push(newView);
 }
 
 function loadFriendslistFromServer() {
-/* 	1. hole die Freundesliste des Users vom Server
-		2. füge dem html Dokument für jeden user in der Freundesliste einen Eintrag "Freund" hinzu.
-	*/
+		//Hole die Freundesliste des Users vom Server
 /* 		$.ajax( {
 		url:serverURL + "Studiduell/settings/friends",
 		type:"GET",
@@ -22,6 +21,7 @@ function loadFriendslistFromServer() {
 	addFriendToList(tmpServerData); 
 }
 
+// Füge dem HTML Dokument für jeden user in der Freundesliste einen Eintrag "Freund" hinzu.
 function addFriendToList(obj){
 	//Freundesliste befüllen
 	for(var i=0;i<obj.length;i++){
@@ -37,20 +37,14 @@ function createNewGameFriendlist(friendName){
 		success:function(){openHomeView();},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
+		*/
 		
 		//Test
-		*/openHomeView();
+		steroids.layers.popAll();
 		
 }
 
 function createNewGameRandom() {
-/* Server überprüft, ob ein passendes Spiel bereits offen ist 
---> füge Spieler hinzu 
---> beim laden des homescreens wird das Spiel angezeigt! 
-
-Wenn kein passendes Spiel vorhanden ist, starte ein neues Spiel gegen "Unbekannt"
---> beim laden des homescreens wird das Spiel angezeigt!*/
-
 	// Schicke Anfrage an Server
 /*	$.ajax( {
 		url:serverURL + "Studiduell/game/create/random",
@@ -58,14 +52,10 @@ Wenn kein passendes Spiel vorhanden ist, starte ein neues Spiel gegen "Unbekannt
 		success:function(){openHomeView();},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
+		*/
 		
 		//Test
-		*/openHomeView();
-}
-
-
-function openHomeView(){
-popViewPushView("html/home.html");
+		steroids.layers.popAll();
 }
 
 document.addEventListener("deviceready", init, false);

@@ -85,18 +85,14 @@ function createNewGame(gegnerName){
 /*$.ajax( {
 		url:serverURL + "game/create/with/" + gegnerName,
 		type:"POST",
-		success:function(){openHomeView();},
+		success:function(){steroids.layers.popAll();},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
-		
+		*/
 		//Test
-		*/openHomeView();
+		steroids.layers.popAll();
+
 }
 
-
-function openHomeView(){
-popViewPushView("html/home.html");
-}
- 
 
 document.addEventListener("deviceready", init, false);
