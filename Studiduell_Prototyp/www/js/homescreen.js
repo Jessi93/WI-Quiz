@@ -1,4 +1,5 @@
 checkCredentials();
+//openRundenuebersicht();
 
 function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
@@ -312,4 +313,3 @@ window.location.reload();
 
 //sobald das Dokument rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
 document.addEventListener("deviceready", sync, false);
-document.addEventListener("resume", test, false);
