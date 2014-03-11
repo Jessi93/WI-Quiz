@@ -48,7 +48,6 @@
 }
 
 .quadrat {
-	border: 1px solid black;
 	width: 2em;
 	height: 2em;
 	border-radius: 3px;
@@ -58,10 +57,13 @@
 
 .greenBackground {
 	background-color: green !important;
+		border: 1px solid black;
 }
 .redBackground {
 	background-color: red !important;
+		border: 1px solid black;
 }
+
 
 .rundeDetailText {
 	font-size:13px;
