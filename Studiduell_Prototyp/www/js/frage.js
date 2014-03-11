@@ -1,12 +1,22 @@
+var gameInfo;
+var roundStart;
+var questions;
+var questionCounter;
+
+var opponentAnswers;
+
 function init() {
-	var questions = JSON.parse(localStorage.getItem("questions"));
-	var questionCounter = localStorage.getItem("questionCounter");
+	gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
+	roundStart = localStorage.getItem("gameQuestionContinue") === null;
+	questions = roundStart ? JSON.parse(localStorage.getItem("questions")) : JSON.parse(localStorage.getItem("gameQuestionContinue")).questions;
+	questionCounter = localStorage.getItem("questionCounter");
+	// continue-specific
+	opponentAnswers = roundStart ? null : JSON.parse(localStorage.getItem("gameQuestionContinue")).answers;
+	
 	
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
 	setAntworten(questions[questionCounter]);
-	alert(JSON.stringify(questions[questionCounter]));
-	
 }
 
 
@@ -26,101 +36,213 @@ function setAntworten(question) {
 	$("#antwort4").text(question.antwortmoeglichkeit4);
 }
 
-function markiereAntwort(button) {
+function markAnswer(button) {
 	var btn = $(button);
 	if (!btn.hasClass("buttonAusgewaehlt")) {
-	// Der Button wird ausgewählt
+		// Weiter-Button aktivieren, falls bisher keine Antworten ausgewählt wurden.
+		if(getSelectedButtonCount() == 0) {
+			$("#nextButton").removeAttr("disabled");
+		}
+	
+		// Der Button wird ausgewählt
 		btn.addClass("buttonAusgewaehlt");
 		btn.addClass("buttonRand");
+		
+		
  	}else {
-	// Button wird abgewählt
+		// Weiter-Button deaktivieren, wenn keine Antwortmöglichkeit ausgewählt ist
+		if(getSelectedButtonCount() == 1) {
+			$("#nextButton").attr("disabled", "");
+		}
+		
+		// Button wird abgewählt
 		btn.removeClass("buttonAusgewaehlt");
 		btn.removeClass("buttonRand");
 	}
 }
 
-//Ermittelt den Wahrheitsgehalt einer Antwort 
-/* /* function getWahrheitsgehalt(antwort) {
-//TODO 
-/*if (antwort.getWahrheit){
-return true;
+function getSelectedButtonCount() {
+	var count = 0;
+	if($("#antwort1").hasClass("buttonAusgewaehlt")) {
+		count++;
+	}
+	if($("#antwort2").hasClass("buttonAusgewaehlt")) {
+		count++;
+	}
+	if($("#antwort3").hasClass("buttonAusgewaehlt")) {
+		count++;
+	}
+	if($("#antwort4").hasClass("buttonAusgewaehlt")) {
+		count++;
+	}
+	
+	return count;
 }
-else{
-return false;
+
+var result = null;
+function next() {
+	if(result === null) {
+		// Color buttons
+		result = nextShowResult();
+	} else {
+		// Move to next screen
+		nextNextQuestion(result);
+	}
 }
-*/
-//test
-	/* switch (antwort) {
-	  case "antwort1":
-		return true;
-	  case "antwort2":
-		return true;
-	  case "antwort3":
-		return false;
-	  case "antwort4":
-		return true;
+
+/**
+  * @return whether the user has answered the question correctly.
+  */
+function nextShowResult() {
+	var correctlyAnswered = true;
+	
+	// Auswertung
+	var question;
+	var answer1 = $("#antwort1");
+	var answer2 = $("#antwort2");
+	var answer3 = $("#antwort3");
+	var answer4 = $("#antwort4");
+	
+	question = questions[questionCounter];
+	
+	// Evaluate whether the question was answered correctly
+	if(((answer1.hasClass("buttonAusgewaehlt") && !question.wahrheitAntwortmoeglichkeit1) ||
+		(!answer1.hasClass("buttonAusgewaehlt") && question.wahrheitAntwortmoeglichkeit1)) ||
+		
+		((answer2.hasClass("buttonAusgewaehlt") && !question.wahrheitAntwortmoeglichkeit2) ||
+		(!answer2.hasClass("buttonAusgewaehlt") && question.wahrheitAntwortmoeglichkeit2)) ||
+		
+		((answer3.hasClass("buttonAusgewaehlt") && !question.wahrheitAntwortmoeglichkeit3) ||
+		(!answer3.hasClass("buttonAusgewaehlt") && question.wahrheitAntwortmoeglichkeit3)) ||
+		
+		((answer4.hasClass("buttonAusgewaehlt") && !question.wahrheitAntwortmoeglichkeit4) ||
+		(!answer4.hasClass("buttonAusgewaehlt") && question.wahrheitAntwortmoeglichkeit4))
+		) {
+		correctlyAnswered = false;
 	}
-} */
-//Antworten werden auf Richtigkeit ueberprueft und die Buttons werden dem entsprechend markiert
-/* function vergleicheAntworten(btn) {
-	if (getWahrheitsgehalt(btn)){
-	btn.addClass("buttonRichtig");
+	
+	// remove actions of answer buttons
+	answer1.attr("ontouchend", "");
+	answer2.attr("ontouchend", "");
+	answer3.attr("ontouchend", "");
+	answer4.attr("ontouchend", "");
+	
+	// Color the buttons
+	if(question.wahrheitAntwortmoeglichkeit1) {
+		answer1.addClass("buttonRichtig");
+	} else {
+		if(answer1.hasClass("buttonAusgewaehlt")) {
+			answer1.addClass("buttonFalsch");
+		}
 	}
-	else if (btn.hasClass("buttonAusgewaehlt") &&  !getWahrheitsgehalt(btn)) {
-	btn.addClass("buttonFalsch");
+	if(question.wahrheitAntwortmoeglichkeit2) {
+		answer2.addClass("buttonRichtig");
+	} else {
+		if(answer2.hasClass("buttonAusgewaehlt")) {
+			answer2.addClass("buttonFalsch");
+		}
 	}
-	//TODO Logik: hat gegner bereits geantwortet?
-	btn.addClass("antwortGegner");
+	if(question.wahrheitAntwortmoeglichkeit3) {
+		answer3.addClass("buttonRichtig");
+	} else {
+		if(answer3.hasClass("buttonAusgewaehlt")) {
+			answer3.addClass("buttonFalsch");
+		}
+	}
+	if(question.wahrheitAntwortmoeglichkeit4) {
+		answer4.addClass("buttonRichtig");
+	} else {
+		if(answer4.hasClass("buttonAusgewaehlt")) {
+			answer4.addClass("buttonFalsch");
+		}
+	}
+	
+	// show opponent's answer if user finishes the current round
+	if(!roundStart) {
+		animateOpponentsAnswers();
+	}
+	
+	return correctlyAnswered;
 }
- */
-//var buttonWeiterZaehler;
 
-//var fragenZaehler;
-  
-//Weiterleitung
-/*
-function weiter() {
-	if (buttonWeiterZaehler = 1){
-	vergleicheAntworten($("#antwort1"));
-	vergleicheAntworten($("#antwort2"));
-	vergleicheAntworten($("#antwort3"));
-	vergleicheAntworten($("#antwort4"));
-	buttonWeiterZaehler = 2;
+function nextNextQuestion(correctlyAnswered) {
+	var question = questions[questionCounter];
+	var answers;
+	
+	if(questionCounter == 0) {
+		// create new answer array
+		answers = new Array();
+	} else {
+		answers = JSON.parse(localStorage.getItem("answers"));
 	}
-	else if ((buttonWeiterZaehler = 2) && (fragenZaehler <= 3){
-	var newView = new steroids.views.WebView("html/Frage.html");
-	steroids.layers.push(newView);
+	
+	var submitData = {
+		"spielID" : gameInfo.spielID,
+		"runde" : gameInfo.aktuelleRunde,
+		"fragenID" : question.fragenID,
+		"richtig" : correctlyAnswered
+	};
+	answers.push(submitData);
+	
+	alert("Vorbereitet: " + JSON.stringify(answers));
+	
+	localStorage.setItem("questionCounter", ++questionCounter);
+	
+	if(questionCounter != 3) {
+		localStorage.setItem("answers", JSON.stringify(answers));
+		popViewPushView("html/frage.html");
+	} else {
+		//TODO send data to server at the end of round
+		localStorage.removeItem("answers");
+		popViewPushView("html/rundenuebersicht.html");
+	}
+}
 
-	buttonWeiterZaehler = 1;
-	fragenZaehler = fragenZaehler + 1;
+function animateOpponentsAnswers() {
+	var opponentName = opponentAnswers[0].benutzername;
+	
+	// apply opponent's name on those popup divs that represent the opponent's answer
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit1_check) {
+		$("#antwort1Popup").text(opponentName);
 	}
-	else {
-	var newView = new steroids.views.WebView("html/Rundenuebersicht.html");
-	steroids.layers.push(newView);
-	fragenZaehler = 1;
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit2_check) {
+		$("#antwort2Popup").text(opponentName);
 	}
-}*/
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit3_check) {
+		$("#antwort3Popup").text(opponentName);
+	}
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit4_check) {
+		$("#antwort4Popup").text(opponentName);
+	}
+	
+	// align popup divs
+	var posA = $("#antwort1").position();
+	var posB = $("#antwort2").position();
+	var posC = $("#antwort3").position();
+	var posD = $("#antwort4").position();
+	
+	var calcATop = ($("#antwort1").height() / 2) + posA.top - ($("#antwort1Popup").height() / 2);
+	var calcALeft = ($("#antwort1").width() / 2) + posA.left - ($("#antwort1Popup").width() / 2);
+	var calcBTop = ($("#antwort2").height() / 2) + posB.top - ($("#antwort2Popup").height() / 2);
+	var calcBLeft = ($("#antwort2").width() / 2) + posB.left - ($("#antwort2Popup").width() / 2);
+	var calcCTop = ($("#antwort3").height() / 2) + posC.top - ($("#antwort3Popup").height() / 2);
+	var calcCLeft = ($("#antwort3").width() / 2) + posC.left - ($("#antwort3Popup").width() / 2);
+	var calcDTop = ($("#antwort4").height() / 2) + posD.top - ($("#antwort4Popup").height() / 2);
+	var calcDLeft = ($("#antwort4").width() / 2) + posD.left - ($("#antwort4Popup").width() / 2);
+	
+	$("#antwort1Popup").css({"top" : calcATop, "left" : calcALeft});
+	$("#antwort2Popup").css({"top" : calcBTop, "left" : calcBLeft});
+	$("#antwort3Popup").css({"top" : calcCTop, "left" : calcCLeft});
+	$("#antwort4Popup").css({"top" : calcDTop, "left" : calcDLeft});
+	
+	// animate all popup divs
+	$(".popupDiv").animate( {
+		"font-size" : "60px",
+		"opacity" : 0
+	}, 600, function() {
+		// on completion
+		$(this).remove();
+	});
+}
 
-/* function weiter() {
-  switch (buttonWeiterZaehler) {
-  case "1":
-    // vergleicheAntworten 4x
-	buttonWeiterZaehler = 2;
-    break;
-  case "2":
-	if (fragenZaehler <= 3){
-    var newView = new steroids.views.WebView("html/Frage.html");
-	steroids.layers.push(newView);
-	buttonWeiterZaehler = 1;
-	fragenZaehler = fragenZaehler + 1;
-	}
-	else{
-	var newView = new steroids.views.WebView("html/Rundenuebersicht.html");
-	steroids.layers.push(newView);
-	fragenZaehler = 1;
-	}
-    break;
-	}
-  } */
-  
-  document.addEventListener("deviceready", init, false);
+document.addEventListener("deviceready", init, false);

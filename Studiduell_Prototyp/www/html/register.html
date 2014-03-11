@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <meta charset="utf8">
+	  <meta name="viewport" content="width=device-width">
+	  <title>Register</title>
+	  
+	  <link rel="stylesheet" href="../vendor/topcoat/css/topcoat-mobile-light.css" />
+	  <link rel="stylesheet" href="../css/register.css" />
+	  
+	  <script src="../js/jquery-1.11.0.min.js"></script>
+	  <!-- cordova.js is served from localhost to ensure the correct version -->
+	  <script src="http://localhost/cordova.js"></script>
+	  <script src="../components/steroids-js/steroids.js"></script>
+	  
+	  <script src="../js/register.js"></script>
+	  <script src="../js/application.js"></script>
+	  <script src="/components/steroids-addons/index.js"></script>
+	</head>
+	<body>
+		<div id="Anweisung_div">Bitte gib deinen gew&uuml;nschten Usernamen und dein Passwort ein, um dich zu registrieren. </div>
+		<input id= "username_input" type="text" class="topcoat-text-input" placeholder="Username" value=""> <br>
+		<input id= "password_input" type="password" class="topcoat-text-input" placeholder="Passwort" value=""> <br>
+		
+		<button id="RegisterButton" class="topcoat-button--large" ontouchend="sendRegistration();">Los!</button> <br>
+		
+	</body>
+</html>
+

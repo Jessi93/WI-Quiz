@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.dhbw</groupId>
-	<artifactId>studiduell-backend</artifactId>
+	<artifactId>Studiduell</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>Studiduell-Backend</name>
+	<name>Studiduell</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

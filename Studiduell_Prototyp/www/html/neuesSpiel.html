@@ -15,6 +15,7 @@
 		<!-- cordova.js is served from localhost to ensure the correct version -->
 		<script src="http://localhost/cordova.js"></script>
 		<script src="../components/steroids-js/steroids.js"></script>
+		<script src="../js/jquery-1.11.0.min.js"></script>
 		<script src="../js/application.js"></script>
 		<script src="../js/neuesSpiel.js"></script>
 		<script src="/components/steroids-addons/index.js"></script>
@@ -28,7 +29,7 @@
 				<!-- Freundesliste -->
 			<div id="freundeslisteDiv" class="topcoat-list">
 				<h3 class="topcoat-list__header">Freundesliste</h3>
-				<ul class="topcoat-list__container" id="freundeslistErweitern">
+				<ul class="topcoat-list__container" id="freundeslisteErweitern">
 					<!--tbd: Freund entfernen Button & Profilbild! -->
 				<!--obsolet<li class="topcoat-list__item ">
 					PeterMayer
@@ -36,10 +37,10 @@
 				<li class="topcoat-list__item custom_List_item">
 					PaulKotte
 				</li>
-				<li class="topcoat-list__item custom_List_item" ontouchend="test()">
+				<li class="topcoat-list__item custom_List_item" ontouchend="createNewGameFriendlist(this)">
 					Phil
 				</li>
-				<li class="topcoat-list__item custom_List_item" ontouchend ="test()">
+				<!--<li class="topcoat-list__item custom_List_item" ontouchend ="test()">
 					Phil123
 				</li>
 				-->
