@@ -11,10 +11,26 @@ function fillScreen() {
 					data[2].categoryName);
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+function loadCategoriesFromServer() {
+	$.ajax( {
+		url:"http://192.168.0.108:8090/Studiduell/game/randomCategoriesFor/123",
+		type:"POST",
+		success:function(obj){setKategorien(obj);},
+		error:function(obj){alert(JSON.stringify(obj));}
+	});
+=======
+=======
+>>>>>>> 4336186af8647da2e02ac7c2a85a36f7dbc4f13c
 function setKategorien(cat1, cat2, cat3) {
 	 $("#kategorie1").text(cat1);
 	 $("#kategorie2").text(cat2);
 	 $("#kategorie3").text(cat3);
+<<<<<<< HEAD
+>>>>>>> 4336186af8647da2e02ac7c2a85a36f7dbc4f13c
+=======
+>>>>>>> 4336186af8647da2e02ac7c2a85a36f7dbc4f13c
 }
 
 function kategorieAuswaehlen(kategorie) {
@@ -38,4 +54,8 @@ function kategorieAuswaehlen(kategorie) {
 	popViewPushView("html/ausgewaehlteKategorie.html");
 }
 
+<<<<<<< HEAD
 document.addEventListener("deviceready", init, false);
+=======
+document.addEventListener("deviceready", init, false);
+>>>>>>> 4336186af8647da2e02ac7c2a85a36f7dbc4f13c
