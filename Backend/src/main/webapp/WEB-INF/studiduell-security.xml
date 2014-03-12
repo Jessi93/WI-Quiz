@@ -9,6 +9,7 @@
 		<http-basic />
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/user/register/*" access="permitAll" />
+		<intercept-url pattern="/**" access="permitAll" method="OPTIONS" />
 		<intercept-url pattern="/**" access="hasRole('USER')" />
 	</http>
 
@@ -21,5 +22,4 @@
 			<password-encoder base64="false" hash="md5" />
 		</authentication-provider>
 	</authentication-manager>
-
 </beans:beans>

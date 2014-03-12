@@ -7,15 +7,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HttpHeaderDefaults {
-	@Value("${ajax.accessControlAllowOriginKey}")
+public final class HttpHeaderDefaults {
+	@Value("${ajax.cors.accessControlAllowOriginKey}")
 	private String accessControlAllowOriginKey;
-	@Value("${ajax.accessControlAllowOriginValue}")
+	@Value("${ajax.cors.accessControlAllowOriginValue}")
 	private String accessControlAllowOriginValue;
 	
-	
 	private HttpHeaders accessControlAllowOriginHeader;
-	
 	
 	@PostConstruct
 	public void init() {
