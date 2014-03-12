@@ -292,8 +292,8 @@ public class SpielController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-			value = "/sendRoundResult")
-	public ResponseEntity<Void> sendRoundResult(@RequestBody AntwortEntity answer) {
+			value = "/submitRoundResult")
+	public ResponseEntity<Void> submitRoundResult(@RequestBody AntwortEntity answer) {
 		return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_IMPLEMENTED);
 	}
 	
