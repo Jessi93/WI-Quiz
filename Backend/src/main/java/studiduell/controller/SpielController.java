@@ -12,7 +12,6 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +27,12 @@ import studiduell.constants.entity.SpieltypEntityEnum;
 import studiduell.constants.httpheader.HttpHeaderDefaults;
 import studiduell.model.AntwortEntity;
 import studiduell.model.FrageEntity;
-import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.RundeEntity;
 import studiduell.model.SpielEntity;
 import studiduell.model.SpielstatusEntity;
 import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
-import studiduell.model.id.KategorienfilterEntityPk;
 import studiduell.repository.AntwortRepository;
 import studiduell.repository.FrageRepository;
 import studiduell.repository.KategorienfilterRepository;
@@ -295,6 +292,32 @@ public class SpielController {
 			value = "/submitRoundResult")
 	public ResponseEntity<Void> submitRoundResult(@RequestBody AntwortEntity answer) {
 		return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_IMPLEMENTED);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/abandon/{gameID}")
+	public ResponseEntity<Void> abandon(@PathVariable("gameID") Integer gameID) {
+		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
+		
+		if(gameSpielEntity != null) {
+			SpielstatusEntity gameState = gameSpielEntity.getSpielstatusName();
+			if(SpielstatusEntityEnum.A.getEntity().equals(gameState)
+					|| SpielstatusEntityEnum.P.getEntity().equals(gameState)) {
+				
+				gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.Q.getEntity());
+				spielRepository.save(gameSpielEntity);
+				
+				return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+						HttpStatus.OK); 
+			} else {
+				// only active and pending games can be abandoned
+				return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+						HttpStatus.NOT_ACCEPTABLE);
+			}
+		} else {
+			// no such game found
+			return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+					HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	private SpielEntity createGame(UserEntity user, UserEntity opponent, SpieltypEntity type, SpielstatusEntity status) {

@@ -26,4 +26,19 @@ public class SpieltypEntity {
 	public void setName(char name) {
 		this.name = name;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof SpieltypEntity)) {
+			return false;
+		}
+		SpieltypEntity pk = (SpieltypEntity) obj;
+		return pk.name == name;
+	}
 }

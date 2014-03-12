@@ -6,7 +6,8 @@ public enum SpielstatusEntityEnum {
 	A('A'),
 	P('P'),
 	C('C'),
-	D('D');
+	D('D'),
+	Q('Q');
 	
 	private SpielstatusEntity entity;
 	
