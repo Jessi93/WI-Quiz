@@ -139,7 +139,8 @@ INSERT INTO Spielstatus VALUES
 	('A'), /* ACTIVE */
 	('P'), /* PENDING */
 	('C'), /* CLOSED */
-	('D'); /* DECLINED */
+	('D'), /* DECLINED */
+	('Q'); /* QUIT (ABANDONED) */
 INSERT INTO Spieltyp VALUES
 	('M'), /* MULTI */
 	('S'); /* SINGLE */
