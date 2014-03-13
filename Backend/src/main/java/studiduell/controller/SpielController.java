@@ -128,8 +128,9 @@ public class SpielController {
 							SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
 					spielRepository.save(game);
 					return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
-				} else
+				} else {
 					return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
+				}
 			} else {
 				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
 			}
