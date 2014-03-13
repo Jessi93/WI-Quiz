@@ -7,7 +7,7 @@ Screenspezifische Funktionen werden in den jeweiligen 'screenname.js' files besc
 
 steroids.view.navigationBar.show("Studiduell");
 
-var serverURL = "http://192.168.0.108:8090/Studiduell/";
+var serverURL = "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/";
 
 /*
 Prüft, ob ein String leer ist, oder nicht (leer = true, nicht leer = false)
@@ -38,6 +38,37 @@ function popViewPushView (newView_locationString){
 		steroids.layers.pop();
 		steroids.layers.push(newView);
 	
+}
+
+function isRoundStarter(gameInfo) {
+	var me = localStorage.getItem("username");
+	var mePlayerNo = (me == gameInfo.spieler1.benutzername) ? 1 : 2;
+	
+	// persist some info
+	localStorage.setItem("gameInfo", JSON.stringify(gameInfo));
+	// delete questions
+	localStorage.removeItem("gameQuestionStart");
+	localStorage.removeItem("gameQuestionContinue");
+	
+	if(gameInfo.aktuelleRunde % 2 == 0) {
+		// even round
+		if(mePlayerNo == 1) {
+			// new
+			return true;
+		} else {
+			// continue
+			return false;
+		}
+	} else {
+		// odd round
+		if(mePlayerNo == 1) {
+			// continue
+			return false;
+		} else {
+			// new
+			return true;
+		}
+	}
 }
 
 function authHeader(xhr) {

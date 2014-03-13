@@ -1,6 +1,8 @@
 checkCredentials();
 //openRundenuebersicht();
 
+var homescreenServerdata;
+
 function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
 	//zu testzwecken: setze localstorage username & pw auf leer! --> zeige login screen immer an!
@@ -19,12 +21,24 @@ function checkCredentials() {
 	}
 }
 
-function openRundenuebersicht(spielID) {
-	//TODO PHIL:
-	//hole daten für rundenübersicht für Spiel ID vom Server 
-	//schreibe Rundenüberischtsdaten in localstorage, damit "rundenübersicht" screen die richtigen Daten anzeigen kann
-	var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
-	steroids.layers.push(rundenuebersichtView);
+function openRundenuebersicht(spielID, positionInServerdata) {
+	//Schreibe Spieldaten in localstorage (für Fragescreen und enemy_username)
+	localStorage.setItem("enemyUsername", getEnemyUsername(homescreenServerdata[positionInServerdata]) );
+	localStorage.setItem("gameInfo", homescreenServerdata[positionInServerdata] );
+	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage -> wird dann in der Rundenübersicht in variable geschrieben
+	$.ajax( {
+		url:serverURL + "game/overview/" + spielID,
+		type:"GET",
+		beforeSend:authHeader(xhr),
+		crossDomain:true,
+		success:function(obj){localStorage.setItem("gameOverview", obj);
+		alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+JSON.stringify(obj));
+		var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
+		steroids.layers.push(rundenuebersichtView);
+		},
+		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten!"+JSON.stringify(obj));}
+		});
+		
 }
 
 function openNeuesSpielScreen() {
@@ -55,7 +69,7 @@ function sync() {
 	//Setze Usernamen
 	$("#username_div").text(localStorage.getItem("username"));
 
-	//lade Hauptmenüdaten vom Server & fügre die entsprechenden HTML Elemente hinzu
+	//lade Hauptmenüdaten vom Server & füge die entsprechenden HTML Elemente hinzu
 	fetchServerData();
 	}
 }
@@ -197,6 +211,9 @@ function fetchServerData() {
 
 function handleServerData(serverSyncData){
 	//alert("handleServerData wurde aufgerufen"+JSON.stringify(serverSyncData));
+	//schreibe sync Daten in localstorage
+	homescreenServerdata = serverSyncData;
+	
 	
 	for(var i=0;i<serverSyncData.length;i++){
 		//alert(JSON.stringify(serverSyncData[i]));
@@ -204,33 +221,33 @@ function handleServerData(serverSyncData){
 		if(	serverSyncData[i].spielstatusName.name 		== "A" && 
 			serverSyncData[i].wartenAuf.benutzername	== localStorage.getItem("username")
 		){
-		addActionRequirendGame(serverSyncData[i]);
+		addActionRequiredGame(serverSyncData[i], i);
 		}
 		//Prüfe, ob Eintrag ein Spiel darstellt, bei dem auf den Gegner gewartet wird:
 		else if (	serverSyncData[i].spielstatusName.name 		== "A" && 
 					serverSyncData[i].wartenAuf.benutzername	!= localStorage.getItem("username")
 		){
-		addWaitingForGame(serverSyncData[i]);
+		addWaitingForGame(serverSyncData[i], i);
 		}
 		//Prüfe, ob Eintrag eine offene Duellanfrage darstellt: (Status "pending")
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== localStorage.getItem("username")
 		){
-		showDuelRequest(serverSyncData[i]);
+		showDuelRequest(serverSyncData[i],i);
 		}
 	}
 
 }
 
-function addActionRequirendGame(gameData){
-	//alert("addActionRequirendGame wurde aufgerufen"+JSON.stringify(gameData));
+function addActionRequiredGame(gameData, positionInServerData){
+	//alert("addActionRequiredGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
 	//füge HTML ein:
-	$("#ActionRequiredGames_div").append("<div class='content-padded'><button class='topcoat-button--large center full custom_icon_button_left Rand2 textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+")' >Du bist an der Reihe gegen "+enemy_username+" SpielID: "+gameData.spielID+"</a></div>"
+	$("#ActionRequiredGames_div").append("<div class='content-padded'><button class='topcoat-button--large center full custom_icon_button_left Rand2 textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Du bist an der Reihe gegen "+enemy_username+" SpielID: "+gameData.spielID+"</a></div>"
 	);
 }
 
-function addWaitingForGame(gameData){
+function addWaitingForGame(gameData, positionInServerData){
 	//alert("addWaitingForGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
 	//füge HTML ein:
@@ -247,7 +264,7 @@ function getEnemyUsername(gameData){
 		}
 }
 
-function showDuelRequest(gameData){
+function showDuelRequest(gameData, positionInServerData){
 //alert("showDuelRequest wurde aufgerufen"+JSON.stringify(gameData));
 
 	navigator.notification.confirm(      
@@ -270,7 +287,7 @@ function onConfirmDuelRequest(buttonIndex, gameData){
 	switch (buttonIndex) {
 		case 1: //Duell wurde angenommen!
 		//Zeige button für dieses Spiel im Homescreen
-		addActionRequirendGame(gameData);
+		addActionRequiredGame(gameData);
 		// bestätige Duellannahme bei Server
 		//alert("TODO: Duellannahme bei Server bestätigt");
 				

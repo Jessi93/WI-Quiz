@@ -77,7 +77,6 @@ function addAsFriend(fName) {
 		});
 		*/
 	alert("Sie sind jetzt mit " + fName + " befreundet");
-
 }
 
 

@@ -1,8 +1,12 @@
 function init() {
 	//alert("Init wurde aufgerufen!");
+	fetchLocalStorageData();
+	
 	setSpieler1();
 	setSpieler2();
 	setSpielstand();
+	setownName();
+	setenemyName();
 }
 var SpielstandSpieler1 = 0;
 var SpielstandSpieler2 = 0;
@@ -655,6 +659,19 @@ var GameData = {
        ]
 };
 
+function fetchLocalStorageData() {
+alert("fetchLocalStorageData wurde aufgerufen!");
+//TODO: hole Serverdaten und schreibe Sie in GameData!
+gameData = localStorage.getItem("gameOverview");
+
+$.ajax( {
+		url:serverURL + "game/overview/" + gameID,
+		type:"PUT",
+		success:navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");
+		error:function(obj){alert(JSON.stringify(obj));}
+		});
+}
+
 function setSpielstand() {
 var Spielstand = (SpielstandSpieler1+":"+SpielstandSpieler2);
 alert("Spielstand: "+Spielstand);
@@ -785,7 +802,17 @@ if (fragenergebnis == true){
 	}	
 }
 
+function setownName(){
+var ownName;
+ownName = localStorage.getItem("username");
+ $('#spielerADiv').append(ownName);
+}
 
+function setenemyName(){
+var enemyUsername;
+var enemyUsername = localStorage.getItem("enemyUsername");
+$('#spielerBDiv').append(enemyUsername);
+}
 
 
 
@@ -800,33 +827,10 @@ function openFrage() {
 }
 
 function prepareQuestion() {
-	var me = localStorage.getItem("username");
-	var mePlayerNo = (me == tmpServerData.spieler1.benutzername) ? 1 : 2;
-	
-	// persist some info
-	localStorage.setItem("gameInfo", JSON.stringify(tmpServerData));
-	// delete questions
-	localStorage.removeItem("gameQuestionStart");
-	localStorage.removeItem("gameQuestionContinue");
-	
-	if(tmpServerData.aktuelleRunde % 2 == 0) {
-		// even round
-		if(mePlayerNo == 1) {
-			// new
-			fetchQuestionsRoundStart();
-		} else {
-			// continue
-			fetchQuestionsRoundContinue();
-		}
+	if(isRoundStarter()) {
+		fetchQuestionsRoundStart();
 	} else {
-		// odd round
-		if(mePlayerNo == 1) {
-			// continue
-			fetchQuestionsRoundContinue();
-		} else {
-			// new
-			fetchQuestionsRoundStart();
-		}
+		fetchQuestionsRoundContinue();
 	}
 }
 
@@ -850,6 +854,24 @@ alert("continue"); //XXX
 
 function openQuestions() {
 	//TODO
+}
+
+//Füge gegner als Freund hinzu
+function addAsFriendWrapper(){
+addAsFriend(localStorage.getItem("enemyUsername"));
+}
+
+function giveUp(){
+alert("give up wurde aufgerufen!");
+//TODO hole gameID!
+/*
+$.ajax( {
+		url:serverURL + "game/abandon/" + gameID,
+		type:"POST",
+		success:function(obj){alert(JSON.stringify(obj));}
+		error:function(obj){alert(JSON.stringify(obj));}
+		});
+		*/
 }
 
 document.addEventListener("deviceready", init, false);
