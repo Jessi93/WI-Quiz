@@ -1,12 +1,11 @@
 checkCredentials();
-//openRundenuebersicht();
 
 var homescreenServerdata;
 
 function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
 	//zu testzwecken: setze localstorage username & pw auf leer! --> zeige login screen immer an!
-	localStorage.removeItem("username");
+	//localStorage.removeItem("username");
 	//zu testzwecken: setze username --> gehe direkt in den home screen!
 	//localStorage.setItem("username", "Kevin01");
 	//localStorage.setItem("password", "secret");
@@ -61,8 +60,8 @@ function sync() {
 	
 
 //zu testzwecken: setze username & password im local storage (normalerweise geschieht das im login!)
-	localStorage.setItem("username", "Kevin01");
-	localStorage.setItem("password", "secret");
+	localStorage.setItem("username", "Kevin01");	//Kevin01
+	localStorage.setItem("password", "secret"); //secret
 
 //Sync darf nur ausgeführt wrden, wenn nicht direkt zum Login screen weitergeleitet wird (username vorhanden ist!)
 	if(credentialsAvailable){
@@ -206,13 +205,14 @@ function fetchServerData() {
 }
 
 function handleServerData(serverSyncData){
-	//alert("handleServerData wurde aufgerufen"+JSON.stringify(serverSyncData));
+	alert("handleServerData wurde aufgerufen. Neue Serverdaten:"+JSON.stringify(serverSyncData));
 	//schreibe sync Daten in localstorage
 	homescreenServerdata = serverSyncData;
 	
 	//entferne aktuelle Buttons vom Screen (alle werden anhand der neuen Serverdaten neu hinzugefügt!)
 	$("#ActionRequiredGames_div").empty();
 	$("#WaitingForGames_div").empty();
+	$("#OpenDuelRequests_list_container").empty();
 	
 	for(var i=0;i<serverSyncData.length;i++){
 		//alert(JSON.stringify(serverSyncData[i]));
@@ -228,14 +228,25 @@ function handleServerData(serverSyncData){
 		){
 		addWaitingForGame(serverSyncData[i], i);
 		}
-		//Prüfe, ob Eintrag eine offene Duellanfrage darstellt: (Status "pending")
+		//Prüfe, ob Eintrag eine eigene offene Duellanfrage darstellt: (Status "pending")
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== localStorage.getItem("username")
 		){
 		showDuelRequest(serverSyncData[i],i);
 		}
+		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
+					serverSyncData[i].wartenAuf.benutzername	== getEnemyUsername(serverSyncData[i])
+		//prüfe, ob der Eintrag eine Duellanfrage darstellt, die noch von einem Gegner beantwortet werden muss! 
+		){
+		addOpenDuelRequest(serverSyncData[i]);
+		}
 	}
 
+}
+
+function addOpenDuelRequest(gameData) {
+var enemy_username = getEnemyUsername(gameData);
+$("#OpenDuelRequests_list_container").append('<li class="topcoat-list__item">'+enemy_username+'</li>');
 }
 
 function addActionRequiredGame(gameData, positionInServerData){
@@ -265,7 +276,7 @@ function getEnemyUsername(gameData){
 }
 
 function showDuelRequest(gameData, positionInServerData){
-//alert("showDuelRequest wurde aufgerufen"+JSON.stringify(gameData));
+alert("showDuelRequest wurde aufgerufen"+JSON.stringify(gameData));
 
 	navigator.notification.confirm(      
 	 gameData.spieler1.benutzername+" fordert dich zu einem Duell heraus!",//+"SpielID: "+gameData.spielID, // message    

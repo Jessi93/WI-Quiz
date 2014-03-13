@@ -33,7 +33,7 @@ function sendRegistration(){
 	alert("Register-AJAX-gestartet!");
 	$.ajax( {
 			url:serverURL + "user/register/"+v_username,
-			type:"PUT
+			type:"PUT",
 			contentType:"text/plain",
 			success:function(obj){handleRegistrationOK(v_username, v_password);},
 			error:function(obj){handleErrorRegister(obj);}, 
@@ -65,7 +65,7 @@ function handleErrorRegister(returnedObject) {
 }
 
 function handleRegistrationOK(username, password) {
-	//alert("handleRegistrationOK wurde aufgerufen!");
+	alert("handleRegistrationOK wurde aufgerufen!");
 	//setze Usercredentials in Localstorage:
 	localStorage.setItem("username", username);
 	localStorage.setItem("password", password);
@@ -75,6 +75,5 @@ function handleRegistrationOK(username, password) {
 
 function openHomeScreen() {
 	//alert("openHomeScreen wurde aufgerufen!");
-	var newView = new steroids.views.WebView("html/home.html");
-	steroids.layers.push(newView);
+	steroids.layers.popAll();
 }
