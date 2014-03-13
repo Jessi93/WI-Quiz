@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -19,8 +20,9 @@ public class FrageEntity {
 	@JoinColumn(name = "fragenID", unique = true, nullable = false)
 	private int fragenID;
 	
-	@JoinColumn(name = "kategorieName", nullable = false)
-	private String kategorieName; //XXX as entity
+	@JoinColumn(name = "kategorieName", nullable = false, referencedColumnName = "name")
+	@OneToOne
+	private KategorieEntity kategorieName;
 	
 	@JoinColumn(name = "unterkategorieName")
 	private String unterkategorieName; //XXX as entity
@@ -62,17 +64,15 @@ public class FrageEntity {
 	public FrageEntity() {
 	}
 
-	public FrageEntity(int fragenID, String kategorieName,
-			String unterkategorieName, boolean flagFragenTypMult,
-			String frage, String antwortmoeglichkeit1,
-			String antwortmoeglichkeit2, String antwortmoeglichkeit3,
-			String antwortmoeglichkeit4, boolean wahrheitAntwortmoeglichkeit1,
+	public FrageEntity(int fragenID, KategorieEntity kategorieName,
+			String unterkategorieName, boolean flagFragenTypMult, String frage,
+			String antwortmoeglichkeit1, String antwortmoeglichkeit2,
+			String antwortmoeglichkeit3, String antwortmoeglichkeit4,
+			boolean wahrheitAntwortmoeglichkeit1,
 			boolean wahrheitAntwortmoeglichkeit2,
 			boolean wahrheitAntwortmoeglichkeit3,
 			boolean wahrheitAntwortmoeglichkeit4, boolean flagFrageValidiert) {
-		this.fragenID = fragenID;
-		//XXX only for mock / debugging
-		
+		//XXX
 		this.fragenID = fragenID;
 		this.kategorieName = kategorieName;
 		this.unterkategorieName = unterkategorieName;
@@ -89,6 +89,8 @@ public class FrageEntity {
 		this.flagFrageValidiert = flagFrageValidiert;
 	}
 
+
+
 	public int getFragenID() {
 		return fragenID;
 	}
@@ -97,11 +99,11 @@ public class FrageEntity {
 		this.fragenID = fragenID;
 	}
 
-	public String getKategorieName() {
+	public KategorieEntity getKategorieName() {
 		return kategorieName;
 	}
 
-	public void setKategorieName(String kategorieName) {
+	public void setKategorieName(KategorieEntity kategorieName) {
 		this.kategorieName = kategorieName;
 	}
 
@@ -199,5 +201,10 @@ public class FrageEntity {
 
 	public void setFlagFrageValidiert(boolean flagFrageValidiert) {
 		this.flagFrageValidiert = flagFrageValidiert;
+	}
+	
+	@Override
+	public String toString() {
+		return frage; //XXX
 	}
 }

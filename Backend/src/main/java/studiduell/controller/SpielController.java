@@ -143,20 +143,25 @@ public class SpielController {
 			value = "/overview/{gameID}")
 	public ResponseEntity<ObjectNode> gameOverview(@PathVariable("gameID") Integer gameID) {
 		SpielEntity spielEntity = spielRepository.findOne(gameID);
-		List<RundeEntity> rounds = spielEntity.getRunden();
 		
-		ObjectNode json = JsonNodeFactory.instance.objectNode();
-		
-		// rounds - answers - questions
-		ArrayNode roundsArray = JsonNodeFactory.instance.arrayNode();
-		for(RundeEntity e : rounds) {
-			roundsArray.addPOJO(e);
+		if(spielEntity != null) {
+			List<RundeEntity> rounds = spielEntity.getRunden();
+			
+			ObjectNode json = JsonNodeFactory.instance.objectNode();
+			
+			// rounds - answers - questions
+			ArrayNode roundsArray = JsonNodeFactory.instance.arrayNode();
+			for(RundeEntity e : rounds) {
+				roundsArray.addPOJO(e);
+			}
+			
+			json.putPOJO("rounds", roundsArray);
+			
+			return new ResponseEntity<>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+					HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
 		}
-		
-		json.putPOJO("rounds", roundsArray);
-		
-		return new ResponseEntity<>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
@@ -213,7 +218,7 @@ public class SpielController {
 			value = "/randomCategoriesFor/{gameID}") //TODO GET instead of POST
 	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		
+		//TODO test method
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
@@ -310,9 +315,9 @@ public class SpielController {
 		
 		ObjectNode obj = JsonNodeFactory.instance.objectNode();
 		
-		FrageEntity frage1 = new FrageEntity(7, "Verteilte Systeme","uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage2 = new FrageEntity(8, "Verteilte Systeme","uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage3 = new FrageEntity(9, "Verteilte Systeme","uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage1 = new FrageEntity(7, new KategorieEntity("Verteilte Systeme"),"uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage2 = new FrageEntity(8, new KategorieEntity("Verteilte Systeme"),"uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
+		FrageEntity frage3 = new FrageEntity(9, new KategorieEntity("Verteilte Systeme"),"uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
 		
 		ArrayNode arr1 = JsonNodeFactory.instance.arrayNode();
 		arr1.addPOJO(frage1);
@@ -412,11 +417,16 @@ public class SpielController {
 	}
 	
 	private Set<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
-		// TODO Auto-generated method stub
-		int questionsCount = frageRepository.countFindByKategorieName(category);
+		Set<FrageEntity> questions = frageRepository.findByKategorieName(category);
+		Set<FrageEntity> returnQuestions = new HashSet<>();
 		
-//		PageRequest pageRequest = new PageRequest(page, size)
-		return null;
+		Object[] tmpQuestions = questions.toArray();
+		while(returnQuestions.size() < questionCount) {
+			int randomIndex = random.nextInt(tmpQuestions.length);
+			returnQuestions.add((FrageEntity) tmpQuestions[randomIndex]);
+		}
+		
+		return returnQuestions;
 	}
 }
 
