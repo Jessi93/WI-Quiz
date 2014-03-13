@@ -827,33 +827,10 @@ function openFrage() {
 }
 
 function prepareQuestion() {
-	var me = localStorage.getItem("username");
-	var mePlayerNo = (me == tmpServerData.spieler1.benutzername) ? 1 : 2;
-	
-	// persist some info
-	localStorage.setItem("gameInfo", JSON.stringify(tmpServerData));
-	// delete questions
-	localStorage.removeItem("gameQuestionStart");
-	localStorage.removeItem("gameQuestionContinue");
-	
-	if(tmpServerData.aktuelleRunde % 2 == 0) {
-		// even round
-		if(mePlayerNo == 1) {
-			// new
-			fetchQuestionsRoundStart();
-		} else {
-			// continue
-			fetchQuestionsRoundContinue();
-		}
+	if(isRoundStarter()) {
+		fetchQuestionsRoundStart();
 	} else {
-		// odd round
-		if(mePlayerNo == 1) {
-			// continue
-			fetchQuestionsRoundContinue();
-		} else {
-			// new
-			fetchQuestionsRoundStart();
-		}
+		fetchQuestionsRoundContinue();
 	}
 }
 

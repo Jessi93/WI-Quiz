@@ -41,4 +41,9 @@ public class SpielstatusEntity {
 		SpielstatusEntity pk = (SpielstatusEntity) obj;
 		return pk.name == name;
 	}
+	
+	@Override
+	public int hashCode() {
+		return name;
+	}
 }
