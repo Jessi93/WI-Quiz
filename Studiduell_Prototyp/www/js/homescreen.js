@@ -22,6 +22,8 @@ function checkCredentials() {
 }
 
 function openRundenuebersicht(spielID, positionInServerdata) {
+	//alert("URL"+serverURL + "game/overview/" + spielID + "homescreenServerdata[positionInServerdata]:"+JSON.stringify(homescreenServerdata[positionInServerdata])+" position:"+positionInServerdata);
+	
 	//Schreibe Spieldaten in localstorage (für Fragescreen und enemy_username)
 	localStorage.setItem("enemyUsername", getEnemyUsername(homescreenServerdata[positionInServerdata]) );
 	localStorage.setItem("gameInfo", homescreenServerdata[positionInServerdata] );
@@ -29,14 +31,14 @@ function openRundenuebersicht(spielID, positionInServerdata) {
 	$.ajax( {
 		url:serverURL + "game/overview/" + spielID,
 		type:"GET",
-		beforeSend:authHeader(xhr),
+		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
 		success:function(obj){localStorage.setItem("gameOverview", obj);
-		alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+JSON.stringify(obj));
+		//alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+JSON.stringify(obj));
 		var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
 		steroids.layers.push(rundenuebersichtView);
 		},
-		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten!"+JSON.stringify(obj));}
+		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
 		});
 		
 }
@@ -63,9 +65,6 @@ function sync() {
 
 //Sync darf nur ausgeführt wrden, wenn nicht direkt zum Login screen weitergeleitet wird (username vorhanden ist!)
 	if(credentialsAvailable){
-	
-	//alert("sync wurde aufgerufen");
-	
 	//Setze Usernamen
 	$("#username_div").text(localStorage.getItem("username"));
 
@@ -79,18 +78,19 @@ function fetchServerData() {
 	
 	var v_username = localStorage.getItem("username");
 	var v_password = localStorage.getItem("password");
-	
-	/*
+		 //TODO: AJAX SYNC CALL muss in success gehen!
 	$.ajax( {
 			url:serverURL + "user/sync",
 			type:"POST",
+			contentType:"text/plain",
+			beforeSend:function(xhr){authHeader(xhr);},
+			crossDomain:true,
 			success:function(obj){handleServerData(obj);},
-			error:function(obj){alert(JSON.stringify(obj));},
-			username:v_username,
-			passwort:v_password,
-			data:"0123456789"
+			error:function(obj){alert("Fehler beim holen der Hauptmenü-Spieldaten! "+JSON.stringify(obj));},
+			data:"0123456789",
+			dataType:"text/plain"
 			}); 
-	*/
+	
 	
 	//zu testzwecken (Testdaten ohne Serveranbindung!)
 	var tmpServerData = 
@@ -206,14 +206,13 @@ function fetchServerData() {
            },
            "letzteAktivitaet": 1392739847000
        }];
-	   handleServerData(tmpServerData);
+	  // handleServerData(tmpServerData);
 }
 
 function handleServerData(serverSyncData){
 	//alert("handleServerData wurde aufgerufen"+JSON.stringify(serverSyncData));
 	//schreibe sync Daten in localstorage
 	homescreenServerdata = serverSyncData;
-	
 	
 	for(var i=0;i<serverSyncData.length;i++){
 		//alert(JSON.stringify(serverSyncData[i]));
@@ -243,7 +242,7 @@ function addActionRequiredGame(gameData, positionInServerData){
 	//alert("addActionRequiredGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
 	//füge HTML ein:
-	$("#ActionRequiredGames_div").append("<div class='content-padded'><button class='topcoat-button--large center full custom_icon_button_left Rand2 textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Du bist an der Reihe gegen "+enemy_username+" SpielID: "+gameData.spielID+"</a></div>"
+	$("#ActionRequiredGames_div").append("<div class='content-padded'><button class='topcoat-button--large center full custom_icon_button_left Rand2 textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Du bist an der Reihe gegen "+enemy_username+" SpielID: "+gameData.spielID+" </a></div>" 
 	);
 }
 
@@ -256,6 +255,7 @@ function addWaitingForGame(gameData, positionInServerData){
 }
 
 function getEnemyUsername(gameData){
+	//alert("gameData in getEnemyUsername:"+JSON.stringify(gameData));
 	if (gameData.spieler1.benutzername == localStorage.getItem("username")){
 		//Spieler 1 = User --> Spieler2 = Gegner
 		return gameData.spieler2.benutzername;
@@ -270,7 +270,7 @@ function showDuelRequest(gameData, positionInServerData){
 	navigator.notification.confirm(      
 	 gameData.spieler1.benutzername+" fordert dich zu einem Duell heraus!",//+"SpielID: "+gameData.spielID, // message    
      function(buttonIndex){
-	 onConfirmDuelRequest(buttonIndex, gameData);
+	 onConfirmDuelRequest(buttonIndex, gameData, positionInServerData);
 	 },           	// callback to invoke with index of button pressed       
 	 "Duellanfrage",           			// title      
 	 ['Annehmen','Ablehnen']   			// buttonLabels    
@@ -278,26 +278,24 @@ function showDuelRequest(gameData, positionInServerData){
 	 
 }
 
-function onConfirmDuelRequest(buttonIndex, gameData){
+function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 	//alert("gameData transferred"+JSON.stringify(gameData));
 
-	var v_username = localStorage.getItem("username");
-	var v_password = localStorage.getItem("password");
-	
 	switch (buttonIndex) {
 		case 1: //Duell wurde angenommen!
 		//Zeige button für dieses Spiel im Homescreen
-		addActionRequiredGame(gameData);
+		addActionRequiredGame(gameData, positionInServerData);
 		// bestätige Duellannahme bei Server
 		//alert("TODO: Duellannahme bei Server bestätigt");
 				
 		$.ajax( {
 			url:serverURL + "game/answerInvite/"+gameData.spielID,
 			type:"POST",
+			contentType:"text/plain",
+			beforeSend:function(xhr){authHeader(xhr);},
+			crossDomain:true,
 			success:function(obj){alert("Duellannahme bei Server erfolgreich bestätigt!");},
 			error:function(obj){alert("Fehler bei Bestätigung der Duellannahme"+JSON.stringify(obj));},
-			username:v_username,
-			passwort:v_password,
 			data:"true"
 			}); 
 			
@@ -308,10 +306,11 @@ function onConfirmDuelRequest(buttonIndex, gameData){
 		$.ajax( {
 			url:serverURL + "game/answerInvite/"+gameData.spielID,
 			type:"POST",
+			contentType:"text/plain",
+			beforeSend:function(xhr){authHeader(xhr);},
+			crossDomain:true,
 			success:function(obj){alert("Duellablehnung bei Server erfolgreich bestätigt!");},
 			error:function(obj){alert("Fehler bei Bestätigung der Duellablehnung"+JSON.stringify(obj));},
-			username:v_username,
-			passwort:v_password,
 			data:"false"
 			});
 			break;
@@ -321,7 +320,7 @@ function onConfirmDuelRequest(buttonIndex, gameData){
 function abmelden(){
 //lösche credentials in localstorage
 localStorage.removeItem("username");
-localStorage.removeItem("username");
+localStorage.removeItem("password");
 //zeige login screen (neuladen der seite --> username nicht gesetzt --> Login öffnet sich!
 window.location.reload();
 

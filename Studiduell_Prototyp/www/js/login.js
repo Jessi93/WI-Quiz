@@ -36,12 +36,12 @@ function sendLoginDataToServer() {
 	//Username und passwort sind beide gesetzt worden --> Serveranfrage starten!
 	alert("Login-AJAX-Call gestartet!");
 	$.ajax( {
-			url:serverURL + "user/login",
+			url:serverURL + "user/checkCredentials",
 			type:"POST",
+			beforeSend:function(xhr){authHeader(xhr);},
+			crossDomain:true,
 			success:function(obj){openHomeScreen();},
-			error:function(obj){handleErrorLogin(obj);}, 
-			username:v_username,
-			passwort:v_password
+			error:function(obj){handleErrorLogin(obj);},
 			}); 
 	}
 			
@@ -66,7 +66,7 @@ function handleErrorLogin(returnedObject) {
 	if(returnedObject==="false"){
 	alert("Die Kombination aus Username und Passwort ist nicht korrekt, bitte versuche es erneut.");
 	}else{
-	alert(unescape("%22Fehler bei %DCberpr%FCfung der Login Daten %28Keine Verbindung zum Server%3F%29 %22"));//DEBUG +returnedObject);
+	alert(unescape("%22Fehler bei %DCberpr%FCfung der Login Daten %28Keine Verbindung zum Server%3F%29 %22")+JSON.stringify(returnedObject));//DEBUG +returnedObject);
 	}
 }
 

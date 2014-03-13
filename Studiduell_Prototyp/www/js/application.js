@@ -72,6 +72,7 @@ function isRoundStarter(gameInfo) {
 }
 
 function authHeader(xhr) {
+	alert("username: "+localStorage.getItem("username")+" password: "+localStorage.getItem("password")+"URL: "+serverURL);
 	var usernameColonPassword = localStorage.getItem("username") + ":" + localStorage.getItem("password");
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
