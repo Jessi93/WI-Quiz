@@ -10,7 +10,7 @@ function spielerSuchenSeite() {
 function loadFriendslistFromServer() {
 		//Hole die Freundesliste des Users vom Server
  		$.ajax( {
-		url:serverURL + "Studiduell/settings/friends",
+		url:serverURL + "settings/friends",
 		type:"GET",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
@@ -51,7 +51,7 @@ $.ajax( {
 function createNewGameRandom() {
 	// Schicke Anfrage an Server
 	$.ajax( {
-		url:serverURL + "Studiduell/game/create/random",
+		url:serverURL + "game/create/random",
 		type:"POST",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
