@@ -8,6 +8,7 @@ function spielerSuchenSeite() {
 }
 
 function loadFriendslistFromServer() {
+		alert("loadFriendslistFromServer wurde aufgerufen!");
 		//Hole die Freundesliste des Users vom Server
  		$.ajax( {
 		url:serverURL + "settings/friends",
@@ -25,6 +26,7 @@ function loadFriendslistFromServer() {
 
 // Füge dem HTML Dokument für jeden user in der Freundesliste einen Eintrag "Freund" hinzu.
 function addFriendToList(obj){
+	alert("addFriendToList wurde aufgerufen!");
 	//Freundesliste befüllen
 	for(var i=0;i<obj.length;i++){
 	$("#freundeslisteErweitern").append("<li class='topcoat-list__item custom_List_item' ontouchend='createNewGameFriendlist(this)'>"+obj[i]+"</li>");

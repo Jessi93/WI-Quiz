@@ -74,7 +74,7 @@ public class UserController {
 	 * @param user
 	 * @return 201/409
 	 */
-	@RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
+	@RequestMapping(method = RequestMethod.PUT, consumes = MediaType.TEXT_PLAIN_VALUE,
 					produces = MediaType.TEXT_PLAIN_VALUE, value = "/register/{name}")
 	public ResponseEntity<Void> register(@PathVariable("name") String name,
 			@RequestBody String password) {
@@ -88,7 +88,7 @@ public class UserController {
 				user.setPushId(null);
 				user.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
 				
-				userRepository.save(user);
+				user = userRepository.save(user); // use attached entity. This way, kategorienfilterRepository does not want to save user
 				
 				// persist user's category settings
 				List<KategorieEntity> categories = kategorieRepository.findAll();
