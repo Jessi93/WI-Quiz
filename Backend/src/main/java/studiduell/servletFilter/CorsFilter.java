@@ -1,4 +1,4 @@
-package studiduell.security;
+package studiduell.servletFilter;
 
 import java.io.IOException;
 
