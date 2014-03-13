@@ -3,11 +3,13 @@ function init() {
 }
 
 function spielerSuchen() {
-//Alle Listeelemente löschen
-$("#ergebnislisteErweitern").empty();
-alert($("#search_username_input").val());
-//Daten vom Server holen
-$.ajax( {
+	alert("spielerSuchen() wurde aufgerufen!");
+	alert("Sie suchen nach:" + $("#search_username_input").val());
+	//Alle Listeelemente löschen
+	$("#ergebnislisteErweitern").empty();
+
+	//Daten vom Server holen
+	$.ajax( {
 		url:serverURL + "user/search/" + $("#search_username_input").val(),
 		type:"GET",
 		beforeSend:function(xhr){authHeader(xhr);},
@@ -57,6 +59,7 @@ arrayToSort.sort(sortAlphaNum);
  */
 
 function addResultToList(obj){
+	alert("addResultToList(obj) wurde aufgerufen!");
 	//sortRight(obj);
 	if(obj.length == 0){
 	navigator.notification.alert("Es wurden keine Ergebnisse gefunden.");
