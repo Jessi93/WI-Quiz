@@ -660,21 +660,14 @@ var GameData = {
 };
 
 function fetchLocalStorageData() {
-alert("fetchLocalStorageData wurde aufgerufen!");
+//alert("fetchLocalStorageData wurde aufgerufen!");
 //TODO: hole Serverdaten und schreibe Sie in GameData!
 gameData = localStorage.getItem("gameOverview");
-
-$.ajax( {
-		url:serverURL + "game/overview/" + gameID,
-		type:"PUT",
-		success:navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");
-		error:function(obj){alert(JSON.stringify(obj));}
-		});
 }
 
 function setSpielstand() {
 var Spielstand = (SpielstandSpieler1+":"+SpielstandSpieler2);
-alert("Spielstand: "+Spielstand);
+//alert("Spielstand: "+Spielstand);
  $('#scoreDiv').append(Spielstand);
 }
 function setSpieler1()
@@ -712,9 +705,9 @@ encolourSquare("runde6frage3spieler1", 6, 3, username, 1);
 }	
 
 function setSpieler2(){
-//alert("setSpieler2 wurde aufgerufen, username ist:"+localStorage.getItem("username"));
+//alert("setSpieler2 wurde aufgerufen"));
 //TODO: ermittle enemy username
-var enemy_username = "Kevin02";
+var enemy_username = localStorage.getItem("enemyUsername"); //TESTDATEN: "Kevin02"
 // encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zugehoerigerSpieler)
 //Erste Runde
 encolourSquare("runde1frage1spieler2", 1, 1, enemy_username, 2);	

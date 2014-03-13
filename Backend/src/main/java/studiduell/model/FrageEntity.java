@@ -202,4 +202,9 @@ public class FrageEntity {
 	public void setFlagFrageValidiert(boolean flagFrageValidiert) {
 		this.flagFrageValidiert = flagFrageValidiert;
 	}
+	
+	@Override
+	public String toString() {
+		return frage; //XXX
+	}
 }
