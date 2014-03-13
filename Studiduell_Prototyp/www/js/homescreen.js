@@ -49,6 +49,7 @@ function openNeuesSpielScreen() {
 }
 
 function sync() {
+
 	var credentialsAvailable;
 	if(isEmpty(localStorage.getItem("username"))) {
 	//im localstorage gibt es keinen Username 
@@ -75,7 +76,7 @@ function sync() {
 
 function fetchServerData() {
 	//alert("fetchServerData aufgerufen");
-	
+	alert("Vor SYNC AJAX: password:"+localStorage.getItem("password")+" username: "+localStorage.getItem("username"));
 	var v_username = localStorage.getItem("username");
 	var v_password = localStorage.getItem("password");
 		 //TODO: AJAX SYNC CALL muss in success gehen!
@@ -87,8 +88,7 @@ function fetchServerData() {
 			crossDomain:true,
 			success:function(obj){handleServerData(obj);},
 			error:function(obj){alert("Fehler beim holen der Hauptmenü-Spieldaten! "+JSON.stringify(obj));},
-			data:"0123456789",
-			dataType:"text/plain"
+			data:"0123456789"
 			}); 
 	
 	

@@ -77,8 +77,8 @@ function authHeader(xhr) {
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
 
-function authHeader(xhr, username, password){
-alert("username: "+username+" password: "+password+" URL: "+serverURL);
+function authHeaderManual(xhr, username, password){
+alert("3 parameter auth Header Methode! username: "+username+" password: "+password+" URL: "+serverURL);
 var usernameColonPassword = username + ":" + password;
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
