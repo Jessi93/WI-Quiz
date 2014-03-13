@@ -12,6 +12,8 @@ function loadFriendslistFromServer() {
  		$.ajax( {
 		url:serverURL + "Studiduell/settings/friends",
 		type:"GET",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
 		success:function(obj){addFriendToScreen(obj);},
 		error:function(obj){alert(JSON.stringify(obj));}
 	}); 
@@ -34,7 +36,9 @@ function createNewGameFriendlist(friendName){
 $.ajax( {
 		url:serverURL + "game/create/with/" + friendName,
 		type:"POST",
-		success:function(){openHomeView();},
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
+		success:function(){steroids.layers.popAll();},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
 	
@@ -49,7 +53,9 @@ function createNewGameRandom() {
 	$.ajax( {
 		url:serverURL + "Studiduell/game/create/random",
 		type:"POST",
-		success:function(){openHomeView();},
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
+		success:function(){steroids.layers.popAll();},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
 	
