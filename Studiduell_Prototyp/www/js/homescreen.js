@@ -49,6 +49,7 @@ function openNeuesSpielScreen() {
 }
 
 function sync() {
+
 	var credentialsAvailable;
 	if(isEmpty(localStorage.getItem("username"))) {
 	//im localstorage gibt es keinen Username 
@@ -75,10 +76,6 @@ function sync() {
 
 function fetchServerData() {
 	//alert("fetchServerData aufgerufen");
-	
-	var v_username = localStorage.getItem("username");
-	var v_password = localStorage.getItem("password");
-		 //TODO: AJAX SYNC CALL muss in success gehen!
 	$.ajax( {
 			url:serverURL + "user/sync",
 			type:"POST",
@@ -87,8 +84,7 @@ function fetchServerData() {
 			crossDomain:true,
 			success:function(obj){handleServerData(obj);},
 			error:function(obj){alert("Fehler beim holen der Hauptmenü-Spieldaten! "+JSON.stringify(obj));},
-			data:"0123456789",
-			dataType:"text/plain"
+			data:"0123456789"
 			}); 
 	
 	
@@ -213,6 +209,10 @@ function handleServerData(serverSyncData){
 	//alert("handleServerData wurde aufgerufen"+JSON.stringify(serverSyncData));
 	//schreibe sync Daten in localstorage
 	homescreenServerdata = serverSyncData;
+	
+	//entferne aktuelle Buttons vom Screen (alle werden anhand der neuen Serverdaten neu hinzugefügt!)
+	$("#ActionRequiredGames_div").empty();
+	$("#WaitingForGames_div").empty();
 	
 	for(var i=0;i<serverSyncData.length;i++){
 		//alert(JSON.stringify(serverSyncData[i]));
