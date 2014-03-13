@@ -1,5 +1,5 @@
 function init() {
-	//alert("Init wurde aufgerufen!");
+	alert("Init wurde aufgerufen!");
 	fetchLocalStorageData();
 	
 	setSpieler1();
@@ -275,7 +275,7 @@ var continueData = {
 };
 //XXX XXXXXXXXXXXXXXXXXXXXXXX
 
-var GameData = {
+var GameOverviewData = {
        "rounds":
        [
            {
@@ -661,8 +661,8 @@ var GameData = {
 
 function fetchLocalStorageData() {
 alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+JSON.stringify(localStorage.getItem("gameOverview")););
-// hole Serverdaten und schreibe Sie in GameData!
-gameData = localStorage.getItem("gameOverview");
+// hole Serverdaten und schreibe Sie in GameOverviewData!
+GameOverviewData = localStorage.getItem("gameOverview");
 }
 
 function setSpielstand() {
@@ -744,29 +744,29 @@ function encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zuge
 var fragenergebnis;
 var myUsername = localStorage.getItem("username");
 
-for (var i=0;i<GameData.rounds.length;i++){
+for (var i=0;i<GameOverviewData.rounds.length;i++){
 	//alert("Position in for schleife:"+i);
-	if (GameData.rounds[i].rundenNr == rundenNummer)
+	if (GameOverviewData.rounds[i].rundenNr == rundenNummer)
 		{
 		//prüfe: gibt es 6 antworten für diese Runde?
-		if(GameData.rounds[i].answers.length == 6){
+		if(GameOverviewData.rounds[i].answers.length == 6){
 			//prüfe benutzername === username an erster möglicher stelle
-			if (GameData.rounds[i].answers[(nrFrageInRunde * 2)-2].benutzer.benutzername === username){
+			if (GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-2].benutzer.benutzername === username){
 				//lese aus: ergebnisCheck 
-				fragenergebnis = GameData.rounds[i].answers[(nrFrageInRunde * 2)-2].ergebnisCheck;
+				fragenergebnis = GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-2].ergebnisCheck;
 				break;
 				}
 			//prüfe benutzername === username an zweiter möglicher stelle
-			else if (GameData.rounds[i].answers[(nrFrageInRunde * 2)-1].benutzer.benutzername === username){
+			else if (GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-1].benutzer.benutzername === username){
 				//lese aus: ergebnisCheck 
-				fragenergebnis = GameData.rounds[i].answers[(nrFrageInRunde * 2)-1].ergebnisCheck;
+				fragenergebnis = GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-1].ergebnisCheck;
 				break;
 				}
-			} else if(GameData.rounds[i].answers.length == 3){ 
+			} else if(GameOverviewData.rounds[i].answers.length == 3){ 
 		//Logik für drei Antworten pro Runde in Serverdaten!
-		if(GameData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === myUsername){
+		if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === myUsername){
 		//es sollen nur Vierecke angezeigt, wenn man selbst gespielt hat!
-		fragenergebnis = GameData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
+		fragenergebnis = GameOverviewData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
 		break;		}
 			}
 		}
