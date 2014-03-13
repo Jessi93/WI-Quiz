@@ -214,6 +214,10 @@ function handleServerData(serverSyncData){
 	//schreibe sync Daten in localstorage
 	homescreenServerdata = serverSyncData;
 	
+	//entferne aktuelle Buttons vom Screen (alle werden anhand der neuen Serverdaten neu hinzugefügt!)
+	$("#ActionRequiredGames_div").empty();
+	$("#WaitingForGames_div").empty();
+	
 	for(var i=0;i<serverSyncData.length;i++){
 		//alert(JSON.stringify(serverSyncData[i]));
 		//Prüfe, ob Eintrag ein Spiel darstellt, bei dem der Nutzer dran ist: (aktiv & warten auf = benutzer)

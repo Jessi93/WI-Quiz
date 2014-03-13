@@ -72,13 +72,13 @@ function isRoundStarter(gameInfo) {
 }
 
 function authHeader(xhr) {
-	alert("username: "+localStorage.getItem("username")+" password: "+localStorage.getItem("password")+"URL: "+serverURL);
+	//alert("username: "+localStorage.getItem("username")+" password: "+localStorage.getItem("password")+"URL: "+serverURL);
 	var usernameColonPassword = localStorage.getItem("username") + ":" + localStorage.getItem("password");
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
 
 function authHeaderManual(xhr, username, password){
-alert("3 parameter auth Header Methode! username: "+username+" password: "+password+" URL: "+serverURL);
-var usernameColonPassword = username + ":" + password;
+	//alert("3 parameter auth Header Methode! username: "+username+" password: "+password+" URL: "+serverURL);
+	var usernameColonPassword = username + ":" + password;
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
