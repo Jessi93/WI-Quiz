@@ -661,9 +661,9 @@ var GameOverviewData = {
 };
 
 function fetchLocalStorageData() {
-alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+JSON.stringify(localStorage.getItem("gameOverview")));
+alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+localStorage.getItem("gameOverview"));
 // hole Serverdaten und schreibe Sie in GameOverviewData!
-GameOverviewData = localStorage.getItem("gameOverview");
+GameOverviewData = JSON.parse(localStorage.getItem("gameOverview"));
 }
 
 function setSpielstand() {
@@ -740,7 +740,7 @@ encolourSquare("runde6frage3spieler2", 6, 3, enemy_username, 2);
 
 //Logik zum setzen/ einblenden eines Quadrats
 function encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zugehoerigerSpieler) {
-	//alert("encolourSquare wurde aufgerufen!");
+	//alert("encolourSquare wurde aufgerufen für viereck: "+viereck_id);
 //prüfe rundenNummer === rundenNr
 var fragenergebnis;
 var myUsername = localStorage.getItem("username");

@@ -33,8 +33,8 @@ function openRundenuebersicht(spielID, positionInServerdata) {
 		type:"GET",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
-		success:function(obj){localStorage.setItem("gameOverview", obj);
-		alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+JSON.stringify(localStorage.getItem("gameOverview")));
+		success:function(obj){localStorage.setItem("gameOverview", JSON.stringify(obj));
+		alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
 		var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
 		steroids.layers.push(rundenuebersichtView);
 		},
