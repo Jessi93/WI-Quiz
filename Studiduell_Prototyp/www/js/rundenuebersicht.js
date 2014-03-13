@@ -1,5 +1,5 @@
 function init() {
-	alert("Init wurde aufgerufen!");
+	//alert("Init wurde aufgerufen!");
 	fetchLocalStorageData();
 	
 	setSpieler1();
@@ -853,6 +853,7 @@ function openQuestions() {
 
 //Füge gegner als Freund hinzu
 function addAsFriendWrapper(){
+alert("addAsFriendWrapper wurde aufgerufen! enemyUsername: "+localStorage.getItem("enemyUsername"));
 addAsFriend(localStorage.getItem("enemyUsername"));
 }
 

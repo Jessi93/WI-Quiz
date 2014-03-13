@@ -83,7 +83,7 @@ $.ajax( {
 		type:"PUT",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
-		success:navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");
+		success:function(obj){navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
 		
