@@ -10,6 +10,8 @@ $("#ergebnislisteErweitern").empty();
 $.ajax( {
 		url:serverURL + "user/search/" + $("#search_username_input").val(),
 		type:"GET",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
 		success:function(obj){addResultToList(obj);},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
@@ -72,6 +74,8 @@ function addAsFriend(fName) {
 $.ajax( {
 		url:serverURL + "settings/friends/" + fName,
 		type:"PUT",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
 		success:navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
