@@ -90,13 +90,6 @@ INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwo
 INSERT INTO Spiel VALUES
 (last_insert_id(),'M','Kevin02','Kevin01',null,null,'Kevin01',1,'P','2014-02-18 17:10:47');
 
-INSERT INTO Runde (spielID, rundenNr) VALUES
-(1,1),
-(1,2),
-(1,3),
-(1,4),
-(1,5),
-(1,6);
 
 INSERT INTO Antwort VALUES
 (1,1,'Kevin02',true,false,false,false,true,false),

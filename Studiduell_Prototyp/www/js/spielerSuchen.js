@@ -77,20 +77,6 @@ arrayToSort.sort(sortAlphaNum);
 }
 
 
-function addAsFriend(fName) {
-$.ajax( {
-		url:serverURL + "settings/friends/" + fName,
-		type:"PUT",
-		beforeSend:function(xhr){authHeader(xhr);},
-		crossDomain:true,
-		success:function(){navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");},
-		error:function(obj){alert(JSON.stringify(obj));}
-		});
-		
-	//alert("Sie sind jetzt mit " + fName + " befreundet");
-}
-
-
 function createNewGame(gegnerName){
 $.ajax( {
 		url:serverURL + "game/create/with/" + gegnerName,
