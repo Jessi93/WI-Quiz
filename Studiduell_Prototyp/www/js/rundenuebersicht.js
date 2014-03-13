@@ -660,8 +660,8 @@ var GameData = {
 };
 
 function fetchLocalStorageData() {
-//alert("fetchLocalStorageData wurde aufgerufen!");
-//TODO: hole Serverdaten und schreibe Sie in GameData!
+alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+JSON.stringify(localStorage.getItem("gameOverview")););
+// hole Serverdaten und schreibe Sie in GameData!
 gameData = localStorage.getItem("gameOverview");
 }
 
@@ -820,6 +820,7 @@ function openFrage() {
 }
 
 function prepareQuestion() {
+	alert("prepareQuestion wurde aufgerufen!");
 	if(isRoundStarter()) {
 		fetchQuestionsRoundStart();
 	} else {

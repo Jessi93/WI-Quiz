@@ -76,10 +76,6 @@ function sync() {
 
 function fetchServerData() {
 	//alert("fetchServerData aufgerufen");
-	alert("Vor SYNC AJAX: password:"+localStorage.getItem("password")+" username: "+localStorage.getItem("username"));
-	var v_username = localStorage.getItem("username");
-	var v_password = localStorage.getItem("password");
-		 //TODO: AJAX SYNC CALL muss in success gehen!
 	$.ajax( {
 			url:serverURL + "user/sync",
 			type:"POST",
