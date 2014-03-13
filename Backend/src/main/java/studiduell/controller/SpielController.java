@@ -258,53 +258,6 @@ public class SpielController {
 			// any user requested questions for a game he does not play in
 			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.FORBIDDEN);
 		}
-		//TODO Mock
-		/*
-		ArrayNode json = JsonNodeFactory.instance.arrayNode();
-		
-		FrageEntity frage1 = new FrageEntity(1, "Logik und Algebra","uk", false, "Frage 1","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage2 = new FrageEntity(2, "Logik und Algebra","uk", false, "Frage 2","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage3 = new FrageEntity(3, "Logik und Algebra","uk2", false, "Frage 3","A","B","C","D",false,false,false,true,true);
-		ArrayNode cat1 = JsonNodeFactory.instance.arrayNode();
-		cat1.addPOJO(frage1);
-		cat1.addPOJO(frage2);
-		cat1.addPOJO(frage3);
-		
-		FrageEntity frage4 = new FrageEntity(4, "Methoden der Wirtschaftsinformatik","uk", false, "Frage 4","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage5 = new FrageEntity(5, "Methoden der Wirtschaftsinformatik","uk", false, "Frage 5","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage6 = new FrageEntity(6, "Methoden der Wirtschaftsinformatik","uk2", false, "Frage 6","A","B","C","D",false,false,false,true,true);
-		ArrayNode cat2 = JsonNodeFactory.instance.arrayNode();
-		cat2.addPOJO(frage4);
-		cat2.addPOJO(frage5);
-		cat2.addPOJO(frage6);
-		XXX
-		FrageEntity frage7 = new FrageEntity(7, "Verteilte Systeme","uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage8 = new FrageEntity(8, "Verteilte Systeme","uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage9 = new FrageEntity(9, "Verteilte Systeme","uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
-		ArrayNode cat3 = JsonNodeFactory.instance.arrayNode();
-		cat3.addPOJO(frage7);
-		cat3.addPOJO(frage8);
-		cat3.addPOJO(frage9);
-		
-		ObjectNode obj1 = JsonNodeFactory.instance.objectNode();
-		obj1.put("categoryName", "Logik und Algebra");
-		obj1.put("questions", cat1);
-		
-		ObjectNode obj2 = JsonNodeFactory.instance.objectNode();
-		obj2.put("categoryName", "Methoden der Wirtschaftsinformatik");
-		obj2.put("questions", cat2);
-		
-		ObjectNode obj3 = JsonNodeFactory.instance.objectNode();
-		obj3.put("categoryName", "Verteilte Systeme");
-		obj3.put("questions", cat3);
-		
-		json.add(obj1);
-		json.add(obj2);
-		json.add(obj3);
-		
-		return new ResponseEntity<>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.OK);
-		*/
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
