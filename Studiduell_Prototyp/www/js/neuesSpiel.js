@@ -15,7 +15,7 @@ function loadFriendslistFromServer() {
 		type:"GET",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
-		success:function(obj){addFriendToScreen(obj);},
+		success:function(obj){addFriendToList(obj);},
 		error:function(obj){alert(JSON.stringify(obj));}
 	}); 
 	

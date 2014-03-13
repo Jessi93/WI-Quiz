@@ -1,10 +1,10 @@
 function init() {
-	
+	alert("init wurde aufgerufen!");
 }
 
 function spielerSuchen() {
-	alert("spielerSuchen() wurde aufgerufen!");
-	alert("Sie suchen nach:" + $("#search_username_input").val());
+	alert("Der Button wurde geklickt!");
+	/* alert("Sie suchen nach:" + $("#search_username_input").val());
 	//Alle Listeelemente löschen
 	$("#ergebnislisteErweitern").empty();
 
@@ -20,7 +20,7 @@ function spielerSuchen() {
 	
  	/* 	//Test (Testdaten ohne Serveranbindung!)
 	var tmpServerData = new Array("Anna10", "Anna2", "anna0003", "Anna001", "Anna1");
-	addResultToList(tmpServerData);  */
+	addResultToList(tmpServerData);  */ 
   }
 
 /* //Sortierung
@@ -68,7 +68,7 @@ function addResultToList(obj){
 	// Ergebnisliste befüllen
 	for(var i=0;i<obj.length;i++){
 	//Button zum befreunden ergänzen
-	$("#ergebnislisteErweitern").append('<div class="row"><li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGame(this)">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button rightColumn" ontouchend="addAsFriend(\''+obj[i]+'\')"></button></div>');
+	$("#ergebnislisteErweitern").append('<div class="row"><li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGame(\''+obj[i]+'\')">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button rightColumn" ontouchend="addAsFriend(\''+obj[i]+'\')"></button></div>');
 	}
 	
 	// Zeige Ergebnisliste an
