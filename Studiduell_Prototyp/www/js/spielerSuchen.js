@@ -58,7 +58,7 @@ arrayToSort.sort(sortAlphaNum);
 }
  */
 
-function addResultToList(obj){
+/* function addResultToList(obj){
 	alert("addResultToList(obj) wurde aufgerufen!");
 	//sortRight(obj);
 	if(obj.length == 0){
@@ -83,7 +83,7 @@ $.ajax( {
 		type:"PUT",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
-		success:navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");
+		success:function(){navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
 		
@@ -95,6 +95,8 @@ function createNewGame(gegnerName){
 $.ajax( {
 		url:serverURL + "game/create/with/" + gegnerName,
 		type:"POST",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
 		success:function(){steroids.layers.popAll();},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
@@ -103,6 +105,6 @@ $.ajax( {
 		//steroids.layers.popAll();
 
 }
-
+ */
 
 document.addEventListener("deviceready", init, false);
