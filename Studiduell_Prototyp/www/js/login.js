@@ -38,7 +38,7 @@ function sendLoginDataToServer() {
 	$.ajax( {
 			url:serverURL + "user/checkCredentials",
 			type:"POST",
-			beforeSend:function(xhr){authHeader(xhr);},
+			beforeSend:function(xhr){authHeader(xhr, v_username, v_password);},
 			crossDomain:true,
 			success:function(obj){openHomeScreen();},
 			error:function(obj){handleErrorLogin(obj);},

@@ -76,3 +76,9 @@ function authHeader(xhr) {
 	var usernameColonPassword = localStorage.getItem("username") + ":" + localStorage.getItem("password");
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
+
+function authHeader(xhr, username, password){
+alert("username: "+username+" password: "+password+" URL: "+serverURL);
+var usernameColonPassword = username + ":" + password;
+	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
+}
