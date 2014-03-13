@@ -3,6 +3,8 @@ package studiduell.controller;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -27,6 +29,7 @@ import studiduell.constants.entity.SpieltypEntityEnum;
 import studiduell.constants.httpheader.HttpHeaderDefaults;
 import studiduell.model.AntwortEntity;
 import studiduell.model.FrageEntity;
+import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.RundeEntity;
 import studiduell.model.SpielEntity;
@@ -70,6 +73,11 @@ public class SpielController {
 	private int calendarOffset;
 	@Value("${game.maxRounds}")
 	private int maxRounds;
+	
+	@Value("${game.suggestedCategoriesCount}")
+	private int suggestedCategoriesCount;
+	@Value("${game.questionsPerRound}")
+	private int questionsPerRound;
 	
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE,
 			value = "/create/random")
@@ -115,7 +123,7 @@ public class SpielController {
 					Arrays.asList(new SpielstatusEntity[] {SpielstatusEntityEnum.A.getEntity(), SpielstatusEntityEnum.P.getEntity()})) == 0) {
 				// do we have at least three categories in common
 				Set<KategorienfilterEntity> commonCategories = kategorienfilterRepository.commonCategories(userUserEntity, opponentUserEntity);
-				if(commonCategories.size() >= 3) {
+				if(commonCategories.size() >= suggestedCategoriesCount) {
 					SpielEntity game = createGame(userUserEntity, opponentUserEntity,
 							SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
 					spielRepository.save(game);
@@ -201,10 +209,51 @@ public class SpielController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
-			value = "/randomCategoriesFor/{gameID}")
-	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") String gameID) {
+			value = "/randomCategoriesFor/{gameID}") //TODO GET instead of POST
+	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID) {
+		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		
+		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
+		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
+		
+		if(userUserEntity.equals(gameSpielEntity.getSpieler1()) || userUserEntity.equals(gameSpielEntity.getSpieler2())) {
+			Set<KategorienfilterEntity> commonCategories = kategorienfilterRepository.commonCategories(userUserEntity, opponentUserEntity);
+			if(commonCategories.size() >= suggestedCategoriesCount) {
+				// the certain amount of common categories exists
+				
+				ArrayNode json = JsonNodeFactory.instance.arrayNode();
+				
+				Set<KategorieEntity> categories = randomCommonCategoryIntersection(commonCategories, suggestedCategoriesCount);
+				Iterator<KategorieEntity> categoryIterator = categories.iterator();
+				while(categoryIterator.hasNext()) {
+					// create an array entry for each selected category
+					ObjectNode currEntryNode = JsonNodeFactory.instance.objectNode();
+					KategorieEntity currCategory = categoryIterator.next();
+					
+					Set<FrageEntity> questions = randomQuestionsByCategory(currCategory, questionsPerRound);
+					ArrayNode questionsArrayNode = JsonNodeFactory.instance.arrayNode();
+					for(FrageEntity question : (FrageEntity[]) questions.toArray()) {
+						questionsArrayNode.addPOJO(question);
+					}
+					
+					currEntryNode.put("categoryName", currCategory.getName());
+					currEntryNode.put("questions", questionsArrayNode);
+					
+					json.add(currEntryNode);
+				}
+				
+				return new ResponseEntity<ArrayNode>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+			} else {
+				// less than a certain amount of common categories
+				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.GONE);
+			}
+		} else {
+			// any user requested questions for a game he does not play in
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.FORBIDDEN);
+		}
 		//TODO Mock
+		/*
 		ArrayNode json = JsonNodeFactory.instance.arrayNode();
 		
 		FrageEntity frage1 = new FrageEntity(1, "Logik und Algebra","uk", false, "Frage 1","A","B","C","D",false,false,false,true,true);
@@ -222,7 +271,7 @@ public class SpielController {
 		cat2.addPOJO(frage4);
 		cat2.addPOJO(frage5);
 		cat2.addPOJO(frage6);
-		
+		XXX
 		FrageEntity frage7 = new FrageEntity(7, "Verteilte Systeme","uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
 		FrageEntity frage8 = new FrageEntity(8, "Verteilte Systeme","uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
 		FrageEntity frage9 = new FrageEntity(9, "Verteilte Systeme","uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
@@ -249,6 +298,7 @@ public class SpielController {
 		
 		return new ResponseEntity<>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
 				HttpStatus.OK);
+		*/
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
@@ -338,6 +388,34 @@ public class SpielController {
 			RundeEntity round = new RundeEntity(spielEntity, i);
 			rundeRepository.save(round);
 		}
+	}
+	
+	/**
+	 * Returns a random intersection of common categories. The set's size
+	 * is <code>amount</code>.
+	 * 
+	 * @param categoryFilter the category filters.
+	 * @param amount the amount of randomly selected common categories
+	 * @return the randomly selected common categories
+	 */
+	private Set<KategorieEntity> randomCommonCategoryIntersection(Set<KategorienfilterEntity> categoryFilter, int amount) {
+		Set<KategorieEntity> categories = new HashSet<>(amount);
+		
+		Object[] tmpKategorienfilterEntities = categoryFilter.toArray();
+		while(categories.size() < amount) {
+			int randomIndex = random.nextInt(amount);
+			categories.add(((KategorienfilterEntity) tmpKategorienfilterEntities[randomIndex]).getKategorieName());
+		}
+		
+		return categories;
+	}
+	
+	private Set<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
+		// TODO Auto-generated method stub
+		int questionsCount = frageRepository.countFindByKategorieName(category);
+		
+//		PageRequest pageRequest = new PageRequest(page, size)
+		return null;
 	}
 }
 

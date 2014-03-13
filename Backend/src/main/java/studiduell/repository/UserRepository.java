@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import studiduell.model.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, String> {
+//TODO http://docs.spring.io/spring-data/jpa/docs/1.0.0.M1/reference/html/#jpa.query-methods.query-creation without @Query (generation!)
 	@Query("SELECT u.benutzername FROM UserEntity u WHERE u.benutzername LIKE :pattern")
 	Page<String> roughSearch(@Param("pattern") String pattern, Pageable pageable);
 	
