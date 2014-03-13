@@ -5,7 +5,7 @@ function init() {
 function spielerSuchen() {
 //Alle Listeelemente löschen
 $("#ergebnislisteErweitern").empty();
-
+alert($("#search_username_input").val());
 //Daten vom Server holen
 $.ajax( {
 		url:serverURL + "user/search/" + $("#search_username_input").val(),
@@ -58,6 +58,10 @@ arrayToSort.sort(sortAlphaNum);
 
 function addResultToList(obj){
 	//sortRight(obj);
+	if(obj.length == 0){
+	navigator.notification.alert("Es wurden keine Ergebnisse gefunden.");
+	}
+	else {
 	// Ergebnisliste befüllen
 	for(var i=0;i<obj.length;i++){
 	//Button zum befreunden ergänzen
@@ -66,7 +70,7 @@ function addResultToList(obj){
 	
 	// Zeige Ergebnisliste an
 	$("#ergebnislisteDiv").css("visibility","visible");
-
+	}
 }
 
 
