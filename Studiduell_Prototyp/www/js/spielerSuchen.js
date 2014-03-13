@@ -68,7 +68,7 @@ function addResultToList(obj){
 	// Ergebnisliste befüllen
 	for(var i=0;i<obj.length;i++){
 	//Button zum befreunden ergänzen
-	$("#ergebnislisteErweitern").append('<div class="row"><li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGame(this)">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button rightColumn" ontouchend="addAsFriend(\''+obj[i]+'\')"></button></div>');
+	$("#ergebnislisteErweitern").append('<div class="row"><li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGame(\''+obj[i]+'\')">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button rightColumn" ontouchend="addAsFriend(\''+obj[i]+'\')"></button></div>');
 	}
 	
 	// Zeige Ergebnisliste an
