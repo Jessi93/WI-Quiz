@@ -61,4 +61,9 @@ public class KategorienfilterEntity {
 	public void setKategorieAusgewaehltCheck(boolean kategorieAusgewaehltCheck) {
 		this.kategorieAusgewaehltCheck = kategorieAusgewaehltCheck;
 	}
+	
+	@Override
+	public String toString() {
+		return kategorieName.getName(); //XXX
+	}
 }
