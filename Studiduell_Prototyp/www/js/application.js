@@ -89,7 +89,8 @@ $.ajax( {
 		type:"PUT",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
-		success:function(){navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");},
+		success:function(){navigator.notification.alert('Sie sind jetzt mit ' + fName + ' befreundetYou are the winner!',,'Information','OK');},
+		//TODO proper Fehlerbehandlung
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
 		
