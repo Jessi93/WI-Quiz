@@ -7,7 +7,7 @@ Screenspezifische Funktionen werden in den jeweiligen 'screenname.js' files besc
 
 steroids.view.navigationBar.show("Studiduell");
 
-var serverURL = "http://192.168.0.108:8090/Studiduell/";
+var serverURL = "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/";
 
 /*
 Prüft, ob ein String leer ist, oder nicht (leer = true, nicht leer = false)
