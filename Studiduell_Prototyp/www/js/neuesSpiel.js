@@ -29,7 +29,7 @@ function addFriendToList(obj){
 	alert("addFriendToList wurde aufgerufen!");
 	//Freundesliste befüllen
 	for(var i=0;i<obj.length;i++){
-	$("#freundeslisteErweitern").append("<li class='topcoat-list__item custom_List_item' ontouchend='createNewGameFriendlist(\''+obj[i]+'\')'>"+obj[i]+"</li>");
+	$("#freundeslisteErweitern").append('<li class="topcoat-list__item custom_List_item" ontouchend="createNewGameFriendlist(\''+obj[i]+'\')">'+obj[i]+'</li>');
 	}
 }
 
