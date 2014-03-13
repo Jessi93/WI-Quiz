@@ -8,6 +8,7 @@ function init() {
 	setownName();
 	setenemyName();
 }
+
 var SpielstandSpieler1 = 0;
 var SpielstandSpieler2 = 0;
 
@@ -660,7 +661,7 @@ var GameOverviewData = {
 };
 
 function fetchLocalStorageData() {
-alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+JSON.stringify(localStorage.getItem("gameOverview")););
+alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+JSON.stringify(localStorage.getItem("gameOverview")));
 // hole Serverdaten und schreibe Sie in GameOverviewData!
 GameOverviewData = localStorage.getItem("gameOverview");
 }
@@ -813,10 +814,10 @@ $('#spielerBDiv').append(enemyUsername);
 function openFrage() {
 	//TODO disable button if not waiting for me!
 	prepareQuestion();
-	/*
-	var newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
-	steroids.layers.push(newView);
-	*/
+	
+	//var newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
+	//steroids.layers.push(newView);
+	
 }
 
 function prepareQuestion() {
@@ -858,14 +859,16 @@ addAsFriend(localStorage.getItem("enemyUsername"));
 function giveUp(){
 alert("give up wurde aufgerufen!");
 //TODO hole gameID!
-/*
-$.ajax( {
-		url:serverURL + "game/abandon/" + gameID,
-		type:"POST",
-		success:function(obj){alert(JSON.stringify(obj));}
-		error:function(obj){alert(JSON.stringify(obj));}
-		});
-		*/
+
+// $.ajax( {
+		// url:serverURL + "game/abandon/" + gameID,
+		// type:"POST",
+		// success:function(obj){alert(JSON.stringify(obj));}
+		// error:function(obj){alert(JSON.stringify(obj));}
+		// });
+		
 }
+
+
 
 document.addEventListener("deviceready", init, false);
