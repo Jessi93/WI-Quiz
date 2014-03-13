@@ -1,16 +1,16 @@
 function init() {
-	alert("init wurde aufgerufen!");
+	//alert("init wurde aufgerufen!");
 }
 
 function spielerSuchen() {
-	alert("Der Button wurde geklickt!");
-	/* alert("Sie suchen nach:" + $("#search_username_input").val());
+	 var text_input = $("#search_username_input").val();
 	//Alle Listeelemente löschen
+	
 	$("#ergebnislisteErweitern").empty();
 
 	//Daten vom Server holen
 	$.ajax( {
-		url:serverURL + "user/search/" + $("#search_username_input").val(),
+		url:serverURL + "user/search/" + text_input,
 		type:"GET",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
@@ -23,7 +23,7 @@ function spielerSuchen() {
 	addResultToList(tmpServerData);  */ 
   }
 
-/* //Sortierung
+ //Sortierung
 function sortRight(arrayToSort){
 // Richtige Sortierung: Klein-/Großbuchstaben
 function stringComparison(a, b)	{
@@ -56,10 +56,10 @@ function sortAlphaNum(a,b) {
 }
 arrayToSort.sort(sortAlphaNum);
 }
- */
 
-/* function addResultToList(obj){
-	alert("addResultToList(obj) wurde aufgerufen!");
+
+ function addResultToList(obj){
+	//alert("addResultToList(obj) wurde aufgerufen!");
 	//sortRight(obj);
 	if(obj.length == 0){
 	navigator.notification.alert("Es wurden keine Ergebnisse gefunden.");
@@ -91,6 +91,5 @@ $.ajax( {
 		//steroids.layers.popAll();
 
 }
- */
 
 document.addEventListener("deviceready", init, false);
