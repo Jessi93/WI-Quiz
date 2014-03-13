@@ -7,19 +7,19 @@ function spielerSuchen() {
 $("#ergebnislisteErweitern").empty();
 
 //Daten vom Server holen
-/*$.ajax( {
+$.ajax( {
 		url:serverURL + "user/search/" + $("#search_username_input").val(),
 		type:"GET",
 		success:function(obj){addResultToList(obj);},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
-		*/
- 		//Test (Testdaten ohne Serveranbindung!)
+	
+ 	/* 	//Test (Testdaten ohne Serveranbindung!)
 	var tmpServerData = new Array("Anna10", "Anna2", "anna0003", "Anna001", "Anna1");
-	addResultToList(tmpServerData); 
+	addResultToList(tmpServerData);  */
   }
 
-//Sortierung
+/* //Sortierung
 function sortRight(arrayToSort){
 // Richtige Sortierung: Klein-/Großbuchstaben
 function stringComparison(a, b)	{
@@ -52,10 +52,10 @@ function sortAlphaNum(a,b) {
 }
 arrayToSort.sort(sortAlphaNum);
 }
-
+ */
 
 function addResultToList(obj){
-	sortRight(obj);
+	//sortRight(obj);
 	// Ergebnisliste befüllen
 	for(var i=0;i<obj.length;i++){
 	//Button zum befreunden ergänzen
@@ -69,28 +69,27 @@ function addResultToList(obj){
 
 
 function addAsFriend(fName) {
-/*$.ajax( {
+$.ajax( {
 		url:serverURL + "settings/friends/" + fName,
 		type:"PUT",
 		success:navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
-		*/
-	alert("Sie sind jetzt mit " + fName + " befreundet");
-
+		
+	//alert("Sie sind jetzt mit " + fName + " befreundet");
 }
 
 
 function createNewGame(gegnerName){
-/*$.ajax( {
+$.ajax( {
 		url:serverURL + "game/create/with/" + gegnerName,
 		type:"POST",
 		success:function(){steroids.layers.popAll();},
 		error:function(obj){alert(JSON.stringify(obj));}
 		});
-		*/
+		
 		//Test
-		steroids.layers.popAll();
+		//steroids.layers.popAll();
 
 }
 

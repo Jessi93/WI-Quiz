@@ -70,6 +70,17 @@ INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwo
 ('Programmierung', 'UK 1 zu Programmierung',false,'Was ist ein natives Sprachmittel in C', 'Listen', 'Queues','LinkedLists','Arrays',false,false,false,true,true),
 ('Programmierung', 'UK 2 zu Programmierung',false,'Welche Schleifen-Art gibt es in C++ nicht?', 'For', 'Do-Until','While','Do-While',false,true,false,false,true),
 ('Programmierung', 'UK 1 zu Programmierung',false,'Welcher Assembly-Befehl kopiert register ax nach bx (Intel-Syntax)?', 'mov bx,ax','cpy bx,ax', 'dup bx,ax','copy bx,ax',true,false,false,false,true);
+('Programmierung', 'UK 1 zu Programmierung',false,'Wie sollen Variablen in Java deklariert werden?', 'CamelCase', 'nur Kleinbuchstaben','var b,','In einer eigenen Klasse',true,false,false,false,true),
+('Programmierung', 'UK 1 zu Programmierung',false,'Welche Code ist nicht richtig(JAVA)?', 'int b;','5 = int zahl;', 'int zahl,','int Antwort;',false,true,true,true,true);
+('Programmierung', 'UK 1 zu Programmierung',false,'Was ist richtig deklariert(JAVA)', 'public int getHallo() {return hallo;}', 'public void getHallo() {return hallo;}','public void setHallo() {return hallo;}','public void setHallo(int hallo) {this.hallo = hallo;}',true,false,false,true,true),
+('Programmierung', 'UK 2 zu Programmierung',false,'Mit Welchen Farben kann man alle anderen erstellen?', 'false', 'true','false','false',false,true,false,false,true),
+('Programmierung', 'UK 2 zu Programmierung',false,'Welche Personen haben Java entwickelt?', 'true', 'true','true','true',true,true,true,true,true),
+('Programmierung', 'UK 2 zu Programmierung',false,'Ergänze den folgenden Satz damit die Ausage stimmt: Die Antwort ist ...', 'false', 'true','true','false',false,true,true,false,true),
+('Programmierung', 'UK 2 zu Programmierung',false,'So ein Mist', 'delete', 'wwer','wo','wann',false,true,false,false,false),
+('Programmierung', 'UK 2 zu Programmierung',false,'Was ist richtiger JAVAScript-Code', '<script type="text/javascript">document.getElementById("kategorieDiv").css("visibility","hidden");</script>', '<script type="text/javascript">$("#kategorieDiv").css("visibility","hidden");;</script>','<script type="text/javascript">document.getElementById("antwort1").css("visibility","hidden");</script>', '<script type="text/javascript">$("#antwort1").css("visibility","hidden");;</script>',true,true,true,true,true),
+('Programmierung', 'UK 2 zu Programmierung',false,'TestAlert', '<script>alert("Hallo Sie wurden gehäckt")</script>', 'false','false','false',false,false,false,false,true),
+('Programmierung', 'UK 2 zu Programmierung',false,'Alles ist falsch. Bitt drücken Sie auf weiter', 'false', 'false','false','false',false,false,false,false,true),
+
 
 INSERT INTO Spiel VALUES
 (1,'M','Kevin02','Kevin01',null,null,'Kevin01',1,'P','2014-02-18 17:10:47');
