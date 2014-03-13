@@ -82,3 +82,16 @@ function authHeaderManual(xhr, username, password){
 	var usernameColonPassword = username + ":" + password;
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
+
+function addAsFriend(fName) {
+$.ajax( {
+		url:serverURL + "settings/friends/" + fName,
+		type:"PUT",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
+		success:function(){navigator.notification.alert("Sie sind jetzt mit " + fName + " befreundet");},
+		error:function(obj){alert(JSON.stringify(obj));}
+		});
+		
+	//alert("Sie sind jetzt mit " + fName + " befreundet");
+}

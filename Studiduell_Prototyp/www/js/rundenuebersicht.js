@@ -1,4 +1,5 @@
-function init() {
+function initialize() {
+	
 	//alert("Init wurde aufgerufen!");
 	fetchLocalStorageData();
 	
@@ -872,4 +873,4 @@ alert("give up wurde aufgerufen!");
 
 
 
-document.addEventListener("deviceready", init, false);
+document.addEventListener("deviceready", initialize, false);
