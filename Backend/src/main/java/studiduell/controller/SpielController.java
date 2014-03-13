@@ -218,7 +218,7 @@ public class SpielController {
 			value = "/randomCategoriesFor/{gameID}") //TODO GET instead of POST
 	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		//TODO test method
+		
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
@@ -236,11 +236,11 @@ public class SpielController {
 					// create an array entry for each selected category
 					ObjectNode currEntryNode = JsonNodeFactory.instance.objectNode();
 					KategorieEntity currCategory = categoryIterator.next();
-					
+					 
 					Set<FrageEntity> questions = randomQuestionsByCategory(currCategory, questionsPerRound);
 					ArrayNode questionsArrayNode = JsonNodeFactory.instance.arrayNode();
-					for(FrageEntity question : (FrageEntity[]) questions.toArray()) {
-						questionsArrayNode.addPOJO(question);
+					for(Object question : questions.toArray()) {
+						questionsArrayNode.addPOJO((FrageEntity) question);
 					}
 					
 					currEntryNode.put("categoryName", currCategory.getName());
@@ -432,3 +432,4 @@ public class SpielController {
 
 //TODO @Transactional use timeout
 //TODO synchronized? multiple equal games are created instead of only one. Everywhere or nowhere!
+//FIXME CRITICAL: on database operations / JSON marshaling, escape '"', HTML entities (SQL/HTML injection)
