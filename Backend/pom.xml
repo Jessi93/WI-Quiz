@@ -131,7 +131,7 @@
 				<jdbc.password>development</jdbc.password>
 				<hibernate.generateDdl>true</hibernate.generateDdl>
 				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
-				<hibernate.show_sql>true</hibernate.show_sql>
+				<hibernate.show_sql>false</hibernate.show_sql>
 				<hibernate.database>MYSQL</hibernate.database>
 			</properties>
 		</profile>
