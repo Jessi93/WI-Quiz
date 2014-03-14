@@ -302,6 +302,7 @@ public class SpielController {
 			value = "/submitRoundResult/{gameID}")
 	public ResponseEntity<Void> submitRoundResult(@PathVariable("gameID") Integer gameID,
 			@RequestBody RoundResultPOJO[] roundResult) {
+		//TODO update wartenAuf!
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
