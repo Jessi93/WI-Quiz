@@ -1,5 +1,5 @@
 function initialize() {
-	
+	setNavigationBar();
 	//alert("Init wurde aufgerufen!");
 	fetchLocalStorageData();
 	
@@ -12,6 +12,8 @@ function initialize() {
 
 var SpielstandSpieler1 = 0;
 var SpielstandSpieler2 = 0;
+
+var gameInfo;
 
 // XXX XXXXXXXXXX
 var tmpServerData = 
@@ -662,9 +664,10 @@ var GameOverviewData = {
 };
 
 function fetchLocalStorageData() {
-alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+localStorage.getItem("gameOverview"));
+//alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+localStorage.getItem("gameOverview"));
 // hole Serverdaten und schreibe Sie in GameOverviewData!
 GameOverviewData = JSON.parse(localStorage.getItem("gameOverview"));
+gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 }
 
 function setSpielstand() {
@@ -822,16 +825,16 @@ function openFrage() {
 }
 
 function prepareQuestion() {
-	alert("prepareQuestion wurde aufgerufen!");
-	if(isRoundStarter()) {
-		fetchQuestionsRoundStart();
+	//alert("prepareQuestion wurde aufgerufen!");
+	if(isRoundStarter(gameInfo)) {
+		fetchQuestionsRoundStart(gameInfo);
 	} else {
 		fetchQuestionsRoundContinue();
 	}
 }
 
 function fetchQuestionsRoundStart() {
-alert("start"); //XXX
+alert("fetchQuestionsRoundStart wurde aufgerufen"); //XXX
 	var data = randomData;
 	localStorage.setItem("gameQuestionStart", JSON.stringify(data));
 	
@@ -840,7 +843,7 @@ alert("start"); //XXX
 }
 
 function fetchQuestionsRoundContinue() {
-alert("continue"); //XXX
+alert("fetchQuestionsRoundContinue wurde aufgerufen!"); //XXX
 	var data = continueData;
 	localStorage.setItem("gameQuestionContinue", JSON.stringify(data));
 	
@@ -854,23 +857,104 @@ function openQuestions() {
 
 //Füge gegner als Freund hinzu
 function addAsFriendWrapper(){
-alert("addAsFriendWrapper wurde aufgerufen! enemyUsername: "+localStorage.getItem("enemyUsername"));
-addAsFriend(localStorage.getItem("enemyUsername"));
+var enemyUsername = localStorage.getItem("enemyUsername");
+//alert("addAsFriendWrapper wurde aufgerufen! enemyUsername: "+enemyUsername);
+addAsFriend(enemyUsername);
+
 }
 
 function giveUp(){
-alert("give up wurde aufgerufen!");
-//TODO hole gameID!
+//alert("give up wurde aufgerufen!");
+function onConfirmGiveUp(buttonIndex, gameID){
+		switch (buttonIndex) {
+			case 1: //Aufgeben wurde bestätigt!
+			//TODO: Duell bei Server aufgeben!"
+			 $.ajax( {
+			 url:serverURL + "game/abandon/" + gameID,
+			 type:"POST",
+			success:function(obj){alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
+			//gehe zum home screen zurück!
+			steroids.layers.pop();
+			},
+			 error:function(obj){alert("Fehler beim Aufgeben des Duells!"+JSON.stringify(obj));}
+			 }); 
+				
+				break;
+			case 2: //Duellanfrage wurde abgelehnt!
+			//--> Tue nichts!
+			alert("Duell wurde nicht aufgegeben!")
+				break;
+		}
+	}
 
-// $.ajax( {
-		// url:serverURL + "game/abandon/" + gameID,
-		// type:"POST",
-		// success:function(obj){alert(JSON.stringify(obj));}
-		// error:function(obj){alert(JSON.stringify(obj));}
-		// });
-		
+var gameID = gameInfo.spielID;
+	
+navigator.notification.confirm(      
+	 'Möchtest du das Duell wirklich aufgeben?', 						// message    
+     function(buttonIndex){onConfirmGiveUp(buttonIndex, gameID);},           	// callback to invoke with index of button pressed       
+	 "Bist du sicher?",           			// title      
+	 ['Ja','Nein']   			// buttonLabels    
+	 );
+	 
+}
+
+function setNavigationBar(){
+/*
+	alert("setNavigationBar wurde aufgerufen! Step1")
+	//erstelle Button
+	var syncButton = new steroids.buttons.NavigationBarButton();
+	syncButton.title = "Sync";
+	alert("setNavigationBar wurde aufgerufen! Step2")
+	//Funktionalität des Sync Buttons
+	syncButton.onTap = function() {
+    alert("TODO sync!");
+	};
+	alert("setNavigationBar wurde aufgerufen! Step3")
+	//Zeige Button im Navigation Bar an
+	steroids.view.navigationBar.update({
+		buttons: {right: [syncButton]},
+		onSuccess: function() {    alert("Button set!"); },
+		onFailure: function() {    alert("Failed to set button.");   }
+	});
+	alert("setNavigationBar wurde aufgerufen! Step4")
+	
+	
+	//STEROIDS BEISPIEL! http://docs.appgyver.com/en/edge/steroids_Steroids%20Native%20UI_Steroids.view.navigationBar_navigationBar.update.md.html
+	var leftButton = new steroids.buttons.NavigationBarButton();
+	var rightButton = new steroids.buttons.NavigationBarButton();
+	var imageButton = new steroids.buttons.NavigationBarButton();
+
+	leftButton.title = "Left";
+	leftButton.onTap = function() { alert("Left button tapped"); };
+
+	rightButton.title = "Right";
+	rightButton.onTap = function() { alert("Right button tapped"); };
+
+	imageButton.imagePath = "../images/Lupe.png";
+	imageButton.onTap = function() { alert("Image button tapped"); };
+
+	steroids.view.navigationBar.update({
+	  titleImagePath: "/icons/telescope@2x.png",
+	  overrideBackButton: false,
+	  buttons: {
+		left: [leftButton],
+		right: [rightButton, imageButton]
+	  }
+	}, {
+	  onSuccess: function() {
+		alert("Navigation bar updated!");
+	  },
+	  onFailure: function() {
+		alert("Failed to update the navigation bar.");
+	  }
+	});
+*/
+	
 }
 
 
 
 document.addEventListener("deviceready", initialize, false);
+document.addEventListener("DOMContentLoaded", function(){
+alert("DOMContentLoaded Event wurde gefeuert!");
+}, false);

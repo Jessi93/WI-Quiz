@@ -9,6 +9,7 @@ function checkCredentials() {
 	//zu testzwecken: setze username --> gehe direkt in den home screen!
 	//localStorage.setItem("username", "Kevin01");
 	//localStorage.setItem("password", "secret");
+	//alert("username: "+localStorage.getItem("username"));
 	
 	if(isEmpty(localStorage.getItem("username"))) {
 	//im localstorage gibt es keinen Username --> gehe zum Login Screen 
@@ -25,7 +26,7 @@ function openRundenuebersicht(spielID, positionInServerdata) {
 	
 	//Schreibe Spieldaten in localstorage (für Fragescreen und enemy_username)
 	localStorage.setItem("enemyUsername", getEnemyUsername(homescreenServerdata[positionInServerdata]) );
-	localStorage.setItem("gameInfo", homescreenServerdata[positionInServerdata] );
+	localStorage.setItem("gameInfo", JSON.stringify(homescreenServerdata[positionInServerdata]) );
 	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage -> wird dann in der Rundenübersicht in variable geschrieben
 	$.ajax( {
 		url:serverURL + "game/overview/" + spielID,
@@ -205,7 +206,7 @@ function fetchServerData() {
 }
 
 function handleServerData(serverSyncData){
-	alert("handleServerData wurde aufgerufen. Neue Serverdaten:"+JSON.stringify(serverSyncData));
+	//alert("handleServerData wurde aufgerufen. Neue Serverdaten:"+JSON.stringify(serverSyncData));
 	//schreibe sync Daten in localstorage
 	homescreenServerdata = serverSyncData;
 	
@@ -276,7 +277,7 @@ function getEnemyUsername(gameData){
 }
 
 function showDuelRequest(gameData, positionInServerData){
-alert("showDuelRequest wurde aufgerufen"+JSON.stringify(gameData));
+//alert("showDuelRequest wurde aufgerufen"+JSON.stringify(gameData));
 
 	navigator.notification.confirm(      
 	 gameData.spieler1.benutzername+" fordert dich zu einem Duell heraus!",//+"SpielID: "+gameData.spielID, // message    

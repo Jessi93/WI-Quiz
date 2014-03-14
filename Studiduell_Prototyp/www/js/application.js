@@ -41,6 +41,7 @@ function popViewPushView (newView_locationString){
 }
 
 function isRoundStarter(gameInfo) {
+	//alert("gameinfo: "+JSON.stringify(gameInfo));
 	var me = localStorage.getItem("username");
 	var mePlayerNo = (me == gameInfo.spieler1.benutzername) ? 1 : 2;
 	
@@ -84,15 +85,22 @@ function authHeaderManual(xhr, username, password){
 }
 
 function addAsFriend(fName) {
-$.ajax( {
+	alert("addAsFriend wurde aufgerufen mit name: "+fName);
+
+	function onAlertDismissAddAsFriend(){
+		//leer lassen?
+		}
+	$.ajax( {
 		url:serverURL + "settings/friends/" + fName,
 		type:"PUT",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
-		success:function(){navigator.notification.alert('Sie sind jetzt mit ' + fName + ' befreundetYou are the winner!',,'Information','OK');},
+		success:function(){navigator.notification.alert('Sie sind jetzt mit ' + fName + ' befreundet!', onAlertDismissAddAsFriend,'Information','OK');},
 		//TODO proper Fehlerbehandlung
-		error:function(obj){alert(JSON.stringify(obj));}
+		error:function(obj){alert("Fehler bei der Freundesanfrage!"+JSON.stringify(obj));}
 		});
 		
-	//alert("Sie sind jetzt mit " + fName + " befreundet");
+	
 }
+
+
