@@ -27,21 +27,14 @@ function openRundenuebersicht(spielID, positionInServerdata) {
 	//Schreibe Spieldaten in localstorage (für Fragescreen und enemy_username)
 	localStorage.setItem("enemyUsername", getEnemyUsername(homescreenServerdata[positionInServerdata]) );
 	localStorage.setItem("gameInfo", JSON.stringify(homescreenServerdata[positionInServerdata]) );
-	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage -> wird dann in der Rundenübersicht in variable geschrieben
-	$.ajax( {
-		url:serverURL + "game/overview/" + spielID,
-		type:"GET",
-		beforeSend:function(xhr){authHeader(xhr);},
-		crossDomain:true,
-		success:function(obj){localStorage.setItem("gameOverview", JSON.stringify(obj));
-		alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
-		var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
-		steroids.layers.push(rundenuebersichtView);
-		},
-		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
-		});
-		
+	
+	//Markiere im localStorage, dass die Rundenübersichtdaten nicht neu geholt werden müssen
+	localStorage.setItem("gameOverviewInitialize", true);
+	
+	//hole Serverdaten in localStroage & gehe in neuen Screen nur bei Erfolg! (aber wechsel in neuen Screen nicht in callback, sondern ausgelagert & durch event RundenuebersichtDataloaded initiiert, damit AJAX wiederverwendet werden kann.
+	fetchRundenuebersichtData(spielID);		
 }
+
 
 function openNeuesSpielScreen() {
 	var neuesSpielView = new steroids.views.WebView("html/neuesSpiel.html");
@@ -49,6 +42,7 @@ function openNeuesSpielScreen() {
 }
 
 function sync() {
+	
 
 	var credentialsAvailable;
 	if(isEmpty(localStorage.getItem("username"))) {
@@ -338,6 +332,19 @@ window.location.reload();
 
 }
 
+function openRundenuebersichtScreen(){
+	var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
+		steroids.layers.push(rundenuebersichtView);
+}
+
+function test() {
+alert("DOMContentLoaded event wurde abgefangen!");
+}
+
+//sobald die Rundenübersichtsdaten geladen sind, soll in den RundenuebersichtScreen navigiert werden!
+document.addEventListener("RundenuebersichtDataloaded", openRundenuebersichtScreen, false);
 
 //sobald das Dokument rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
 document.addEventListener("deviceready", sync, false);
+document.addEventListener("DOMContentLoaded", test, false); 
+

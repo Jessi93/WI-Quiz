@@ -103,4 +103,36 @@ function addAsFriend(fName) {
 	
 }
 
+function fetchRundenuebersichtData (spielID){
+	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage --> feuere Event, dass Daten bereit stehen
+	$.ajax( {
+		url:serverURL + "game/overview/" + spielID,
+		type:"GET",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
+		success:function(obj){
+			localStorage.setItem("gameOverview", JSON.stringify(obj));
+			//alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
+			//TODO fireEvent RundenuebersichtDataloaded
+			//Event wird erstellt!
+			var event; // The custom event that will be created
+			  if (document.createEvent) {
+				event = document.createEvent("HTMLEvents");
+				event.initEvent("RundenuebersichtDataloaded", true, true);
+			  } else {
+				event = document.createEventObject();
+				event.eventType = "RundenuebersichtDataloaded";
+			  }
+			event.eventName = "RundenuebersichtDataloaded";
+			//feuern des Events
+			if (document.createEvent) {
+				document.dispatchEvent(event);
+			  } else {
+				document.fireEvent("on" + event.eventType, event);
+			  }
+		},
+		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
+		});
+}
+
 

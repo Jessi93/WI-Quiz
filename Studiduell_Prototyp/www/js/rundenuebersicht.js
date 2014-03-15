@@ -1,6 +1,16 @@
+var SpielstandSpieler1 = 0;
+var SpielstandSpieler2 = 0;
+var gameInfo;
+//Zeigt an, ob initialize bereits einmal gefeuert wurde, oder nicht! (so werden Serverdaten beim Screenstart nur 1 Mal geladen & in local Storage geschrieben!
+
 function initialize() {
+	var initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
+	//alert("initialize wurde aufgerufen! gameOverviewInitialize/initializeNotYetFired: "+initializeNotYetFired);
+	//Markiere im localStorage, dass initialize für die Rundenübersicht bereits aufgerufen wurde!
+	localStorage.setItem("gameOverviewInitialize", false);
+
 	setNavigationBar();
-	//alert("Init wurde aufgerufen!");
+	
 	fetchLocalStorageData();
 	
 	setSpieler1();
@@ -8,13 +18,10 @@ function initialize() {
 	setSpielstand();
 	setownName();
 	setenemyName();
+	//TEST:
+	//initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
+	//alert("initialize wurde abgeschlossen! "+initializeNotYetFired);
 }
-
-var SpielstandSpieler1 = 0;
-var SpielstandSpieler2 = 0;
-
-var gameInfo;
-
 // XXX XXXXXXXXXX
 var tmpServerData = 
        {
@@ -673,11 +680,13 @@ gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 function setSpielstand() {
 var Spielstand = (SpielstandSpieler1+":"+SpielstandSpieler2);
 //alert("Spielstand: "+Spielstand);
- $('#scoreDiv').append(Spielstand);
+ $('#scoreDiv').text(Spielstand);
 }
 function setSpieler1()
 {
 //alert("setSpieler1 wurde aufgerufen, username ist:"+localStorage.getItem("username"));
+//Setze Spielstand zurück, damit bei aktualisieren von 0 gezählt wird.
+SpielstandSpieler1 = 0;
 
 var username = localStorage.getItem("username");
 // encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zugehoerigerSpieler)
@@ -711,7 +720,10 @@ encolourSquare("runde6frage3spieler1", 6, 3, username, 1);
 
 function setSpieler2(){
 //alert("setSpieler2 wurde aufgerufen"));
-//TODO: ermittle enemy username
+
+//Setze Spielstand zurück, damit bei aktualisieren von 0 gezählt wird.
+SpielstandSpieler2 = 0;
+
 var enemy_username = localStorage.getItem("enemyUsername"); //TESTDATEN: "Kevin02"
 // encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zugehoerigerSpieler)
 //Erste Runde
@@ -803,13 +815,13 @@ if (fragenergebnis == true){
 function setownName(){
 var ownName;
 ownName = localStorage.getItem("username");
- $('#spielerADiv').append(ownName);
+ $('#spielerADiv').text(ownName);
 }
 
 function setenemyName(){
 var enemyUsername;
 var enemyUsername = localStorage.getItem("enemyUsername");
-$('#spielerBDiv').append(enemyUsername);
+$('#spielerBDiv').text(enemyUsername);
 }
 
 
@@ -882,19 +894,19 @@ function onConfirmGiveUp(buttonIndex, gameID){
 				break;
 			case 2: //Duellanfrage wurde abgelehnt!
 			//--> Tue nichts!
-			alert("Duell wurde nicht aufgegeben!")
+			//alert("Duell wurde nicht aufgegeben!")
 				break;
 		}
 	}
 
-var gameID = gameInfo.spielID;
-	
-navigator.notification.confirm(      
-	 'Möchtest du das Duell wirklich aufgeben?', 						// message    
-     function(buttonIndex){onConfirmGiveUp(buttonIndex, gameID);},           	// callback to invoke with index of button pressed       
-	 "Bist du sicher?",           			// title      
-	 ['Ja','Nein']   			// buttonLabels    
-	 );
+	var gameID = gameInfo.spielID;
+		
+	navigator.notification.confirm(      
+		 'Möchtest du das Duell wirklich aufgeben?', 						// message    
+		 function(buttonIndex){onConfirmGiveUp(buttonIndex, gameID);},           	// callback to invoke with index of button pressed       
+		 "Bist du sicher?",           			// title      
+		 ['Ja','Nein']   			// buttonLabels    
+		 );
 	 
 }
 
@@ -952,9 +964,29 @@ function setNavigationBar(){
 	
 }
 
+function sync(){
+	var initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
+	//true: die rundenübersicht wird für dieses Spiel neu aufgerufen (aus hauptmenü heraus)
+	//false: die rundenübersicht wird lediglich aktualisiert! (init wurde bereits mind 1 mal aufgerufen!)
+	alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
+	var gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
+	if(initializeNotYetFired === "true"){ 
+	//wenn initialize noch nicht aufgerufen wurde, rufe nur initialize auf (Aufruf aus Hauptmenü)
+	initialize();
+	}else{
+	//rundenübersicht wird aktualisiert! --> neue Daten holen & screen aktualisieren!
+	 //alert("im else von sync! initializeNotYetFired= "+initializeNotYetFired);
+	var gameID = gameInfo.spielID;
+	 //hole neue Serverdaten 
+	fetchRundenuebersichtData (gameID); //bei erfolg wird RundenuebersichtDataloaded gefeuert (als event!)
+	
+	}
+}
 
 
-document.addEventListener("deviceready", initialize, false);
-document.addEventListener("DOMContentLoaded", function(){
-alert("DOMContentLoaded Event wurde gefeuert!");
-}, false);
+//document.addEventListener("deviceready", initialize, false);
+
+document.addEventListener("DOMContentLoaded", sync, false);
+
+//sobald neue Serverdaten bereit stehen, soll der screen mit initialize aktualisiert werden!
+document.addEventListener("RundenuebersichtDataloaded", initialize, false);
