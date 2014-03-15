@@ -219,7 +219,8 @@ public class SpielController {
 			value = "/randomCategoriesFor/{gameID}") //TODO GET instead of POST
 	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		
+		//FIXME 500 if not enough questions
+		//TODO is it authUsername's turn?
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
@@ -304,6 +305,7 @@ public class SpielController {
 			@RequestBody RoundResultPOJO[] roundResult) {
 		//TODO update wartenAuf!
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+		//TODO is it authUsername's turn?
 		
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
