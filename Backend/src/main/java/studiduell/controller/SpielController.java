@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import studiduell.constants.entity.SpielstatusEntityEnum;
 import studiduell.constants.entity.SpieltypEntityEnum;
 import studiduell.constants.httpheader.HttpHeaderDefaults;
+import studiduell.json.model.RoundResultPOJO;
 import studiduell.model.AntwortEntity;
 import studiduell.model.FrageEntity;
 import studiduell.model.KategorieEntity;
@@ -218,7 +219,8 @@ public class SpielController {
 			value = "/randomCategoriesFor/{gameID}") //TODO GET instead of POST
 	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		
+		//FIXME 500 if not enough questions
+		//TODO is it authUsername's turn?
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
@@ -298,9 +300,53 @@ public class SpielController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-			value = "/submitRoundResult")
-	public ResponseEntity<Void> submitRoundResult(@RequestBody AntwortEntity answer) {
-		return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_IMPLEMENTED);
+			value = "/submitRoundResult/{gameID}")
+	public ResponseEntity<Void> submitRoundResult(@PathVariable("gameID") Integer gameID,
+			@RequestBody RoundResultPOJO[] roundResult) {
+		//TODO update wartenAuf!
+		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+		//TODO is it authUsername's turn?
+		
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
+		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
+		
+		if(gameSpielEntity != null) {
+			// does player participate that game? is he allowed to submit round results
+			if(gameSpielEntity.getSpieler1().getBenutzername().equals(authUsername)
+					|| gameSpielEntity.getSpieler2().getBenutzername().equals(authUsername)) {
+				// did the player send exactly that amount of questions the server expects
+				if(roundResult.length == questionsPerRound) {
+					for(RoundResultPOJO currResult : roundResult) {
+						RundeEntity roundRundeEntity = rundeRepository.findBySpielAndRundenNr(gameSpielEntity, currResult.getRunde());
+						FrageEntity questionFrageEntity = frageRepository.findOne(currResult.getFragenID());
+						// does the submitted question id number really denote a valid question?
+						if(questionFrageEntity != null) {
+							AntwortEntity answerAntwortEntity = new AntwortEntity();
+							answerAntwortEntity.setFrage(questionFrageEntity);
+							answerAntwortEntity.setRundenID(roundRundeEntity);
+							answerAntwortEntity.setBenutzer(userUserEntity);
+							answerAntwortEntity.setAntwortmoeglichkeit1Check(currResult.isAntwortmoeglichkeit1Check());
+							answerAntwortEntity.setAntwortmoeglichkeit2Check(currResult.isAntwortmoeglichkeit2Check());
+							answerAntwortEntity.setAntwortmoeglichkeit3Check(currResult.isAntwortmoeglichkeit3Check());
+							answerAntwortEntity.setAntwortmoeglichkeit4Check(currResult.isAntwortmoeglichkeit4Check());
+							answerAntwortEntity.setFlagFrageAngezeigt(true);
+							answerAntwortEntity.setErgebnisCheck(currResult.isErgebnisCheck());
+							
+							antwortRepository.save(answerAntwortEntity);
+						} else {
+							return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
+						}
+					}
+					return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+				} else {
+					return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.EXPECTATION_FAILED);
+				}
+			} else {
+				return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.FORBIDDEN);
+			}
+		} else {
+			return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/abandon/{gameID}")
