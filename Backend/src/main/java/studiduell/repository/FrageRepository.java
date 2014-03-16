@@ -1,6 +1,6 @@
 package studiduell.repository;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,5 +15,5 @@ public interface FrageRepository extends JpaRepository<FrageEntity, Integer> {
 	
 	//TODO used?
 	//TODO nicht validierte rausfiltern
-	Set<FrageEntity> findByKategorieName(KategorieEntity category);
+	List<FrageEntity> findByKategorieNameOrderByFragenIDAsc(KategorieEntity category);
 }

@@ -1,6 +1,7 @@
 package studiduell.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -240,7 +241,7 @@ public class SpielController {
 					ObjectNode currEntryNode = JsonNodeFactory.instance.objectNode();
 					KategorieEntity currCategory = categoryIterator.next();
 					
-					Set<FrageEntity> questions = randomQuestionsByCategory(currCategory, questionsPerRound);
+					List<FrageEntity> questions = randomQuestionsByCategory(currCategory, questionsPerRound);
 					ArrayNode questionsArrayNode = JsonNodeFactory.instance.arrayNode();
 					for(Object question : questions.toArray()) {
 						questionsArrayNode.addPOJO((FrageEntity) question);
@@ -440,14 +441,20 @@ public class SpielController {
 		return categories;
 	}
 	
-	private Set<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
-		Set<FrageEntity> questions = frageRepository.findByKategorieName(category);
-		Set<FrageEntity> returnQuestions = new HashSet<>();
+	private List<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
+		List<FrageEntity> questions = frageRepository.findByKategorieNameOrderByFragenIDAsc(category);
+		Set<Integer> indices = new HashSet<>(questionCount);
 		
-		Object[] tmpQuestions = questions.toArray();
-		while(returnQuestions.size() < questionCount) {
-			int randomIndex = random.nextInt(tmpQuestions.length);
-			returnQuestions.add((FrageEntity) tmpQuestions[randomIndex]);
+		do {
+			indices.add(random.nextInt(questions.size()));
+		} while(indices.size() != questionCount);
+		
+		Integer[] orderedIndices = indices.toArray(new Integer[questionCount]);
+		Arrays.sort(orderedIndices);
+		
+		List<FrageEntity> returnQuestions = new ArrayList<>(questionCount);
+		for(Integer i : orderedIndices) {
+			returnQuestions.add(questions.get(i));
 		}
 		
 		return returnQuestions;
