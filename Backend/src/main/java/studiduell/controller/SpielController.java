@@ -225,7 +225,7 @@ public class SpielController {
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
-		
+		//FIXME CRITICAL: sort questions in categories (criteria: questionID)
 		if(userUserEntity.equals(gameSpielEntity.getSpieler1()) || userUserEntity.equals(gameSpielEntity.getSpieler2())) {
 			Set<KategorienfilterEntity> commonCategories = kategorienfilterRepository.commonCategories(userUserEntity, opponentUserEntity);
 			if(commonCategories.size() >= suggestedCategoriesCount) {
@@ -265,39 +265,34 @@ public class SpielController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
 			value = "/continueRound/{gameID}")
-	public ResponseEntity<ObjectNode> continueRound(@PathVariable("gameID") String gameID) {
+	public ResponseEntity<ObjectNode> continueRound(@PathVariable("gameID") Integer gameID) {
+		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		
-		//TODO Mock
-		
-		ObjectNode obj = JsonNodeFactory.instance.objectNode();
-		
-		FrageEntity frage1 = new FrageEntity(7, new KategorieEntity("Verteilte Systeme"),"uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage2 = new FrageEntity(8, new KategorieEntity("Verteilte Systeme"),"uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage3 = new FrageEntity(9, new KategorieEntity("Verteilte Systeme"),"uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
-		
-		ArrayNode arr1 = JsonNodeFactory.instance.arrayNode();
-		arr1.addPOJO(frage1);
-		arr1.addPOJO(frage2);
-		arr1.addPOJO(frage3);
-		
-		RundeEntity r = new RundeEntity();
-		r.setRundenID(21);
-		
-		UserEntity user = userRepository.findOne("Kevin01");
-		AntwortEntity ans1 = new AntwortEntity(frageRepository.findOne(7), r, user, false, false, false, true, true, true);
-		AntwortEntity ans2 = new AntwortEntity(frageRepository.findOne(8), r, user, false, false, false, true, true, true);
-		AntwortEntity ans3 = new AntwortEntity(frageRepository.findOne(9), r, user, false, false, false, true, true, true);
-		
-		ArrayNode arr2 = JsonNodeFactory.instance.arrayNode();
-		arr2.addPOJO(ans1);
-		arr2.addPOJO(ans2);
-		arr2.addPOJO(ans3);
-		
-		obj.put("questions", arr1);
-		obj.put("answers", arr2);
-		
-		return new ResponseEntity<>(obj, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.OK);
+		if(gameSpielEntity != null) {
+			RundeEntity roundRundeEntity = rundeRepository.findBySpielAndRundenNr(gameSpielEntity, gameSpielEntity.getAktuelleRunde());
+			List<AntwortEntity> answers = roundRundeEntity.getAnswers();
+			if(!answers.isEmpty()) {
+				// build server answer
+				ObjectNode json = JsonNodeFactory.instance.objectNode();
+				ArrayNode questionsNode = JsonNodeFactory.instance.arrayNode();
+				ArrayNode answersNode = JsonNodeFactory.instance.arrayNode();
+				
+				for(AntwortEntity ans : answers) {
+					questionsNode.addPOJO(ans.getFrage());
+					answersNode.addPOJO(ans);
+				}
+				
+				json.put("questions", questionsNode);
+				json.put("answers", answersNode);
+				
+				return new ResponseEntity<ObjectNode>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+						HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+			}
+		} else {
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -322,12 +317,15 @@ public class SpielController {
 						authUsername.equals(tmpSpieler1Name) ? tmpSpieler2Name : tmpSpieler1Name);
 				// did the player send exactly that amount of questions the server expects
 				if(roundResult.length == questionsPerRound) {
+					Boolean roundStarter = null;
 					for(RoundResultPOJO currResult : roundResult) {
 						RundeEntity roundRundeEntity = rundeRepository.findBySpielAndRundenNr(gameSpielEntity, currResult.getRunde());
 						FrageEntity questionFrageEntity = frageRepository.findOne(currResult.getFragenID());
 						// does the submitted question id number really denote a valid question?
 						if(questionFrageEntity != null) {
-							boolean roundStarter = hasStartedRound(questionFrageEntity, roundRundeEntity);
+							// round starter if no answers for this current round exist
+							roundStarter = roundRundeEntity.getAnswers().isEmpty();
+							
 							AntwortEntity answerAntwortEntity = new AntwortEntity();
 							answerAntwortEntity.setFrage(questionFrageEntity);
 							answerAntwortEntity.setRundenID(roundRundeEntity);
@@ -342,24 +340,28 @@ public class SpielController {
 							antwortRepository.save(answerAntwortEntity);
 							
 							
-							if(roundStarter) {
-								// update wartenAuf
-								gameSpielEntity.setWartenAuf(opponentUserEntity);
-							} else {
-								if(gameSpielEntity.getAktuelleRunde() != maxRounds) {
-									// increment round, as the current is finished
-									gameSpielEntity.setAktuelleRunde(gameSpielEntity.getAktuelleRunde() + 1);
-								} else {
-									// finished last round, game over
-									gameSpielEntity.setWartenAuf(null);
-								}
-							}
-							
-							spielRepository.save(gameSpielEntity);
 						} else {
 							return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
 						}
 					}
+					
+					if(roundStarter != null) {
+						if(roundStarter) {
+							// update wartenAuf
+							gameSpielEntity.setWartenAuf(opponentUserEntity);
+						} else {
+							if(gameSpielEntity.getAktuelleRunde() != maxRounds) {
+								// increment round, as the current is finished
+								gameSpielEntity.setAktuelleRunde(gameSpielEntity.getAktuelleRunde() + 1);
+							} else {
+								// finished last round, game over
+								gameSpielEntity.setWartenAuf(null);
+								gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.C.getEntity());
+							}
+						}
+					}
+					
+					spielRepository.save(gameSpielEntity);
 					return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
 				} else {
 					return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.EXPECTATION_FAILED);
@@ -449,27 +451,6 @@ public class SpielController {
 		}
 		
 		return returnQuestions;
-	}
-	
-	/**
-	 * Returns whether the current user starts this round or
-	 * continues and finishes it (opponent's answers already
-	 * exist for this round).
-	 * 
-	 * @param questionFrageEntity question entity (might be
-	 * any question in this round)
-	 * @param roundRundeEntity round entity
-	 * 
-	 * @return <code>true</code> if no answers exist, i. e.
-	 * the user starts this round, <code>false</code>
-	 * otherwise
-	 */
-	private boolean hasStartedRound(FrageEntity questionFrageEntity,
-			RundeEntity roundRundeEntity) {
-		List<AntwortEntity> answers =
-				antwortRepository.findByFrageAndRundenID(questionFrageEntity, roundRundeEntity);
-		//TODO null vs empty list
-		return answers == null;
 	}
 }
 

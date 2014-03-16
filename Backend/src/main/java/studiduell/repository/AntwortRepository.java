@@ -10,7 +10,5 @@ import studiduell.model.RundeEntity;
 import studiduell.model.id.AntwortEntityPk;
 
 public interface AntwortRepository extends JpaRepository<AntwortEntity, AntwortEntityPk> {
-
-	List<AntwortEntity> findByFrageAndRundenID(FrageEntity questionFrageEntity,
-			RundeEntity roundRundeEntity);
+	// no new methods here
 }
