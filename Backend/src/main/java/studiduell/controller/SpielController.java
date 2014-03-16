@@ -37,6 +37,7 @@ import studiduell.model.SpielEntity;
 import studiduell.model.SpielstatusEntity;
 import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
+import studiduell.model.id.AntwortEntityPk;
 import studiduell.repository.AntwortRepository;
 import studiduell.repository.FrageRepository;
 import studiduell.repository.KategorienfilterRepository;
@@ -220,7 +221,7 @@ public class SpielController {
 	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		//FIXME 500 if not enough questions
-		//TODO is it authUsername's turn?
+		//XXX is it authUsername's turn? -> does not matter, as the user can just submit answers if it's his turn
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
@@ -238,7 +239,7 @@ public class SpielController {
 					// create an array entry for each selected category
 					ObjectNode currEntryNode = JsonNodeFactory.instance.objectNode();
 					KategorieEntity currCategory = categoryIterator.next();
-					 
+					
 					Set<FrageEntity> questions = randomQuestionsByCategory(currCategory, questionsPerRound);
 					ArrayNode questionsArrayNode = JsonNodeFactory.instance.arrayNode();
 					for(Object question : questions.toArray()) {
@@ -305,15 +306,20 @@ public class SpielController {
 			@RequestBody RoundResultPOJO[] roundResult) {
 		//TODO update wartenAuf!
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		//TODO is it authUsername's turn?
+		//TODO is it authUsername's turn? check wartenAuf!
 		
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		
 		if(gameSpielEntity != null) {
-			// does player participate that game? is he allowed to submit round results
-			if(gameSpielEntity.getSpieler1().getBenutzername().equals(authUsername)
-					|| gameSpielEntity.getSpieler2().getBenutzername().equals(authUsername)) {
+			String tmpSpieler1Name = gameSpielEntity.getSpieler1().getBenutzername();
+			String tmpSpieler2Name = gameSpielEntity.getSpieler2().getBenutzername();
+			
+			// does player participate that game? Is it his turn, meaning he is allowed to submit round results
+			if((tmpSpieler1Name.equals(authUsername) || tmpSpieler2Name.equals(authUsername))
+					&& gameSpielEntity.getWartenAuf().getBenutzername().equals(authUsername)) {
+				UserEntity opponentUserEntity = userRepository.findOne(
+						authUsername.equals(tmpSpieler1Name) ? tmpSpieler2Name : tmpSpieler1Name);
 				// did the player send exactly that amount of questions the server expects
 				if(roundResult.length == questionsPerRound) {
 					for(RoundResultPOJO currResult : roundResult) {
@@ -321,6 +327,7 @@ public class SpielController {
 						FrageEntity questionFrageEntity = frageRepository.findOne(currResult.getFragenID());
 						// does the submitted question id number really denote a valid question?
 						if(questionFrageEntity != null) {
+							boolean roundStarter = hasStartedRound(questionFrageEntity, roundRundeEntity);
 							AntwortEntity answerAntwortEntity = new AntwortEntity();
 							answerAntwortEntity.setFrage(questionFrageEntity);
 							answerAntwortEntity.setRundenID(roundRundeEntity);
@@ -333,6 +340,22 @@ public class SpielController {
 							answerAntwortEntity.setErgebnisCheck(currResult.isErgebnisCheck());
 							
 							antwortRepository.save(answerAntwortEntity);
+							
+							
+							if(roundStarter) {
+								// update wartenAuf
+								gameSpielEntity.setWartenAuf(opponentUserEntity);
+							} else {
+								if(gameSpielEntity.getAktuelleRunde() != maxRounds) {
+									// increment round, as the current is finished
+									gameSpielEntity.setAktuelleRunde(gameSpielEntity.getAktuelleRunde() + 1);
+								} else {
+									// finished last round, game over
+									gameSpielEntity.setWartenAuf(null);
+								}
+							}
+							
+							spielRepository.save(gameSpielEntity);
 						} else {
 							return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
 						}
@@ -426,6 +449,27 @@ public class SpielController {
 		}
 		
 		return returnQuestions;
+	}
+	
+	/**
+	 * Returns whether the current user starts this round or
+	 * continues and finishes it (opponent's answers already
+	 * exist for this round).
+	 * 
+	 * @param questionFrageEntity question entity (might be
+	 * any question in this round)
+	 * @param roundRundeEntity round entity
+	 * 
+	 * @return <code>true</code> if no answers exist, i. e.
+	 * the user starts this round, <code>false</code>
+	 * otherwise
+	 */
+	private boolean hasStartedRound(FrageEntity questionFrageEntity,
+			RundeEntity roundRundeEntity) {
+		List<AntwortEntity> answers =
+				antwortRepository.findByFrageAndRundenID(questionFrageEntity, roundRundeEntity);
+		//TODO null vs empty list
+		return answers == null;
 	}
 }
 
