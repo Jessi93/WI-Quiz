@@ -63,7 +63,7 @@ public class SpielEntity {
 	@OneToOne
 	private UserEntity verlierer;
 	
-	@JoinColumn(name = "wartenAuf", nullable = false, referencedColumnName = "benutzername")
+	@JoinColumn(name = "wartenAuf", referencedColumnName = "benutzername")
 	@OneToOne
 	private UserEntity wartenAuf;
 	
