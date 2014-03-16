@@ -15,5 +15,5 @@ public interface FrageRepository extends JpaRepository<FrageEntity, Integer> {
 	
 	//TODO used?
 	//TODO nicht validierte rausfiltern
-	List<FrageEntity> findByKategorieNameOrderByFragenIDAsc(KategorieEntity category);
+	List<FrageEntity> findByKategorieName(KategorieEntity category);
 }

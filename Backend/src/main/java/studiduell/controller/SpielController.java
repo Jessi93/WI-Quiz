@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +31,7 @@ import studiduell.constants.entity.SpielstatusEntityEnum;
 import studiduell.constants.entity.SpieltypEntityEnum;
 import studiduell.constants.httpheader.HttpHeaderDefaults;
 import studiduell.json.model.RoundResultPOJO;
+import studiduell.misc.QuestionsSorter;
 import studiduell.model.AntwortEntity;
 import studiduell.model.FrageEntity;
 import studiduell.model.KategorieEntity;
@@ -67,6 +70,8 @@ public class SpielController {
 	private SecurityContextFacade securityContextFacade;
 	@Autowired
 	private HttpHeaderDefaults httpHeaderDefaults;
+	@Autowired
+	private QuestionsSorter questionsSorter;
 	
 	private Random random = new Random();
 	
@@ -442,22 +447,25 @@ public class SpielController {
 	}
 	
 	private List<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
-		List<FrageEntity> questions = frageRepository.findByKategorieNameOrderByFragenIDAsc(category);
+		List<FrageEntity> questions = frageRepository.findByKategorieName(category);
 		Set<Integer> indices = new HashSet<>(questionCount);
-		
+		List<FrageEntity> selectedQuestions = new ArrayList<>(questionCount);
+			
+		// pick random indices that denote questions
 		do {
 			indices.add(random.nextInt(questions.size()));
 		} while(indices.size() != questionCount);
 		
-		Integer[] orderedIndices = indices.toArray(new Integer[questionCount]);
-		Arrays.sort(orderedIndices);
-		
-		List<FrageEntity> returnQuestions = new ArrayList<>(questionCount);
-		for(Integer i : orderedIndices) {
-			returnQuestions.add(questions.get(i));
+		Integer[] tmpIndicesArray = indices.toArray(new Integer[questionCount]);
+		// pick the questions that are identified by the determined indices
+		for(int i = 0; i < tmpIndicesArray.length; i++) {
+			selectedQuestions.add(questions.get(tmpIndicesArray[i]));
 		}
 		
-		return returnQuestions;
+		// sort by fragenID
+		Collections.sort(selectedQuestions, questionsSorter);
+		
+		return selectedQuestions;
 	}
 }
 
