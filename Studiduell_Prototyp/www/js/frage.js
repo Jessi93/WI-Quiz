@@ -13,8 +13,6 @@ function init() {
 	// continue-specific
 	opponentAnswers = roundStart ? null : JSON.parse(localStorage.getItem("gameQuestionContinue")).answers;
 	
-	alert(JSON.stringify(questions[questionCounter]));
-	
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
 	setAntworten(questions[questionCounter]);
@@ -200,7 +198,7 @@ function nextNextQuestion(correctlyAnswered) {
 }
 
 function animateOpponentsAnswers() {
-	var opponentName = opponentAnswers[0].benutzername;
+	var opponentName = opponentAnswers[0].benutzer.benutzername;
 	
 	// apply opponent's name on those popup divs that represent the opponent's answer
 	if(opponentAnswers[questionCounter].antwortmoeglichkeit1Check) {
