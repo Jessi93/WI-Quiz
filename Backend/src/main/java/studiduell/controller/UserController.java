@@ -56,14 +56,22 @@ public class UserController {
 	private HttpHeaderDefaults httpHeaderDefaults;
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
-			value = "/checkCredentials")
-	public ResponseEntity<Void> checkCredentials() {
-		/*
-		 * If the provided credentials are incorrect,
-		 * this method is never called and 401 is
-		 * returned.
-		 */
-		return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+			value = "/checkCredentials/{name}")
+	public ResponseEntity<Void> checkCredentials(@PathVariable("name") String name,
+			@RequestBody String password) {
+		UserEntity userUserEntity = userRepository.findOne(name);
+		
+		if(userUserEntity != null) {
+			String encryptedPwd = DigestUtils.md5DigestAsHex(password.getBytes());
+			
+			if(userUserEntity.getPasswortHash().equals(encryptedPwd)) {
+				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+						HttpStatus.OK);
+			}
+		}
+		
+		return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+				HttpStatus.UNAUTHORIZED);
 	}
 	
 	/**
