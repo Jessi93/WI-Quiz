@@ -12,15 +12,19 @@ function fillScreen() {
 					data[2].categoryName);
 }
 
-
-function loadCategoriesFromServer() {
-	$.ajax( {
-		url:"http://192.168.0.108:8090/Studiduell/game/randomCategoriesFor/123",
-		type:"POST",
-		success:function(obj){setKategorien(obj);},
-		error:function(obj){alert(JSON.stringify(obj));}
-	});
-}
+//Nicht mehr benutzt!
+// function loadCategoriesFromServer(gameID) {
+	// $.ajax( {
+		// url:serverURL +"game/randomCategoriesFor/"+gameID,
+		// type:"POST",
+		// beforeSend:function(xhr){authHeader(xhr);},
+		// crossDomain:true,
+		// success:function(obj){alert("Kategorien Laden Ajax erfolgreich!"+JSON.stringify(obj));
+			// setKategorien(obj);
+			// },
+		// error:function(obj){alert("Fehler beim Laden der Kategorien!"+JSON.stringify(obj));}
+	// });
+// }
 
 function setKategorien(cat1, cat2, cat3) {
 	 $("#kategorie1").text(cat1);

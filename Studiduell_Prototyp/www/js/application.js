@@ -112,7 +112,7 @@ function fetchRundenuebersichtData (spielID){
 		crossDomain:true,
 		success:function(obj){
 			localStorage.setItem("gameOverview", JSON.stringify(obj));
-			//alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
+			alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
 			//TODO fireEvent RundenuebersichtDataloaded
 			//Event wird erstellt!
 			var event; // The custom event that will be created

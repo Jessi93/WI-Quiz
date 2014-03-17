@@ -12,6 +12,7 @@ function initialize() {
 	setNavigationBar();
 	
 	fetchLocalStorageData();
+	enORdisableSpielenButton();
 	
 	setSpieler1();
 	setSpieler2();
@@ -416,6 +417,26 @@ GameOverviewData = JSON.parse(localStorage.getItem("gameOverview"));
 gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 }
 
+function enORdisableSpielenButton() {
+	var MyUsername = localStorage.getItem("username");
+	 
+	var waitForUsername = gameInfo.wartenAuf.benutzername;
+	//alert("MyUsername: "+MyUsername+" waitForUsername: "+waitForUsername);
+	if(waitForUsername === MyUsername){
+		//auf mich wird gewartet(ich bin dran) --> Spielen Button soll aktiv sein!
+		$("#spielenButton").removeClass("topcoat-button--large");
+		$("#spielenButton").addClass("topcoat-button--large--cta");
+		$("#spielenButton").removeAttr("disabled");
+		$("#spielenButton").text("Spielen");
+	}else{
+		// auf den gegner wird gewartet --> disable Spielen button (Text "Warten")
+		$("#spielenButton").removeClass("topcoat-button--large--cta");
+		$("#spielenButton").addClass("topcoat-button--large");
+		$("#spielenButton").attr("disabled", ""); 
+		$("#spielenButton").text("Warten");
+	}
+}
+
 function setSpielstand() {
 var Spielstand = (SpielstandSpieler1+":"+SpielstandSpieler2);
 //alert("Spielstand: "+Spielstand);
@@ -717,7 +738,7 @@ function sync(){
 	var initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
 	//true: die rundenübersicht wird für dieses Spiel neu aufgerufen (aus hauptmenü heraus)
 	//false: die rundenübersicht wird lediglich aktualisiert! (init wurde bereits mind 1 mal aufgerufen!)
-	alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
+	//alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
 	var gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 	if(initializeNotYetFired === "true"){ 
 	//wenn initialize noch nicht aufgerufen wurde, rufe nur initialize auf (Aufruf aus Hauptmenü)

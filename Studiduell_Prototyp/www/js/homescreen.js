@@ -1,23 +1,15 @@
-checkCredentials();
-
 var homescreenServerdata;
 
 function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
 	//zu testzwecken: setze localstorage username & pw auf leer! --> zeige login screen immer an!
 	//localStorage.removeItem("username");
-	//zu testzwecken: setze username --> gehe direkt in den home screen!
-	//localStorage.setItem("username", "Kevin01");
-	//localStorage.setItem("password", "secret");
-	//alert("username: "+localStorage.getItem("username"));
 	
 	if(isEmpty(localStorage.getItem("username"))) {
-	//im localstorage gibt es keinen Username --> gehe zum Login Screen 
-	var newView = new steroids.views.WebView("html/login.html");
-	steroids.layers.push(newView);
-	
+	return false;
 	}else{
 	//im localstorage gibt es einen Username --> home screen muss geladen werden! (mit sync call!)
+	return true;
 	}
 }
 
@@ -44,27 +36,25 @@ function openNeuesSpielScreen() {
 function sync() {
 	
 
-	var credentialsAvailable;
-	if(isEmpty(localStorage.getItem("username"))) {
-	//im localstorage gibt es keinen Username 
-	credentialsAvailable = false;
-	}else{
-	//im localstorage gibt es einen Username 
-	credentialsAvailable = true;
-	}
+	var credentialsAvailable = checkCredentials();
 	
 
 //zu testzwecken: setze username & password im local storage (normalerweise geschieht das im login!)
-	localStorage.setItem("username", "Kevin01");	//Kevin01
-	localStorage.setItem("password", "secret"); //secret
+	//localStorage.setItem("username", "Kevin01");	//Kevin01
+	//localStorage.setItem("password", "secret"); //secret
 
-//Sync darf nur ausgeführt wrden, wenn nicht direkt zum Login screen weitergeleitet wird (username vorhanden ist!)
+//Sync darf nur ausgeführt werden, wenn username vorhanden ist!)
 	if(credentialsAvailable){
-	//Setze Usernamen
+	//Setze Usernamen 
 	$("#username_div").text(localStorage.getItem("username"));
 
 	//lade Hauptmenüdaten vom Server & füge die entsprechenden HTML Elemente hinzu
 	fetchServerData();
+	}else{
+		//kein username vorhanden --> gehe zum login screen
+		//im localstorage gibt es keinen Username --> gehe zum Login Screen 
+		var newView = new steroids.views.WebView("html/login.html");
+		steroids.layers.push(newView);
 	}
 }
 
@@ -255,9 +245,7 @@ function addActionRequiredGame(gameData, positionInServerData){
 function addWaitingForGame(gameData, positionInServerData){
 	//alert("addWaitingForGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
-	//füge HTML ein:
-	$("#WaitingForGames_div").append("<div class='content-padded'><button class='topcoat-button--large--quiet center full custom_icon_button_left Rand1 textklein yourTurnButton' ontouchend='openRundenuebersicht("+gameData.spielID+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a></div>");
-
+	$("#WaitingForGames_div").append("<div class='content-padded'><button class='topcoat-button--large--quiet center full custom_icon_button_left Rand1 textklein yourTurnButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a></div>");
 }
 
 function getEnemyUsername(gameData){
