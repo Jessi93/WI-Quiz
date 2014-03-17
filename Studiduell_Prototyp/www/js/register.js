@@ -33,7 +33,7 @@ function sendRegistration(){
 	alert("Register-AJAX-gestartet!");
 	$.ajax( {
 			url:serverURL + "user/register/"+v_username,
-			type:"PUT
+			type:"PUT",
 			contentType:"text/plain",
 			success:function(obj){handleRegistrationOK(v_username, v_password);},
 			error:function(obj){handleErrorRegister(obj);}, 
