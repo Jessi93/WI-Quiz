@@ -63,7 +63,11 @@ INSERT INTO Unterkategorie VALUES
 ('UK 1 zu Programmierung','Programmierung'),
 ('UK 2 zu Programmierung','Programmierung'),
 ('UK 1 zu Wissenschaftliches Arbeiten', 'Wissenschaftliches Arbeiten'),
-('UK 2 zu Wissenschaftliches Arbeiten', 'Wissenschaftliches Arbeiten');
+('UK 2 zu Wissenschaftliches Arbeiten', 'Wissenschaftliches Arbeiten'),
+('UK 1 zu Logik und Algebra', 'Logik und Algebra'),
+('UK 2 zu Logik und Algebra', 'Logik und Algebra'),
+('UK 1 zu Projektmanagement', 'Projektmanagement'),
+('UK 2 zu Projektmanagement', 'Projektmanagement');
 
 INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwortmoeglichkeit1,antwortmoeglichkeit2,antwortmoeglichkeit3,antwortmoeglichkeit4,wahrheitAntwortmoeglichkeit1,wahrheitAntwortmoeglichkeit2,wahrheitAntwortmoeglichkeit3,wahrheitAntwortmoeglichkeit4,flagFrageValidiert) VALUES
 ('IT-Management','UK 1 zu IT-Management',false,'Welche Gase wurden behandelt?','Exert','Inert','Exposé','Imposé',false,true,false,false,true),
@@ -84,7 +88,13 @@ INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwo
 ('Programmierung', 'UK 2 zu Programmierung',false,'Alles ist falsch. Bitt drücken Sie auf weiter', 'false', 'false','false','false',false,false,false,false,true),
 ('Wissenschaftliches Arbeiten', 'UK 1 zu Wissenschaftliches Arbeiten',false,'Wissenschaft', '1', '2','3','4',false,false,false,false,true),
 ('Wissenschaftliches Arbeiten', 'UK 2 zu Wissenschaftliches Arbeiten',false,'Wissenschaftliches Arbeiten 2', 'false', 'false','false','false',false,false,false,false,true),
-('Wissenschaftliches Arbeiten', 'UK 2 zu Wissenschaftliches Arbeiten',false,'Was eine Wissenschaft dahinter :)', 'false', 'false','true','true',false,false,true,true,true);
+('Wissenschaftliches Arbeiten', 'UK 2 zu Wissenschaftliches Arbeiten',false,'Was eine Wissenschaft dahinter :)', 'false', 'false','true','true',false,false,true,true,true),
+('Logik und Algebra', 'UK 1 zu Logik und Algebra',true,'Stichwort Tautologie', 'allgemeingültig', 'Fisch','Joghurt','situationsbedingt',true,false,false,true,true),
+('Logik und Algebra', 'UK 2 zu Logik und Algebra',true,'Macht den meisten Logik und Algebra Spaß', 'nein', 'ja','nein','nein',false,true,false,false,true),
+('Logik und Algebra', 'UK 1 zu Logik und Algebra',true,'Da hat wohl einer Spaß am Anlegen von Testdaten', 'ganz bestimmt', 'das hier klicken','das nicht','super cool',false,true,false,false,true),
+('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Fand ich Projektmanagment immer interessant?', 'klaro', 'mega','giga','gar nicht',false,false,false,true,true),
+('Projektmanagement', 'UK 2 zu Projektmanagement',true,'Wer hat am wenigsten mit Projektmanagement zu tun?', 'Britney Spears', 'Luft','Manager','Senior Manager',false,false,false,true,true),
+('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Welchen Begriff gibt es im PM beim Berechnen von Puffern im Projekt?', 'rasante Linie', 'klarer Weg','kritischer Pfad','Höllenweg',false,false,false,true,true);
 
 
 INSERT INTO Spiel VALUES
