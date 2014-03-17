@@ -428,7 +428,7 @@ public class SpielController {
 		
 		Object[] tmpKategorienfilterEntities = categoryFilter.toArray();
 		while(categories.size() < amount) {
-			int randomIndex = random.nextInt(amount);
+			int randomIndex = random.nextInt(categoryFilter.size());
 			categories.add(((KategorienfilterEntity) tmpKategorienfilterEntities[randomIndex]).getKategorieName());
 		}
 		
@@ -436,7 +436,7 @@ public class SpielController {
 	}
 	
 	private List<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
-		List<FrageEntity> questions = frageRepository.findByKategorieName(category);
+		List<FrageEntity> questions = frageRepository.findByKategorieNameAndFlagFrageValidiertIsTrue(category);
 		Set<Integer> indices = new HashSet<>(questionCount);
 		List<FrageEntity> selectedQuestions = new ArrayList<>(questionCount);
 			

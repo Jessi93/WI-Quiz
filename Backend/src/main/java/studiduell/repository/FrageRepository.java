@@ -13,7 +13,5 @@ public interface FrageRepository extends JpaRepository<FrageEntity, Integer> {
 	@Deprecated
 	Integer countFindByKategorieName(KategorieEntity category);
 	
-	//TODO used?
-	//TODO nicht validierte rausfiltern
-	List<FrageEntity> findByKategorieName(KategorieEntity category);
+	List<FrageEntity> findByKategorieNameAndFlagFrageValidiertIsTrue(KategorieEntity category);
 }
