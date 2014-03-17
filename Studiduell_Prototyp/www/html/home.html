@@ -26,7 +26,7 @@
 	</head>
 
 	<body>
-	
+		<div class="content-padded">
 		<h2>Homescreen</h2>
 				
 		<img src="../images/profilbild.png">
@@ -54,6 +54,12 @@
 			</div>
 			-->
 		</div> 
+		<div class="topcoat-list" >
+			<h3 class="topcoat-list__header">Offene Duellanfragen:</h3>
+			<ul class="topcoat-list__container" id="OpenDuelRequests_list_container">
+			<!-- Hier werden in der "SYNC" methode die Spiele eingefügt, bei denen der gegner die duellanfrage annehmen muss -->
+			</ul>
+		</div>
 		<br>
 		<div class="content-padded">
 			<button id="AbmeldenButton" class="topcoat-button--large center full" ontouchend="abmelden()">Logout</button>
@@ -61,5 +67,6 @@
 		<div class="content-padded">
 			<button id="SyncButton" class="topcoat-button--large center full" ontouchend="sync()">Aktualisieren</button>
 		</div> 
+		</div>
 	</body>
 </html>

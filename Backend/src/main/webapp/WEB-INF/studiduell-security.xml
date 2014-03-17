@@ -9,6 +9,7 @@
 		<http-basic />
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/user/register/*" access="permitAll" />
+		<intercept-url pattern="/user/checkCredentials/*" access="permitAll"/>
 		<intercept-url pattern="/**" access="permitAll" method="OPTIONS" />
 		<intercept-url pattern="/**" access="hasRole('USER')" />
 	</http>

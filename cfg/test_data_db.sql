@@ -61,7 +61,9 @@ INSERT INTO Unterkategorie VALUES
 ('UK 1 zu IT-Management','IT-Management'),
 ('UK 2 zu IT-Management','IT-Management'),
 ('UK 1 zu Programmierung','Programmierung'),
-('UK 2 zu Programmierung','Programmierung');
+('UK 2 zu Programmierung','Programmierung'),
+('UK 1 zu Wissenschaftliches Arbeiten', 'Wissenschaftliches Arbeiten'),
+('UK 2 zu Wissenschaftliches Arbeiten', 'Wissenschaftliches Arbeiten');
 
 INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwortmoeglichkeit1,antwortmoeglichkeit2,antwortmoeglichkeit3,antwortmoeglichkeit4,wahrheitAntwortmoeglichkeit1,wahrheitAntwortmoeglichkeit2,wahrheitAntwortmoeglichkeit3,wahrheitAntwortmoeglichkeit4,flagFrageValidiert) VALUES
 ('IT-Management','UK 1 zu IT-Management',false,'Welche Gase wurden behandelt?','Exert','Inert','Exposé','Imposé',false,true,false,false,true),
@@ -79,19 +81,15 @@ INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwo
 ('Programmierung', 'UK 2 zu Programmierung',false,'So ein Mist', 'delete', 'wwer','wo','wann',false,true,false,false,false),
 ('Programmierung', 'UK 2 zu Programmierung',false,'Was ist richtiger JAVAScript-Code', '<script type="text/javascript">document.getElementById("kategorieDiv").css("visibility","hidden");</script>', '<script type="text/javascript">$("#kategorieDiv").css("visibility","hidden");</script>','<script type="text/javascript">document.getElementById("antwort1").css("visibility","hidden");</script>', '<script type="text/javascript">$("#antwort1").css("visibility","hidden");</script>',true,true,true,true,true),
 ('Programmierung', 'UK 2 zu Programmierung',false,'TestAlert', '<script>alert("Hallo Sie wurden gehäckt")</script>', 'false','false','false',false,false,false,false,true),
-('Programmierung', 'UK 2 zu Programmierung',false,'Alles ist falsch. Bitt drücken Sie auf weiter', 'false', 'false','false','false',false,false,false,false,true);
+('Programmierung', 'UK 2 zu Programmierung',false,'Alles ist falsch. Bitt drücken Sie auf weiter', 'false', 'false','false','false',false,false,false,false,true),
+('Wissenschaftliches Arbeiten', 'UK 1 zu Wissenschaftliches Arbeiten',false,'Wissenschaft', '1', '2','3','4',false,false,false,false,true),
+('Wissenschaftliches Arbeiten', 'UK 2 zu Wissenschaftliches Arbeiten',false,'Wissenschaftliches Arbeiten 2', 'false', 'false','false','false',false,false,false,false,true),
+('Wissenschaftliches Arbeiten', 'UK 2 zu Wissenschaftliches Arbeiten',false,'Was eine Wissenschaft dahinter :)', 'false', 'false','true','true',false,false,true,true,true);
 
 
 INSERT INTO Spiel VALUES
-(1,'M','Kevin02','Kevin01',null,null,'Kevin01',1,'P','2014-02-18 17:10:47');
+(last_insert_id(),'M','Kevin02','Kevin01',null,null,'Kevin01',1,'P','2014-02-18 17:10:47');
 
-INSERT INTO Runde VALUES
-(1,1,1),
-(2,1,2),
-(3,1,3),
-(4,1,4),
-(5,1,5),
-(6,1,6);
 
 INSERT INTO Antwort VALUES
 (1,1,'Kevin02',true,false,false,false,true,false),

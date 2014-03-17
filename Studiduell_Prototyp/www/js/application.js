@@ -41,6 +41,7 @@ function popViewPushView (newView_locationString){
 }
 
 function isRoundStarter(gameInfo) {
+	//alert("gameinfo: "+JSON.stringify(gameInfo));
 	var me = localStorage.getItem("username");
 	var mePlayerNo = (me == gameInfo.spieler1.benutzername) ? 1 : 2;
 	
@@ -72,7 +73,66 @@ function isRoundStarter(gameInfo) {
 }
 
 function authHeader(xhr) {
-	alert("username: "+localStorage.getItem("username")+" password: "+localStorage.getItem("password")+"URL: "+serverURL);
+	//alert("username: "+localStorage.getItem("username")+" password: "+localStorage.getItem("password")+"URL: "+serverURL);
 	var usernameColonPassword = localStorage.getItem("username") + ":" + localStorage.getItem("password");
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
+
+function authHeaderManual(xhr, username, password){
+	//alert("3 parameter auth Header Methode! username: "+username+" password: "+password+" URL: "+serverURL);
+	var usernameColonPassword = username + ":" + password;
+	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
+}
+
+function addAsFriend(fName) {
+	alert("addAsFriend wurde aufgerufen mit name: "+fName);
+
+	function onAlertDismissAddAsFriend(){
+		//leer lassen?
+		}
+	$.ajax( {
+		url:serverURL + "settings/friends/" + fName,
+		type:"PUT",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
+		success:function(){navigator.notification.alert('Sie sind jetzt mit ' + fName + ' befreundet!', onAlertDismissAddAsFriend,'Information','OK');},
+		//TODO proper Fehlerbehandlung
+		error:function(obj){alert("Fehler bei der Freundesanfrage!"+JSON.stringify(obj));}
+		});
+		
+	
+}
+
+function fetchRundenuebersichtData (spielID){
+	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage --> feuere Event, dass Daten bereit stehen
+	$.ajax( {
+		url:serverURL + "game/overview/" + spielID,
+		type:"GET",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
+		success:function(obj){
+			localStorage.setItem("gameOverview", JSON.stringify(obj));
+			alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
+			//TODO fireEvent RundenuebersichtDataloaded
+			//Event wird erstellt!
+			var event; // The custom event that will be created
+			  if (document.createEvent) {
+				event = document.createEvent("HTMLEvents");
+				event.initEvent("RundenuebersichtDataloaded", true, true);
+			  } else {
+				event = document.createEventObject();
+				event.eventType = "RundenuebersichtDataloaded";
+			  }
+			event.eventName = "RundenuebersichtDataloaded";
+			//feuern des Events
+			if (document.createEvent) {
+				document.dispatchEvent(event);
+			  } else {
+				document.fireEvent("on" + event.eventType, event);
+			  }
+		},
+		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
+		});
+}
+
+

@@ -1,281 +1,32 @@
-function init() {
-	//alert("Init wurde aufgerufen!");
+var SpielstandSpieler1 = 0;
+var SpielstandSpieler2 = 0;
+var gameInfo;
+//Zeigt an, ob initialize bereits einmal gefeuert wurde, oder nicht! (so werden Serverdaten beim Screenstart nur 1 Mal geladen & in local Storage geschrieben!
+
+function initialize() {
+	var initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
+	//alert("initialize wurde aufgerufen! gameOverviewInitialize/initializeNotYetFired: "+initializeNotYetFired);
+	//Markiere im localStorage, dass initialize für die Rundenübersicht bereits aufgerufen wurde!
+	localStorage.setItem("gameOverviewInitialize", false);
+
+	setNavigationBar();
+	
 	fetchLocalStorageData();
+	enORdisableSpielenButton();
 	
 	setSpieler1();
 	setSpieler2();
 	setSpielstand();
 	setownName();
 	setenemyName();
+	//TEST:
+	//initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
+	//alert("initialize wurde abgeschlossen! "+initializeNotYetFired);
 }
-var SpielstandSpieler1 = 0;
-var SpielstandSpieler2 = 0;
 
-// XXX XXXXXXXXXX
-var tmpServerData = 
-       {
-           "spielID": 1,
-           "spieltypName":
-           {
-               "name": "M"
-           },
-           "spieler1":
-           {
-               "benutzername": "Kevin02"
-           },
-           "spieler2":
-           {
-               "benutzername": "Kevin01"
-           },
-           "sieger": null,
-           "verlierer": null,
-           "wartenAuf":
-           {
-               "benutzername": "Kevin01"
-           },
-           "aktuelleRunde": 1,
-           "spielstatusName":
-           {
-               "name": "P"
-           },
-           "letzteAktivitaet": 1392739847000
-       }
-    ;
-	
-var randomData = [{
-		"categoryName" : "Logik und Algebra",
-		"questions" : [{
-				"fragenID" : 1,
-				"kategorie_name" : "Logik und Algebra",
-				"unterkategorie_name" : "uk",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 1",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}, {
-				"fragenID" : 2,
-				"kategorie_name" : "Logik und Algebra",
-				"unterkategorie_name" : "uk",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 2",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}, {
-				"fragenID" : 3,
-				"kategorie_name" : "Logik und Algebra",
-				"unterkategorie_name" : "uk2",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 3",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}
-		]
-	}, {
-		"categoryName" : "Methoden der Wirtschaftsinformatik",
-		"questions" : [{
-				"fragenID" : 4,
-				"kategorie_name" : "Methoden der Wirtschaftsinformatik",
-				"unterkategorie_name" : "uk",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 4",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}, {
-				"fragenID" : 5,
-				"kategorie_name" : "Methoden der Wirtschaftsinformatik",
-				"unterkategorie_name" : "uk",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 5",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}, {
-				"fragenID" : 6,
-				"kategorie_name" : "Methoden der Wirtschaftsinformatik",
-				"unterkategorie_name" : "uk2",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 6",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}
-		]
-	}, {
-		"categoryName" : "Verteilte Systeme",
-		"questions" : [{
-				"fragenID" : 7,
-				"kategorie_name" : "Verteilte Systeme",
-				"unterkategorie_name" : "uk",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 7",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}, {
-				"fragenID" : 8,
-				"kategorie_name" : "Verteilte Systeme",
-				"unterkategorie_name" : "uk",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 8",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}, {
-				"fragenID" : 9,
-				"kategorie_name" : "Verteilte Systeme",
-				"unterkategorie_name" : "uk2",
-				"flag_fragenTyp_mult" : false,
-				"frage" : "Frage 9",
-				"antwortmoeglichkeit1" : "A",
-				"antwortmoeglichkeit2" : "B",
-				"antwortmoeglichkeit3" : "C",
-				"antwortmoeglichkeit4" : "D",
-				"wahrheitAntwortmoeglichkeit1" : false,
-				"wahrheitAntwortmoeglichkeit2" : false,
-				"wahrheitAntwortmoeglichkeit3" : false,
-				"wahrheitAntwortmoeglichkeit4" : true,
-				"flag_frageValidiert" : true
-			}
-		]
-	}
-];
 
-var continueData = {
- "questions" : [{
-   "fragenID" : 7,
-   "kategorie_name" : "Verteilte Systeme",
-   "unterkategorie_name" : "uk",
-   "flag_fragenTyp_mult" : false,
-   "frage" : "Frage 7",
-   "antwortmoeglichkeit1" : "A",
-   "antwortmoeglichkeit2" : "B",
-   "antwortmoeglichkeit3" : "C",
-   "antwortmoeglichkeit4" : "D",
-   "wahrheitAntwortmoeglichkeit1" : false,
-   "wahrheitAntwortmoeglichkeit2" : false,
-   "wahrheitAntwortmoeglichkeit3" : false,
-   "wahrheitAntwortmoeglichkeit4" : true,
-   "flag_frageValidiert" : true
-  }, {
-   "fragenID" : 8,
-   "kategorie_name" : "Verteilte Systeme",
-   "unterkategorie_name" : "uk",
-   "flag_fragenTyp_mult" : false,
-   "frage" : "Frage 8",
-   "antwortmoeglichkeit1" : "A",
-   "antwortmoeglichkeit2" : "B",
-   "antwortmoeglichkeit3" : "C",
-   "antwortmoeglichkeit4" : "D",
-   "wahrheitAntwortmoeglichkeit1" : false,
-   "wahrheitAntwortmoeglichkeit2" : false,
-   "wahrheitAntwortmoeglichkeit3" : false,
-   "wahrheitAntwortmoeglichkeit4" : true,
-   "flag_frageValidiert" : true
-  }, {
-   "fragenID" : 9,
-   "kategorie_name" : "Verteilte Systeme",
-   "unterkategorie_name" : "uk2",
-   "flag_fragenTyp_mult" : false,
-   "frage" : "Frage 9",
-   "antwortmoeglichkeit1" : "A",
-   "antwortmoeglichkeit2" : "B",
-   "antwortmoeglichkeit3" : "C",
-   "antwortmoeglichkeit4" : "D",
-   "wahrheitAntwortmoeglichkeit1" : false,
-   "wahrheitAntwortmoeglichkeit2" : false,
-   "wahrheitAntwortmoeglichkeit3" : false,
-   "wahrheitAntwortmoeglichkeit4" : true,
-   "flag_frageValidiert" : true
-  }
- ],
- "answers" : [{
-   "fragenID" : 7,
-   "rundenID" : 21,
-   "benutzername" : "Kevin",
-   "antwortmoeglichkeit1_check" : false,
-   "antwortmoeglichkeit2_check" : false,
-   "antwortmoeglichkeit3_check" : false,
-   "antwortmoeglichkeit4_check" : true,
-   "flagFrageAngezeigt" : true,
-   "ergebnis_check" : true
-  }, {
-   "fragenID" : 8,
-   "rundenID" : 21,
-   "benutzername" : "Kevin",
-   "antwortmoeglichkeit1_check" : false,
-   "antwortmoeglichkeit2_check" : false,
-   "antwortmoeglichkeit3_check" : false,
-   "antwortmoeglichkeit4_check" : true,
-   "flagFrageAngezeigt" : true,
-   "ergebnis_check" : true
-  }, {
-   "fragenID" : 9,
-   "rundenID" : 21,
-   "benutzername" : "Kevin",
-   "antwortmoeglichkeit1_check" : false,
-   "antwortmoeglichkeit2_check" : false,
-   "antwortmoeglichkeit3_check" : false,
-   "antwortmoeglichkeit4_check" : true,
-   "flagFrageAngezeigt" : true,
-   "ergebnis_check" : true
-  }
- ]
-};
 //XXX XXXXXXXXXXXXXXXXXXXXXXX
-
-var GameData = {
+var GameOverviewData = {
        "rounds":
        [
            {
@@ -660,19 +411,42 @@ var GameData = {
 };
 
 function fetchLocalStorageData() {
-//alert("fetchLocalStorageData wurde aufgerufen!");
-//TODO: hole Serverdaten und schreibe Sie in GameData!
-gameData = localStorage.getItem("gameOverview");
+//alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+localStorage.getItem("gameOverview"));
+// hole Serverdaten und schreibe Sie in GameOverviewData!
+GameOverviewData = JSON.parse(localStorage.getItem("gameOverview"));
+gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
+}
+
+function enORdisableSpielenButton() {
+	var MyUsername = localStorage.getItem("username");
+	 
+	var waitForUsername = gameInfo.wartenAuf.benutzername;
+	//alert("MyUsername: "+MyUsername+" waitForUsername: "+waitForUsername);
+	if(waitForUsername === MyUsername){
+		//auf mich wird gewartet(ich bin dran) --> Spielen Button soll aktiv sein!
+		$("#spielenButton").removeClass("topcoat-button--large");
+		$("#spielenButton").addClass("topcoat-button--large--cta");
+		$("#spielenButton").removeAttr("disabled");
+		$("#spielenButton").text("Spielen");
+	}else{
+		// auf den gegner wird gewartet --> disable Spielen button (Text "Warten")
+		$("#spielenButton").removeClass("topcoat-button--large--cta");
+		$("#spielenButton").addClass("topcoat-button--large");
+		$("#spielenButton").attr("disabled", ""); 
+		$("#spielenButton").text("Warten");
+	}
 }
 
 function setSpielstand() {
 var Spielstand = (SpielstandSpieler1+":"+SpielstandSpieler2);
 //alert("Spielstand: "+Spielstand);
- $('#scoreDiv').append(Spielstand);
+ $('#scoreDiv').text(Spielstand);
 }
 function setSpieler1()
 {
 //alert("setSpieler1 wurde aufgerufen, username ist:"+localStorage.getItem("username"));
+//Setze Spielstand zurück, damit bei aktualisieren von 0 gezählt wird.
+SpielstandSpieler1 = 0;
 
 var username = localStorage.getItem("username");
 // encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zugehoerigerSpieler)
@@ -706,7 +480,10 @@ encolourSquare("runde6frage3spieler1", 6, 3, username, 1);
 
 function setSpieler2(){
 //alert("setSpieler2 wurde aufgerufen"));
-//TODO: ermittle enemy username
+
+//Setze Spielstand zurück, damit bei aktualisieren von 0 gezählt wird.
+SpielstandSpieler2 = 0;
+
 var enemy_username = localStorage.getItem("enemyUsername"); //TESTDATEN: "Kevin02"
 // encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zugehoerigerSpieler)
 //Erste Runde
@@ -739,34 +516,34 @@ encolourSquare("runde6frage3spieler2", 6, 3, enemy_username, 2);
 
 //Logik zum setzen/ einblenden eines Quadrats
 function encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zugehoerigerSpieler) {
-	//alert("encolourSquare wurde aufgerufen!");
+	//alert("encolourSquare wurde aufgerufen für viereck: "+viereck_id);
 //prüfe rundenNummer === rundenNr
 var fragenergebnis;
 var myUsername = localStorage.getItem("username");
 
-for (var i=0;i<GameData.rounds.length;i++){
+for (var i=0;i<GameOverviewData.rounds.length;i++){
 	//alert("Position in for schleife:"+i);
-	if (GameData.rounds[i].rundenNr == rundenNummer)
+	if (GameOverviewData.rounds[i].rundenNr == rundenNummer)
 		{
 		//prüfe: gibt es 6 antworten für diese Runde?
-		if(GameData.rounds[i].answers.length == 6){
+		if(GameOverviewData.rounds[i].answers.length == 6){
 			//prüfe benutzername === username an erster möglicher stelle
-			if (GameData.rounds[i].answers[(nrFrageInRunde * 2)-2].benutzer.benutzername === username){
+			if (GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-2].benutzer.benutzername === username){
 				//lese aus: ergebnisCheck 
-				fragenergebnis = GameData.rounds[i].answers[(nrFrageInRunde * 2)-2].ergebnisCheck;
+				fragenergebnis = GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-2].ergebnisCheck;
 				break;
 				}
 			//prüfe benutzername === username an zweiter möglicher stelle
-			else if (GameData.rounds[i].answers[(nrFrageInRunde * 2)-1].benutzer.benutzername === username){
+			else if (GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-1].benutzer.benutzername === username){
 				//lese aus: ergebnisCheck 
-				fragenergebnis = GameData.rounds[i].answers[(nrFrageInRunde * 2)-1].ergebnisCheck;
+				fragenergebnis = GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-1].ergebnisCheck;
 				break;
 				}
-			} else if(GameData.rounds[i].answers.length == 3){ 
+			} else if(GameOverviewData.rounds[i].answers.length == 3){ 
 		//Logik für drei Antworten pro Runde in Serverdaten!
-		if(GameData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === myUsername){
+		if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === myUsername){
 		//es sollen nur Vierecke angezeigt, wenn man selbst gespielt hat!
-		fragenergebnis = GameData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
+		fragenergebnis = GameOverviewData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
 		break;		}
 			}
 		}
@@ -798,48 +575,59 @@ if (fragenergebnis == true){
 function setownName(){
 var ownName;
 ownName = localStorage.getItem("username");
- $('#spielerADiv').append(ownName);
+ $('#spielerADiv').text(ownName);
 }
 
 function setenemyName(){
 var enemyUsername;
 var enemyUsername = localStorage.getItem("enemyUsername");
-$('#spielerBDiv').append(enemyUsername);
+$('#spielerBDiv').text(enemyUsername);
 }
 
 
 
 
 function openFrage() {
+	localStorage.setItem("questionCounter", 0);
 	//TODO disable button if not waiting for me!
 	prepareQuestion();
-	/*
-	var newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
-	steroids.layers.push(newView);
-	*/
+	
+	//var newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
+	//steroids.layers.push(newView);
+	
 }
 
 function prepareQuestion() {
-	if(isRoundStarter()) {
-		fetchQuestionsRoundStart();
+	if(isRoundStarter(gameInfo)) {
+		$.ajax( {
+			url : serverURL + "game/randomCategoriesFor/" + gameInfo.spielID,
+			type : "POST",
+			beforeSend : function(xhr) {authHeader(xhr);},
+			success : function(cAndQ) {fetchQuestionsRoundStart(cAndQ);},
+			error : function(obj) {alert("Die Spieldaten konnten nicht übertragen werden.");}
+		});
 	} else {
-		fetchQuestionsRoundContinue();
+		$.ajax( {
+			url : serverURL + "game/continueRound/" + gameInfo.spielID,
+			type : "GET",
+			beforeSend : function(xhr) {authHeader(xhr);},
+			success : function(qAndA) {fetchQuestionsRoundContinue(qAndA);},
+			error : function(obj) {alert("Die Spieldaten konnten nicht übertragen werden.");}
+		});
 	}
 }
 
-function fetchQuestionsRoundStart() {
-alert("start"); //XXX
-	var data = randomData;
-	localStorage.setItem("gameQuestionStart", JSON.stringify(data));
+function fetchQuestionsRoundStart(categoriesAndQuestions) {
+alert("fetchQuestionsRoundStart wurde aufgerufen"); //XXX
+	localStorage.setItem("gameQuestionStart", JSON.stringify(categoriesAndQuestions));
 	
 	var newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
 	steroids.layers.push(newView);
 }
 
-function fetchQuestionsRoundContinue() {
-alert("continue"); //XXX
-	var data = continueData;
-	localStorage.setItem("gameQuestionContinue", JSON.stringify(data));
+function fetchQuestionsRoundContinue(questionsAndAnswersOpponent) {
+alert("fetchQuestionsRoundContinue wurde aufgerufen!"); //XXX
+	localStorage.setItem("gameQuestionContinue", JSON.stringify(questionsAndAnswersOpponent));
 	
 	var newView = new steroids.views.WebView("html/frage.html");
 	steroids.layers.push(newView);
@@ -851,20 +639,124 @@ function openQuestions() {
 
 //Füge gegner als Freund hinzu
 function addAsFriendWrapper(){
-addAsFriend(localStorage.getItem("enemyUsername"));
+var enemyUsername = localStorage.getItem("enemyUsername");
+//alert("addAsFriendWrapper wurde aufgerufen! enemyUsername: "+enemyUsername);
+addAsFriend(enemyUsername);
+
 }
 
 function giveUp(){
-alert("give up wurde aufgerufen!");
-//TODO hole gameID!
-/*
-$.ajax( {
-		url:serverURL + "game/abandon/" + gameID,
-		type:"POST",
-		success:function(obj){alert(JSON.stringify(obj));}
-		error:function(obj){alert(JSON.stringify(obj));}
-		});
-		*/
+//alert("give up wurde aufgerufen!");
+function onConfirmGiveUp(buttonIndex, gameID){
+		switch (buttonIndex) {
+			case 1: //Aufgeben wurde bestätigt!
+			//TODO: Duell bei Server aufgeben!"
+			 $.ajax( {
+			 url:serverURL + "game/abandon/" + gameID,
+			 type:"POST",
+			success:function(obj){alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
+			//gehe zum home screen zurück!
+			steroids.layers.pop();
+			},
+			 error:function(obj){alert("Fehler beim Aufgeben des Duells!"+JSON.stringify(obj));}
+			 }); 
+				
+				break;
+			case 2: //Duellanfrage wurde abgelehnt!
+			//--> Tue nichts!
+			//alert("Duell wurde nicht aufgegeben!")
+				break;
+		}
+	}
+
+	var gameID = gameInfo.spielID;
+		
+	navigator.notification.confirm(      
+		 'Möchtest du das Duell wirklich aufgeben?', 						// message    
+		 function(buttonIndex){onConfirmGiveUp(buttonIndex, gameID);},           	// callback to invoke with index of button pressed       
+		 "Bist du sicher?",           			// title      
+		 ['Ja','Nein']   			// buttonLabels    
+		 );
+	 
 }
 
-document.addEventListener("deviceready", init, false);
+function setNavigationBar(){
+/*
+	alert("setNavigationBar wurde aufgerufen! Step1")
+	//erstelle Button
+	var syncButton = new steroids.buttons.NavigationBarButton();
+	syncButton.title = "Sync";
+	alert("setNavigationBar wurde aufgerufen! Step2")
+	//Funktionalität des Sync Buttons
+	syncButton.onTap = function() {
+    alert("TODO sync!");
+	};
+	alert("setNavigationBar wurde aufgerufen! Step3")
+	//Zeige Button im Navigation Bar an
+	steroids.view.navigationBar.update({
+		buttons: {right: [syncButton]},
+		onSuccess: function() {    alert("Button set!"); },
+		onFailure: function() {    alert("Failed to set button.");   }
+	});
+	alert("setNavigationBar wurde aufgerufen! Step4")
+	
+	
+	//STEROIDS BEISPIEL! http://docs.appgyver.com/en/edge/steroids_Steroids%20Native%20UI_Steroids.view.navigationBar_navigationBar.update.md.html
+	var leftButton = new steroids.buttons.NavigationBarButton();
+	var rightButton = new steroids.buttons.NavigationBarButton();
+	var imageButton = new steroids.buttons.NavigationBarButton();
+
+	leftButton.title = "Left";
+	leftButton.onTap = function() { alert("Left button tapped"); };
+
+	rightButton.title = "Right";
+	rightButton.onTap = function() { alert("Right button tapped"); };
+
+	imageButton.imagePath = "../images/Lupe.png";
+	imageButton.onTap = function() { alert("Image button tapped"); };
+
+	steroids.view.navigationBar.update({
+	  titleImagePath: "/icons/telescope@2x.png",
+	  overrideBackButton: false,
+	  buttons: {
+		left: [leftButton],
+		right: [rightButton, imageButton]
+	  }
+	}, {
+	  onSuccess: function() {
+		alert("Navigation bar updated!");
+	  },
+	  onFailure: function() {
+		alert("Failed to update the navigation bar.");
+	  }
+	});
+*/
+	
+}
+
+function sync(){
+	var initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
+	//true: die rundenübersicht wird für dieses Spiel neu aufgerufen (aus hauptmenü heraus)
+	//false: die rundenübersicht wird lediglich aktualisiert! (init wurde bereits mind 1 mal aufgerufen!)
+	//alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
+	var gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
+	if(initializeNotYetFired === "true"){ 
+	//wenn initialize noch nicht aufgerufen wurde, rufe nur initialize auf (Aufruf aus Hauptmenü)
+	initialize();
+	}else{
+	//rundenübersicht wird aktualisiert! --> neue Daten holen & screen aktualisieren!
+	 //alert("im else von sync! initializeNotYetFired= "+initializeNotYetFired);
+	var gameID = gameInfo.spielID;
+	 //hole neue Serverdaten 
+	fetchRundenuebersichtData (gameID); //bei erfolg wird RundenuebersichtDataloaded gefeuert (als event!)
+	
+	}
+}
+
+
+//document.addEventListener("deviceready", initialize, false);
+
+document.addEventListener("DOMContentLoaded", sync, false);
+
+//sobald neue Serverdaten bereit stehen, soll der screen mit initialize aktualisiert werden!
+document.addEventListener("RundenuebersichtDataloaded", initialize, false);

@@ -30,6 +30,7 @@ import studiduell.security.SecurityContextFacade;
 @Transactional(rollbackFor = RuntimeException.class)
 @RequestMapping(value = "/settings")
 public class SettingsController {
+	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private KategorienfilterRepository kategorienfilterRepository;
@@ -102,8 +103,8 @@ public class SettingsController {
 		String authUsername = securityContextFacade.getContext()
 				.getAuthentication().getName();
 
-		UserEntity userUserEntity = userRepository.findOne(authUsername), friendUserEntity = userRepository
-				.findOne(friend);
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
+		UserEntity friendUserEntity = userRepository.findOne(friend);
 
 		// do I try to be my own friend?
 		if (authUsername.equals(friend)) {

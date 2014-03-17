@@ -1,8 +1,11 @@
 package studiduell.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import studiduell.constants.entity.SpielstatusEntityEnum;
 import studiduell.constants.entity.SpieltypEntityEnum;
 import studiduell.constants.httpheader.HttpHeaderDefaults;
+import studiduell.json.model.RoundResultPOJO;
+import studiduell.misc.QuestionsSorter;
 import studiduell.model.AntwortEntity;
 import studiduell.model.FrageEntity;
 import studiduell.model.KategorieEntity;
@@ -36,6 +41,7 @@ import studiduell.model.SpielEntity;
 import studiduell.model.SpielstatusEntity;
 import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
+import studiduell.model.id.AntwortEntityPk;
 import studiduell.repository.AntwortRepository;
 import studiduell.repository.FrageRepository;
 import studiduell.repository.KategorienfilterRepository;
@@ -64,6 +70,8 @@ public class SpielController {
 	private SecurityContextFacade securityContextFacade;
 	@Autowired
 	private HttpHeaderDefaults httpHeaderDefaults;
+	@Autowired
+	private QuestionsSorter questionsSorter;
 	
 	private Random random = new Random();
 	
@@ -218,11 +226,12 @@ public class SpielController {
 			value = "/randomCategoriesFor/{gameID}") //TODO GET instead of POST
 	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID) {
 		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		//TODO test method
+		//FIXME 500 if not enough questions
+		//XXX is it authUsername's turn? -> does not matter, as the user can just submit answers if it's his turn
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
-		
+		//FIXME CRITICAL: sort questions in categories (criteria: questionID)
 		if(userUserEntity.equals(gameSpielEntity.getSpieler1()) || userUserEntity.equals(gameSpielEntity.getSpieler2())) {
 			Set<KategorienfilterEntity> commonCategories = kategorienfilterRepository.commonCategories(userUserEntity, opponentUserEntity);
 			if(commonCategories.size() >= suggestedCategoriesCount) {
@@ -237,10 +246,10 @@ public class SpielController {
 					ObjectNode currEntryNode = JsonNodeFactory.instance.objectNode();
 					KategorieEntity currCategory = categoryIterator.next();
 					
-					Set<FrageEntity> questions = randomQuestionsByCategory(currCategory, questionsPerRound);
+					List<FrageEntity> questions = randomQuestionsByCategory(currCategory, questionsPerRound);
 					ArrayNode questionsArrayNode = JsonNodeFactory.instance.arrayNode();
-					for(FrageEntity question : (FrageEntity[]) questions.toArray()) {
-						questionsArrayNode.addPOJO(question);
+					for(Object question : questions.toArray()) {
+						questionsArrayNode.addPOJO((FrageEntity) question);
 					}
 					
 					currEntryNode.put("categoryName", currCategory.getName());
@@ -258,96 +267,117 @@ public class SpielController {
 			// any user requested questions for a game he does not play in
 			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.FORBIDDEN);
 		}
-		//TODO Mock
-		/*
-		ArrayNode json = JsonNodeFactory.instance.arrayNode();
-		
-		FrageEntity frage1 = new FrageEntity(1, "Logik und Algebra","uk", false, "Frage 1","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage2 = new FrageEntity(2, "Logik und Algebra","uk", false, "Frage 2","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage3 = new FrageEntity(3, "Logik und Algebra","uk2", false, "Frage 3","A","B","C","D",false,false,false,true,true);
-		ArrayNode cat1 = JsonNodeFactory.instance.arrayNode();
-		cat1.addPOJO(frage1);
-		cat1.addPOJO(frage2);
-		cat1.addPOJO(frage3);
-		
-		FrageEntity frage4 = new FrageEntity(4, "Methoden der Wirtschaftsinformatik","uk", false, "Frage 4","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage5 = new FrageEntity(5, "Methoden der Wirtschaftsinformatik","uk", false, "Frage 5","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage6 = new FrageEntity(6, "Methoden der Wirtschaftsinformatik","uk2", false, "Frage 6","A","B","C","D",false,false,false,true,true);
-		ArrayNode cat2 = JsonNodeFactory.instance.arrayNode();
-		cat2.addPOJO(frage4);
-		cat2.addPOJO(frage5);
-		cat2.addPOJO(frage6);
-		XXX
-		FrageEntity frage7 = new FrageEntity(7, "Verteilte Systeme","uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage8 = new FrageEntity(8, "Verteilte Systeme","uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage9 = new FrageEntity(9, "Verteilte Systeme","uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
-		ArrayNode cat3 = JsonNodeFactory.instance.arrayNode();
-		cat3.addPOJO(frage7);
-		cat3.addPOJO(frage8);
-		cat3.addPOJO(frage9);
-		
-		ObjectNode obj1 = JsonNodeFactory.instance.objectNode();
-		obj1.put("categoryName", "Logik und Algebra");
-		obj1.put("questions", cat1);
-		
-		ObjectNode obj2 = JsonNodeFactory.instance.objectNode();
-		obj2.put("categoryName", "Methoden der Wirtschaftsinformatik");
-		obj2.put("questions", cat2);
-		
-		ObjectNode obj3 = JsonNodeFactory.instance.objectNode();
-		obj3.put("categoryName", "Verteilte Systeme");
-		obj3.put("questions", cat3);
-		
-		json.add(obj1);
-		json.add(obj2);
-		json.add(obj3);
-		
-		return new ResponseEntity<>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.OK);
-		*/
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
 			value = "/continueRound/{gameID}")
-	public ResponseEntity<ObjectNode> continueRound(@PathVariable("gameID") String gameID) {
+	public ResponseEntity<ObjectNode> continueRound(@PathVariable("gameID") Integer gameID) {
+		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		
-		//TODO Mock
-		
-		ObjectNode obj = JsonNodeFactory.instance.objectNode();
-		
-		FrageEntity frage1 = new FrageEntity(7, new KategorieEntity("Verteilte Systeme"),"uk", false, "Frage 7","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage2 = new FrageEntity(8, new KategorieEntity("Verteilte Systeme"),"uk", false, "Frage 8","A","B","C","D",false,false,false,true,true);
-		FrageEntity frage3 = new FrageEntity(9, new KategorieEntity("Verteilte Systeme"),"uk2", false, "Frage 9","A","B","C","D",false,false,false,true,true);
-		
-		ArrayNode arr1 = JsonNodeFactory.instance.arrayNode();
-		arr1.addPOJO(frage1);
-		arr1.addPOJO(frage2);
-		arr1.addPOJO(frage3);
-		
-		RundeEntity r = new RundeEntity();
-		r.setRundenID(21);
-		
-		UserEntity user = userRepository.findOne("Kevin01");
-		AntwortEntity ans1 = new AntwortEntity(frageRepository.findOne(7), r, user, false, false, false, true, true, true);
-		AntwortEntity ans2 = new AntwortEntity(frageRepository.findOne(8), r, user, false, false, false, true, true, true);
-		AntwortEntity ans3 = new AntwortEntity(frageRepository.findOne(9), r, user, false, false, false, true, true, true);
-		
-		ArrayNode arr2 = JsonNodeFactory.instance.arrayNode();
-		arr2.addPOJO(ans1);
-		arr2.addPOJO(ans2);
-		arr2.addPOJO(ans3);
-		
-		obj.put("questions", arr1);
-		obj.put("answers", arr2);
-		
-		return new ResponseEntity<>(obj, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.OK);
+		if(gameSpielEntity != null) {
+			RundeEntity roundRundeEntity = rundeRepository.findBySpielAndRundenNr(gameSpielEntity, gameSpielEntity.getAktuelleRunde());
+			List<AntwortEntity> answers = roundRundeEntity.getAnswers();
+			if(!answers.isEmpty()) {
+				// build server answer
+				ObjectNode json = JsonNodeFactory.instance.objectNode();
+				ArrayNode questionsNode = JsonNodeFactory.instance.arrayNode();
+				ArrayNode answersNode = JsonNodeFactory.instance.arrayNode();
+				
+				for(AntwortEntity ans : answers) {
+					questionsNode.addPOJO(ans.getFrage());
+					answersNode.addPOJO(ans);
+				}
+				
+				json.put("questions", questionsNode);
+				json.put("answers", answersNode);
+				
+				return new ResponseEntity<ObjectNode>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
+						HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+			}
+		} else {
+			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-			value = "/submitRoundResult")
-	public ResponseEntity<Void> submitRoundResult(@RequestBody AntwortEntity answer) {
-		return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_IMPLEMENTED);
+			value = "/submitRoundResult/{gameID}")
+	public ResponseEntity<Void> submitRoundResult(@PathVariable("gameID") Integer gameID,
+			@RequestBody RoundResultPOJO[] roundResult) {
+		//TODO update wartenAuf!
+		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+		//TODO is it authUsername's turn? check wartenAuf!
+		
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
+		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
+		
+		if(gameSpielEntity != null) {
+			String tmpSpieler1Name = gameSpielEntity.getSpieler1().getBenutzername();
+			String tmpSpieler2Name = gameSpielEntity.getSpieler2().getBenutzername();
+			
+			// does player participate that game? Is it his turn, meaning he is allowed to submit round results
+			if((tmpSpieler1Name.equals(authUsername) || tmpSpieler2Name.equals(authUsername))
+					&& gameSpielEntity.getWartenAuf().getBenutzername().equals(authUsername)) {
+				UserEntity opponentUserEntity = userRepository.findOne(
+						authUsername.equals(tmpSpieler1Name) ? tmpSpieler2Name : tmpSpieler1Name);
+				// did the player send exactly that amount of questions the server expects
+				if(roundResult.length == questionsPerRound) {
+					Boolean roundStarter = null;
+					for(RoundResultPOJO currResult : roundResult) {
+						RundeEntity roundRundeEntity = rundeRepository.findBySpielAndRundenNr(gameSpielEntity, currResult.getRunde());
+						FrageEntity questionFrageEntity = frageRepository.findOne(currResult.getFragenID());
+						// does the submitted question id number really denote a valid question?
+						if(questionFrageEntity != null) {
+							// round starter if no answers for this current round exist
+							roundStarter = roundRundeEntity.getAnswers().isEmpty();
+							
+							AntwortEntity answerAntwortEntity = new AntwortEntity();
+							answerAntwortEntity.setFrage(questionFrageEntity);
+							answerAntwortEntity.setRundenID(roundRundeEntity);
+							answerAntwortEntity.setBenutzer(userUserEntity);
+							answerAntwortEntity.setAntwortmoeglichkeit1Check(currResult.isAntwortmoeglichkeit1Check());
+							answerAntwortEntity.setAntwortmoeglichkeit2Check(currResult.isAntwortmoeglichkeit2Check());
+							answerAntwortEntity.setAntwortmoeglichkeit3Check(currResult.isAntwortmoeglichkeit3Check());
+							answerAntwortEntity.setAntwortmoeglichkeit4Check(currResult.isAntwortmoeglichkeit4Check());
+							answerAntwortEntity.setFlagFrageAngezeigt(true);
+							answerAntwortEntity.setErgebnisCheck(currResult.isErgebnisCheck());
+							
+							antwortRepository.save(answerAntwortEntity);
+							
+							
+						} else {
+							return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
+						}
+					}
+					
+					if(roundStarter != null) {
+						if(roundStarter) {
+							// update wartenAuf
+							gameSpielEntity.setWartenAuf(opponentUserEntity);
+						} else {
+							if(gameSpielEntity.getAktuelleRunde() != maxRounds) {
+								// increment round, as the current is finished
+								gameSpielEntity.setAktuelleRunde(gameSpielEntity.getAktuelleRunde() + 1);
+							} else {
+								// finished last round, game over
+								gameSpielEntity.setWartenAuf(null);
+								gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.C.getEntity());
+							}
+						}
+					}
+					
+					spielRepository.save(gameSpielEntity);
+					return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+				} else {
+					return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.EXPECTATION_FAILED);
+				}
+			} else {
+				return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.FORBIDDEN);
+			}
+		} else {
+			return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/abandon/{gameID}")
@@ -416,19 +446,29 @@ public class SpielController {
 		return categories;
 	}
 	
-	private Set<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
-		Set<FrageEntity> questions = frageRepository.findByKategorieName(category);
-		Set<FrageEntity> returnQuestions = new HashSet<>();
+	private List<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
+		List<FrageEntity> questions = frageRepository.findByKategorieName(category);
+		Set<Integer> indices = new HashSet<>(questionCount);
+		List<FrageEntity> selectedQuestions = new ArrayList<>(questionCount);
+			
+		// pick random indices that denote questions
+		do {
+			indices.add(random.nextInt(questions.size()));
+		} while(indices.size() != questionCount);
 		
-		Object[] tmpQuestions = questions.toArray();
-		while(returnQuestions.size() < questionCount) {
-			int randomIndex = random.nextInt(tmpQuestions.length);
-			returnQuestions.add((FrageEntity) tmpQuestions[randomIndex]);
+		Integer[] tmpIndicesArray = indices.toArray(new Integer[questionCount]);
+		// pick the questions that are identified by the determined indices
+		for(int i = 0; i < tmpIndicesArray.length; i++) {
+			selectedQuestions.add(questions.get(tmpIndicesArray[i]));
 		}
 		
-		return returnQuestions;
+		// sort by fragenID
+		Collections.sort(selectedQuestions, questionsSorter);
+		
+		return selectedQuestions;
 	}
 }
 
 //TODO @Transactional use timeout
 //TODO synchronized? multiple equal games are created instead of only one. Everywhere or nowhere!
+//FIXME CRITICAL: on database operations / JSON marshaling, escape '"', HTML entities (SQL/HTML injection)

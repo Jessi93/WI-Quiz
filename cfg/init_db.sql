@@ -68,7 +68,7 @@ CREATE TABLE Spiel (
 	spieler2 VARCHAR(50) NOT NULL,
 	sieger VARCHAR(50),
 	verlierer VARCHAR(50),
-	wartenAuf VARCHAR(50) NOT NULL,
+	wartenAuf VARCHAR(50),
 	aktuelleRunde INTEGER NOT NULL,
 	spielstatusName CHAR NOT NULL,
 	letzteAktivitaet TIMESTAMP NOT NULL,

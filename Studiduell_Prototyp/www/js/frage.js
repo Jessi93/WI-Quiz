@@ -13,7 +13,6 @@ function init() {
 	// continue-specific
 	opponentAnswers = roundStart ? null : JSON.parse(localStorage.getItem("gameQuestionContinue")).answers;
 	
-	
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
 	setAntworten(questions[questionCounter]);
@@ -21,7 +20,7 @@ function init() {
 
 
 function setKategorie(question) {
-	$("#kategorieDiv").text(question.kategorie_name);
+	$("#kategorieDiv").text(question.kategorieName.name);
 
 }
 
@@ -177,10 +176,13 @@ function nextNextQuestion(correctlyAnswered) {
 	}
 	
 	var submitData = {
-		"spielID" : gameInfo.spielID,
 		"runde" : gameInfo.aktuelleRunde,
 		"fragenID" : question.fragenID,
-		"richtig" : correctlyAnswered
+		"antwortmoeglichkeit1Check" : $("#antwort1").hasClass("buttonAusgewaehlt"),
+		"antwortmoeglichkeit2Check" : $("#antwort2").hasClass("buttonAusgewaehlt"),
+		"antwortmoeglichkeit3Check" : $("#antwort3").hasClass("buttonAusgewaehlt"),
+		"antwortmoeglichkeit4Check" : $("#antwort4").hasClass("buttonAusgewaehlt"),
+		"ergebnisCheck" : correctlyAnswered
 	};
 	answers.push(submitData);
 	
@@ -193,25 +195,40 @@ function nextNextQuestion(correctlyAnswered) {
 		popViewPushView("html/frage.html");
 	} else {
 		//TODO send data to server at the end of round
-		localStorage.removeItem("answers");
-		popViewPushView("html/rundenuebersicht.html");
+		$.ajax( {
+			url : serverURL + "game/submitRoundResult/" + gameInfo.spielID,
+			type : "POST",
+			data : JSON.stringify(answers),
+			contentType : "application/json",
+			beforeSend : function(xhr) {authHeader(xhr);},
+			statusCode : {
+				200 : function() {
+					localStorage.removeItem("answers");
+					popViewPushView("html/rundenuebersicht.html");
+				},
+				403 : function() {alert("Interner Fehler (403).");},
+				404 : function() {alert("Interner Fehler (404).");},
+				406 : function() {alert("Interner Fehler (406).");},
+				417 : function() {alert("Interner Fehler (417).");},
+			},
+		});
 	}
 }
 
 function animateOpponentsAnswers() {
-	var opponentName = opponentAnswers[0].benutzername;
+	var opponentName = opponentAnswers[0].benutzer.benutzername;
 	
 	// apply opponent's name on those popup divs that represent the opponent's answer
-	if(opponentAnswers[questionCounter].antwortmoeglichkeit1_check) {
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit1Check) {
 		$("#antwort1Popup").text(opponentName);
 	}
-	if(opponentAnswers[questionCounter].antwortmoeglichkeit2_check) {
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit2Check) {
 		$("#antwort2Popup").text(opponentName);
 	}
-	if(opponentAnswers[questionCounter].antwortmoeglichkeit3_check) {
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit3Check) {
 		$("#antwort3Popup").text(opponentName);
 	}
-	if(opponentAnswers[questionCounter].antwortmoeglichkeit4_check) {
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit4Check) {
 		$("#antwort4Popup").text(opponentName);
 	}
 	

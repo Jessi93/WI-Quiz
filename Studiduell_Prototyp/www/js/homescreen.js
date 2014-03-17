@@ -1,23 +1,15 @@
-checkCredentials();
-//openRundenuebersicht();
-
 var homescreenServerdata;
 
 function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
 	//zu testzwecken: setze localstorage username & pw auf leer! --> zeige login screen immer an!
-	localStorage.removeItem("username");
-	//zu testzwecken: setze username --> gehe direkt in den home screen!
-	//localStorage.setItem("username", "Kevin01");
-	//localStorage.setItem("password", "secret");
+	//localStorage.removeItem("username");
 	
 	if(isEmpty(localStorage.getItem("username"))) {
-	//im localstorage gibt es keinen Username --> gehe zum Login Screen 
-	var newView = new steroids.views.WebView("html/login.html");
-	steroids.layers.push(newView);
-	
+	return false;
 	}else{
 	//im localstorage gibt es einen Username --> home screen muss geladen werden! (mit sync call!)
+	return true;
 	}
 }
 
@@ -26,22 +18,15 @@ function openRundenuebersicht(spielID, positionInServerdata) {
 	
 	//Schreibe Spieldaten in localstorage (für Fragescreen und enemy_username)
 	localStorage.setItem("enemyUsername", getEnemyUsername(homescreenServerdata[positionInServerdata]) );
-	localStorage.setItem("gameInfo", homescreenServerdata[positionInServerdata] );
-	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage -> wird dann in der Rundenübersicht in variable geschrieben
-	$.ajax( {
-		url:serverURL + "game/overview/" + spielID,
-		type:"GET",
-		beforeSend:function(xhr){authHeader(xhr);},
-		crossDomain:true,
-		success:function(obj){localStorage.setItem("gameOverview", obj);
-		//alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+JSON.stringify(obj));
-		var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
-		steroids.layers.push(rundenuebersichtView);
-		},
-		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
-		});
-		
+	localStorage.setItem("gameInfo", JSON.stringify(homescreenServerdata[positionInServerdata]) );
+	
+	//Markiere im localStorage, dass die Rundenübersichtdaten nicht neu geholt werden müssen
+	localStorage.setItem("gameOverviewInitialize", true);
+	
+	//hole Serverdaten in localStroage & gehe in neuen Screen nur bei Erfolg! (aber wechsel in neuen Screen nicht in callback, sondern ausgelagert & durch event RundenuebersichtDataloaded initiiert, damit AJAX wiederverwendet werden kann.
+	fetchRundenuebersichtData(spielID);		
 }
+
 
 function openNeuesSpielScreen() {
 	var neuesSpielView = new steroids.views.WebView("html/neuesSpiel.html");
@@ -49,36 +34,32 @@ function openNeuesSpielScreen() {
 }
 
 function sync() {
-	var credentialsAvailable;
-	if(isEmpty(localStorage.getItem("username"))) {
-	//im localstorage gibt es keinen Username 
-	credentialsAvailable = false;
-	}else{
-	//im localstorage gibt es einen Username 
-	credentialsAvailable = true;
-	}
+	
+
+	var credentialsAvailable = checkCredentials();
 	
 
 //zu testzwecken: setze username & password im local storage (normalerweise geschieht das im login!)
-	localStorage.setItem("username", "Kevin01");
-	localStorage.setItem("password", "secret");
+	//localStorage.setItem("username", "Kevin01");	//Kevin01
+	//localStorage.setItem("password", "secret"); //secret
 
-//Sync darf nur ausgeführt wrden, wenn nicht direkt zum Login screen weitergeleitet wird (username vorhanden ist!)
+//Sync darf nur ausgeführt werden, wenn username vorhanden ist!)
 	if(credentialsAvailable){
-	//Setze Usernamen
+	//Setze Usernamen 
 	$("#username_div").text(localStorage.getItem("username"));
 
 	//lade Hauptmenüdaten vom Server & füge die entsprechenden HTML Elemente hinzu
 	fetchServerData();
+	}else{
+		//kein username vorhanden --> gehe zum login screen
+		//im localstorage gibt es keinen Username --> gehe zum Login Screen 
+		var newView = new steroids.views.WebView("html/login.html");
+		steroids.layers.push(newView);
 	}
 }
 
 function fetchServerData() {
 	//alert("fetchServerData aufgerufen");
-	
-	var v_username = localStorage.getItem("username");
-	var v_password = localStorage.getItem("password");
-		 //TODO: AJAX SYNC CALL muss in success gehen!
 	$.ajax( {
 			url:serverURL + "user/sync",
 			type:"POST",
@@ -87,8 +68,7 @@ function fetchServerData() {
 			crossDomain:true,
 			success:function(obj){handleServerData(obj);},
 			error:function(obj){alert("Fehler beim holen der Hauptmenü-Spieldaten! "+JSON.stringify(obj));},
-			data:"0123456789",
-			dataType:"text/plain"
+			data:"0123456789"
 			}); 
 	
 	
@@ -210,9 +190,14 @@ function fetchServerData() {
 }
 
 function handleServerData(serverSyncData){
-	//alert("handleServerData wurde aufgerufen"+JSON.stringify(serverSyncData));
+	//alert("handleServerData wurde aufgerufen. Neue Serverdaten:"+JSON.stringify(serverSyncData));
 	//schreibe sync Daten in localstorage
 	homescreenServerdata = serverSyncData;
+	
+	//entferne aktuelle Buttons vom Screen (alle werden anhand der neuen Serverdaten neu hinzugefügt!)
+	$("#ActionRequiredGames_div").empty();
+	$("#WaitingForGames_div").empty();
+	$("#OpenDuelRequests_list_container").empty();
 	
 	for(var i=0;i<serverSyncData.length;i++){
 		//alert(JSON.stringify(serverSyncData[i]));
@@ -228,14 +213,25 @@ function handleServerData(serverSyncData){
 		){
 		addWaitingForGame(serverSyncData[i], i);
 		}
-		//Prüfe, ob Eintrag eine offene Duellanfrage darstellt: (Status "pending")
+		//Prüfe, ob Eintrag eine eigene offene Duellanfrage darstellt: (Status "pending")
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== localStorage.getItem("username")
 		){
 		showDuelRequest(serverSyncData[i],i);
 		}
+		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
+					serverSyncData[i].wartenAuf.benutzername	== getEnemyUsername(serverSyncData[i])
+		//prüfe, ob der Eintrag eine Duellanfrage darstellt, die noch von einem Gegner beantwortet werden muss! 
+		){
+		addOpenDuelRequest(serverSyncData[i]);
+		}
 	}
 
+}
+
+function addOpenDuelRequest(gameData) {
+var enemy_username = getEnemyUsername(gameData);
+$("#OpenDuelRequests_list_container").append('<li class="topcoat-list__item">'+enemy_username+'</li>');
 }
 
 function addActionRequiredGame(gameData, positionInServerData){
@@ -249,9 +245,7 @@ function addActionRequiredGame(gameData, positionInServerData){
 function addWaitingForGame(gameData, positionInServerData){
 	//alert("addWaitingForGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
-	//füge HTML ein:
-	$("#WaitingForGames_div").append("<div class='content-padded'><button class='topcoat-button--large--quiet center full custom_icon_button_left Rand1 textklein yourTurnButton' ontouchend='openRundenuebersicht("+gameData.spielID+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a></div>");
-
+	$("#WaitingForGames_div").append("<div class='content-padded'><button class='topcoat-button--large--quiet center full custom_icon_button_left Rand1 textklein yourTurnButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a></div>");
 }
 
 function getEnemyUsername(gameData){
@@ -326,6 +320,19 @@ window.location.reload();
 
 }
 
+function openRundenuebersichtScreen(){
+	var rundenuebersichtView = new steroids.views.WebView("html/rundenuebersicht.html");
+		steroids.layers.push(rundenuebersichtView);
+}
+
+function test() {
+alert("DOMContentLoaded event wurde abgefangen!");
+}
+
+//sobald die Rundenübersichtsdaten geladen sind, soll in den RundenuebersichtScreen navigiert werden!
+document.addEventListener("RundenuebersichtDataloaded", openRundenuebersichtScreen, false);
 
 //sobald das Dokument rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
 document.addEventListener("deviceready", sync, false);
+document.addEventListener("DOMContentLoaded", test, false); 
+

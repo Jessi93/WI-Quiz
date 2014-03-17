@@ -3,18 +3,15 @@ var gv_password;
 
 function sendLoginDataToServer() {
 	//Prüfe, dass notification steroids plugin geladen wurde!
-	if(navigator.notification==="undefined"){
-	alert("Script navigator.notification wurde nicht geladen!");
-	}
+	//if(navigator.notification==="undefined"){
+	//alert("Script navigator.notification wurde nicht geladen!");
+	//}
 	
 	
 	//alert("sendLoginDataToServer wurde aufgerufen!");
-	//prüfe, ob username/password kombination OK ist!
 	
 	var v_username = $("#username_input").val();
 	var v_password = $("#password_input").val();
-	
-
 	
 	//Prüfe, ob mind username oder passwort nicht befüllt wurden
 	if (isEmpty(v_username) || isEmpty(v_password) ){
@@ -33,16 +30,23 @@ function sendLoginDataToServer() {
 		);
 	
 	}else{
-	//Username und passwort sind beide gesetzt worden --> Serveranfrage starten!
+	//Username und passwort sind beide gesetzt worden -->	//prüfe, ob username/password kombination OK ist!
+		//Serveranfrage starten!
 	alert("Login-AJAX-Call gestartet!");
-	$.ajax( {
-			url:serverURL + "user/checkCredentials",
+	
+		$.ajax( {
+			url:serverURL + "user/checkCredentials/"+v_username,
 			type:"POST",
-			beforeSend:function(xhr){authHeader(xhr);},
+			contentType:"text/plain",
 			crossDomain:true,
-			success:function(obj){openHomeScreen();},
+			success:function(obj){
+				//alert("Login Ajax erfolgreich!");
+				openHomeScreen(v_username, v_password);
+			},
 			error:function(obj){handleErrorLogin(obj);},
-			}); 
+			data:v_password
+			});
+		 
 	}
 			
 }
@@ -76,20 +80,12 @@ function openRegisterScreen() {
 	steroids.layers.push(newView);
 }
 
-function openHomeScreen() {
+function openHomeScreen(username, password) {
 	//alert("openHomeScreen wurde aufgerufen!");
+	//Setze username & passwort im localStorage
+	localStorage.setItem("username", username);
+	localStorage.setItem("password", password);
 	
-	// steroids.layers.pop({}, {
-	// onSuccess: function() {
-		//go to the home screen 
-		// var newView = new steroids.views.WebView("html/home.html");
-		// steroids.layers.push(newView);
-		// },
-	// onFailure: function(error) {
-    // alert("Could not remove a layer: " + error.errorDescription);
-		// }
-	// });
-	//var newView = new steroids.views.WebView("html/home.html");
-	 //steroids.layers.push(newView);
+	//gehe zum Homescreen (gesetzte credentials im localstorage verhindern, dass login angezeigt wird!
 	 steroids.layers.pop(); //pop schließt login screen, sodass home sichtbar wird!
 }
