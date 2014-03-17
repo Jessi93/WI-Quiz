@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import studiduell.constants.entity.SpielstatusEntityEnum;
 import studiduell.constants.entity.SpieltypEntityEnum;
-import studiduell.constants.httpheader.HttpHeaderDefaults;
 import studiduell.json.model.RoundResultPOJO;
 import studiduell.misc.QuestionsSorter;
 import studiduell.model.AntwortEntity;
@@ -41,7 +39,6 @@ import studiduell.model.SpielEntity;
 import studiduell.model.SpielstatusEntity;
 import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
-import studiduell.model.id.AntwortEntityPk;
 import studiduell.repository.AntwortRepository;
 import studiduell.repository.FrageRepository;
 import studiduell.repository.KategorienfilterRepository;
@@ -68,8 +65,6 @@ public class SpielController {
 	private KategorienfilterRepository kategorienfilterRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
-	@Autowired
-	private HttpHeaderDefaults httpHeaderDefaults;
 	@Autowired
 	private QuestionsSorter questionsSorter;
 	
@@ -109,10 +104,9 @@ public class SpielController {
 			
 			//TODO Push notification for opponent here
 			
-			return new ResponseEntity<>(opponentUserEntity.getBenutzername(), httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-					HttpStatus.CREATED);
+			return new ResponseEntity<>(opponentUserEntity.getBenutzername(), HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -135,15 +129,15 @@ public class SpielController {
 					SpielEntity game = createGame(userUserEntity, opponentUserEntity,
 							SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
 					spielRepository.save(game);
-					return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
+					return new ResponseEntity<>(HttpStatus.CREATED);
 				} else {
-					return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
+					return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 				}
 			} else {
-				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
 		} else {
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -165,10 +159,9 @@ public class SpielController {
 			
 			json.putPOJO("rounds", roundsArray);
 			
-			return new ResponseEntity<>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-					HttpStatus.OK);
+			return new ResponseEntity<>(json, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -184,7 +177,7 @@ public class SpielController {
 		} else if (flag.equalsIgnoreCase("false")) {
 			flagVal = false;
 		} else {
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		// TODO LOW: If server breaks down before commit, the roundID is
 		// incremented, too. Prevent that?
@@ -214,12 +207,12 @@ public class SpielController {
 				
 				spielRepository.save(gameSpielEntity);
 
-				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
 
-		return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
@@ -258,14 +251,14 @@ public class SpielController {
 					json.add(currEntryNode);
 				}
 				
-				return new ResponseEntity<ArrayNode>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+				return new ResponseEntity<ArrayNode>(json, HttpStatus.OK);
 			} else {
 				// less than a certain amount of common categories
-				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.GONE);
+				return new ResponseEntity<>(HttpStatus.GONE);
 			}
 		} else {
 			// any user requested questions for a game he does not play in
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 	}
 	
@@ -291,13 +284,12 @@ public class SpielController {
 				json.put("questions", questionsNode);
 				json.put("answers", answersNode);
 				
-				return new ResponseEntity<ObjectNode>(json, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-						HttpStatus.OK);
+				return new ResponseEntity<ObjectNode>(json, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} else {
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -347,7 +339,7 @@ public class SpielController {
 							
 							
 						} else {
-							return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
+							return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
 						}
 					}
 					
@@ -368,15 +360,15 @@ public class SpielController {
 					}
 					
 					spielRepository.save(gameSpielEntity);
-					return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+					return new ResponseEntity<Void>(HttpStatus.OK);
 				} else {
-					return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.EXPECTATION_FAILED);
+					return new ResponseEntity<Void>(HttpStatus.EXPECTATION_FAILED);
 				}
 			} else {
-				return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.FORBIDDEN);
+				return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
 			}
 		} else {
-			return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -392,17 +384,14 @@ public class SpielController {
 				gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.Q.getEntity());
 				spielRepository.save(gameSpielEntity);
 				
-				return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-						HttpStatus.OK); 
+				return new ResponseEntity<Void>(HttpStatus.OK); 
 			} else {
 				// only active and pending games can be abandoned
-				return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-						HttpStatus.NOT_ACCEPTABLE);
+				return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
 			}
 		} else {
 			// no such game found
-			return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-					HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 	}
 	

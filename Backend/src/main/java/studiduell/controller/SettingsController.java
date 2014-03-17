@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import studiduell.constants.httpheader.HttpHeaderDefaults;
 import studiduell.model.FreundeslisteEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.UserEntity;
 import studiduell.model.id.FreundeslisteEntityPk;
 import studiduell.model.id.KategorienfilterEntityPk;
 import studiduell.repository.FreundeslisteRepository;
-import studiduell.repository.KategorieRepository;
 import studiduell.repository.KategorienfilterRepository;
 import studiduell.repository.UserRepository;
 import studiduell.security.SecurityContextFacade;
@@ -38,8 +36,6 @@ public class SettingsController {
 	private SecurityContextFacade securityContextFacade;
 	@Autowired
 	private FreundeslisteRepository freundeslisteRepository;
-	@Autowired
-	private HttpHeaderDefaults httpHeaderDefaults;
 
 	/**
 	 * Takes the category_name and check status.
@@ -58,7 +54,7 @@ public class SettingsController {
 					.findOne(new KategorienfilterEntityPk(authUsername,
 							category.getKategorieName().getName()));
 			if (filterEntity == null) {
-				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_ACCEPTABLE);
+				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			}
 		}
 
@@ -72,7 +68,7 @@ public class SettingsController {
 			kategorienfilterRepository.save(filterEntity);
 		}
 
-		return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/friends")
@@ -89,8 +85,7 @@ public class SettingsController {
 					.getBenutzername());
 		}
 
-		return new ResponseEntity<>(friendNames, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.OK);
+		return new ResponseEntity<>(friendNames, HttpStatus.OK);
 	}
 
 	/**
@@ -108,29 +103,29 @@ public class SettingsController {
 
 		// do I try to be my own friend?
 		if (authUsername.equals(friend)) {
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		// does friend exist?
 		if (friendUserEntity == null) {
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		// already befriended?
 		if (freundeslisteRepository.findOne(new FreundeslisteEntityPk(
 				authUsername, friend)) != null) { // exists does not work here
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 
 		FreundeslisteEntity friends = new FreundeslisteEntity(userUserEntity,
 				friendUserEntity);
 		freundeslisteRepository.save(friends);
 
-		return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/friends/{friend}")
 	public ResponseEntity<Void> deleteFriend(
 			@PathVariable("friend") String friend) {
 		// TODO maybe implement
-		return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 }

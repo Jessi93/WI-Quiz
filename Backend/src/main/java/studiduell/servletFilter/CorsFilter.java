@@ -35,6 +35,9 @@ public class CorsFilter extends OncePerRequestFilter {
 					accessControlAllowHeadersValue);
 			response.addHeader(accessControlMaxAgeKey, accessControlMaxAgeValue);
 		}
+		if(!corsPreflightHttpMethod.equals(request.getMethod())) {
+			response.addHeader(accessControlAllowOriginKey, accessControlAllowOriginValue);
+		}
 		filterChain.doFilter(request, response);
 	}
 }

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import studiduell.constants.entity.SpielstatusEntityEnum;
-import studiduell.constants.httpheader.HttpHeaderDefaults;
 import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.SpielEntity;
@@ -52,8 +51,6 @@ public class UserController {
 	private SpielRepository spielRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
-	@Autowired
-	private HttpHeaderDefaults httpHeaderDefaults;
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
 			value = "/checkCredentials/{name}")
@@ -65,13 +62,11 @@ public class UserController {
 			String encryptedPwd = DigestUtils.md5DigestAsHex(password.getBytes());
 			
 			if(userUserEntity.getPasswortHash().equals(encryptedPwd)) {
-				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-						HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
 		
-		return new ResponseEntity<Void>(httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
 	}
 	
 	/**
@@ -106,11 +101,11 @@ public class UserController {
 				}
 				//TODO if sth. went wrong: 500 Internal Server Error
 				
-				return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CREATED);
+				return new ResponseEntity<>(HttpStatus.CREATED);
 			}
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} else {
-			return new ResponseEntity<>(httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -136,7 +131,7 @@ public class UserController {
 		List<SpielEntity> games = spielRepository.getWithUserInStatus(userUserEntity,
 				Arrays.asList(new SpielstatusEntity[]{SpielstatusEntityEnum.A.getEntity(), SpielstatusEntityEnum.P.getEntity()}));
 		
-		return new ResponseEntity<>(games, httpHeaderDefaults.getAccessControlAllowOriginHeader(), HttpStatus.OK);
+		return new ResponseEntity<>(games, HttpStatus.OK);
 	}
 	
 	/**
@@ -169,8 +164,7 @@ public class UserController {
 		allObj.put("game", gameObj);
 		allObj.put("questions", questionsObj);
 		
-		return new ResponseEntity<>(allObj, httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.OK);
+		return new ResponseEntity<>(allObj, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
@@ -179,7 +173,6 @@ public class UserController {
 		Pageable pageRequest = new PageRequest(0, maxSearchableUsers);
 		Page<String> page = userRepository.roughSearch("%" + pattern + "%", pageRequest);
 		
-		return new ResponseEntity<>(page.getContent(), httpHeaderDefaults.getAccessControlAllowOriginHeader(),
-				HttpStatus.OK);
+		return new ResponseEntity<>(page.getContent(), HttpStatus.OK);
 	}
 }
