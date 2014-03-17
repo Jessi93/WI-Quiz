@@ -13,6 +13,7 @@ function init() {
 	// continue-specific
 	opponentAnswers = roundStart ? null : JSON.parse(localStorage.getItem("gameQuestionContinue")).answers;
 	
+	alert(JSON.stringify(questions[questionCounter]));
 	
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
@@ -21,7 +22,7 @@ function init() {
 
 
 function setKategorie(question) {
-	$("#kategorieDiv").text(question.kategorie_name);
+	$("#kategorieDiv").text(question.kategorieName);
 
 }
 
@@ -202,16 +203,16 @@ function animateOpponentsAnswers() {
 	var opponentName = opponentAnswers[0].benutzername;
 	
 	// apply opponent's name on those popup divs that represent the opponent's answer
-	if(opponentAnswers[questionCounter].antwortmoeglichkeit1_check) {
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit1Check) {
 		$("#antwort1Popup").text(opponentName);
 	}
-	if(opponentAnswers[questionCounter].antwortmoeglichkeit2_check) {
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit2Check) {
 		$("#antwort2Popup").text(opponentName);
 	}
-	if(opponentAnswers[questionCounter].antwortmoeglichkeit3_check) {
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit3Check) {
 		$("#antwort3Popup").text(opponentName);
 	}
-	if(opponentAnswers[questionCounter].antwortmoeglichkeit4_check) {
+	if(opponentAnswers[questionCounter].antwortmoeglichkeit4Check) {
 		$("#antwort4Popup").text(opponentName);
 	}
 	
