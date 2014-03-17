@@ -577,8 +577,6 @@ function openFrage() {
 }
 
 function prepareQuestion() {
-	//alert("prepareQuestion wurde aufgerufen!");
-	alert(localStorage.getItem("username") + ":" + localStorage.getItem("password"));
 	if(isRoundStarter(gameInfo)) {
 		$.ajax( {
 			url : serverURL + "game/randomCategoriesFor/" + gameInfo.spielID,
