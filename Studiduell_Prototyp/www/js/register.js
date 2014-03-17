@@ -8,11 +8,14 @@ function sendRegistration(){
 		//alert("handleErrorRegister wurde aufgerufen!");
 		//TODO: Hier Zwischen Verbindungsfehler und bereitsvergebenem Username unterscheiden!){
 		if(returnedObject.status == 409){
-		alert("Dein Username ist leider bereits vergeben...");
+		navigator.notification.alert("Dein Username ist leider bereits vergeben...", onAlertDismissHandleErrorRegister,'Information','OK');
 		}else{
-		alert(unescape("%22Fehler bei %DCberpr%FCfung der Registrierungsaten. %28Keine Verbindung zum Server%3F%29 %22")+JSON.stringify(returnedObject));
+		alert(unescape("%22Fehler bei %DCberpr%FCfung der Registrierungsdaten. %28Keine Verbindung zum Server%3F%29 %22")+JSON.stringify(returnedObject));
 		}
-	}	
+	}
+
+	function onAlertDismissHandleErrorRegister (){ //Tue nichts
+	}
 	function alertDismissedInputEmpty() {
 		//alert("alertDismissed aufgerufen! gv_username= "+gv_username+"gv_password= "+gv_password);
 		//Zeige an, welche Eingabe fehlt! (roter Rand)

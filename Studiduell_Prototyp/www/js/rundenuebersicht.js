@@ -652,11 +652,14 @@ function onConfirmGiveUp(buttonIndex, gameID){
 			 url:serverURL + "game/abandon/" + gameID,
 			 type:"POST",
 			 beforeSend : function(xhr) {authHeader(xhr);},
-			success:function(obj){alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
+			success:function(obj){
+			//alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
 			//gehe zum home screen zurück!
 			steroids.layers.pop();
 			},
-			 error:function(obj){alert("Fehler beim Aufgeben des Duells!"+JSON.stringify(obj));}
+			 error:function(obj){
+			 
+			 alert("Fehler beim Aufgeben des Duells!"+JSON.stringify(obj));}
 			 }); 
 				
 				break;

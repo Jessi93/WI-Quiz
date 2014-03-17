@@ -127,7 +127,7 @@ function fetchRundenuebersichtData (spielID){
 		crossDomain:true,
 		success:function(obj){
 			localStorage.setItem("gameOverview", JSON.stringify(obj));
-			alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
+			//alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
 			//Event wird erstellt!
 			fireEvent("RundenuebersichtDataloaded");
 		},
