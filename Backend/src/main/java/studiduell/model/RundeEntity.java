@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -41,6 +42,7 @@ public class RundeEntity {
 	
 	// relationships
 	@OneToMany(mappedBy = "rundenID", fetch = FetchType.EAGER)
+	@OrderBy("frage.fragenID ASC") // used for gameOverview
 	private List<AntwortEntity> answers;
 
 	public int getRundenID() {
