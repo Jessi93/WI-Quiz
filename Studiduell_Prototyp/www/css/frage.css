@@ -55,6 +55,8 @@ body {
 	word-wrap: break-word !important;
 	white-space: normal !important;
 	line-height: normal !important;
+	/*färbt kleine linie am obenen inneren Rand des  Buttons!*/
+	box-shadow: inset 0 1px rgba(255,255,255,0.36);
 	
 	margin: 0.2em;
 	height: 8em;

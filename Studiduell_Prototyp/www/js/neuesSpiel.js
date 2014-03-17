@@ -35,13 +35,22 @@ function addFriendToList(obj){
 
 
 function createNewGameFriendlist(friendName){
+	function onAlertDismissCreateNewGameFriendlist(){
+	}
 	$.ajax( {
 		url:serverURL + "game/create/with/" + friendName,
 		type:"POST",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
 		success:function(){steroids.layers.popAll();},
-		error:function(obj){alert(JSON.stringify(obj));}
+		error:function(obj){
+			if(obj.status == 409){
+				//409 = "Conflict" = Freundesanfrage fehlgeschlagen, weil Freundschaft bereits herrscht!
+				navigator.notification.alert("Du spielst bereits gegen "+friendName+"!", onAlertDismissCreateNewGameFriendlist,'Information','OK');
+				}else{
+				navigator.notification.alert("Fehler beim Absenden der Duellanfrage!"+JSON.stringify(obj), onAlertDismissCreateNewGameFriendlist,'Information','OK');
+				}
+			}
 		});
 }
 

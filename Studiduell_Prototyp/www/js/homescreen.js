@@ -4,8 +4,9 @@ function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
 	//zu testzwecken: setze localstorage username & pw auf leer! --> zeige login screen immer an!
 	//localStorage.removeItem("username");
-	
-	if(isEmpty(localStorage.getItem("username"))) {
+	var username = localStorage.getItem("username");
+	//alert("checkCredentials wurde aufgerufen mit username: "+username);
+	if(isEmpty(username)) {
 	return false;
 	}else{
 	//im localstorage gibt es einen Username --> home screen muss geladen werden! (mit sync call!)
@@ -34,9 +35,12 @@ function openNeuesSpielScreen() {
 }
 
 function sync() {
+	//TEST.
+	//popEvent("popAll");
 	
-
 	var credentialsAvailable = checkCredentials();
+	//var test_uname = localStorage.getItem("username");
+	//alert("credentialsAvailable: "+credentialsAvailable+" username: "+test_uname);
 	
 
 //zu testzwecken: setze username & password im local storage (normalerweise geschieht das im login!)
@@ -73,7 +77,7 @@ function fetchServerData() {
 	
 	
 	//zu testzwecken (Testdaten ohne Serveranbindung!)
-	var tmpServerData = 
+var tmpServerData = 
 		[
 		//Pending Spiel 1, welches von Kevin02 als Duellanfrage vorliegt
 		{
@@ -325,8 +329,20 @@ function openRundenuebersichtScreen(){
 		steroids.layers.push(rundenuebersichtView);
 }
 
-function test() {
-alert("DOMContentLoaded event wurde abgefangen!");
+function onVisibilityChange() {
+    //alert("document.visibilityState: " + document.visibilityState);
+    //alert("document.hidden: " + document.hidden);
+
+	var docHidden = document.hidden;
+	if(docHidden == false){
+	//Wenn auf das Dokument zurückgekehrt wird, soll es aktualisiert werden
+	//alert("onVisibilityChange wurde aufgerufen & sync wird aufgerufen!");
+	sync();
+	}else{
+	//Wenn das Dokument verlassen wird, soll nichts getan werden!
+	//alert("onVisibilityChange wurde aufgerufen, aber nichts wird getan!");
+	}
+ 
 }
 
 //sobald die Rundenübersichtsdaten geladen sind, soll in den RundenuebersichtScreen navigiert werden!
@@ -334,5 +350,11 @@ document.addEventListener("RundenuebersichtDataloaded", openRundenuebersichtScre
 
 //sobald das Dokument rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
 document.addEventListener("deviceready", sync, false);
-document.addEventListener("DOMContentLoaded", test, false); 
+
+//Eventhandler für das aktualisieren beim "zurückkehren" auf den homescreen durch pop/popAll
+document.addEventListener("visibilitychange", onVisibilityChange, false);
+
+
+
+
 

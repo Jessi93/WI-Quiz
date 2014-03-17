@@ -1,5 +1,5 @@
 function init() {
-	//alert("init wurde aufgerufen!");
+	//alert("init in SpielerSuchen wurde aufgerufen!");
 }
 
 function spielerSuchen() {
@@ -29,7 +29,7 @@ function spielerSuchen() {
 		//var tmpServerData = new Array("Anna10", "Anna2", "anna0003", "Anna001", "Anna1");
 		//addResultToList(tmpServerData);  
 	}
-  }
+ }
  
 
  // //Sortierung

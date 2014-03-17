@@ -584,9 +584,6 @@ var enemyUsername = localStorage.getItem("enemyUsername");
 $('#spielerBDiv').text(enemyUsername);
 }
 
-
-
-
 function openFrage() {
 	localStorage.setItem("questionCounter", 0);
 	//TODO disable button if not waiting for me!
@@ -654,6 +651,7 @@ function onConfirmGiveUp(buttonIndex, gameID){
 			 $.ajax( {
 			 url:serverURL + "game/abandon/" + gameID,
 			 type:"POST",
+			 beforeSend : function(xhr) {authHeader(xhr);},
 			success:function(obj){alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
 			//gehe zum home screen zurück!
 			steroids.layers.pop();
@@ -753,10 +751,26 @@ function sync(){
 	}
 }
 
+function onVisibilityChange() {
+    //alert("document.visibilityState: " + document.visibilityState);
+    //alert("document.hidden: " + document.hidden);
+
+	var docHidden = document.hidden;
+	if(docHidden == false){
+	//Nur wenn auf das Dokument zurückgekehrt wird, soll es aktualisiert werden
+	sync();
+	}else{
+	//Wenn das Dokument verlassen wird, soll nichts getan werden!
+	}
+ 
+}
 
 //document.addEventListener("deviceready", initialize, false);
-
+//sobald das Dokument zum ersten Mal geöffnet wird, soll es mit Inhalt befüllt werden!
 document.addEventListener("DOMContentLoaded", sync, false);
+
+//wenn auf die Rundenübersicht zurückgekehrt wird, soll sie aktualisiert werden! (auch bei Rückkehr aus bildschirm-standby!)
+document.addEventListener("visibilitychange", onVisibilityChange, false);
 
 //sobald neue Serverdaten bereit stehen, soll der screen mit initialize aktualisiert werden!
 document.addEventListener("RundenuebersichtDataloaded", initialize, false);

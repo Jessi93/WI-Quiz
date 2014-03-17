@@ -30,9 +30,10 @@ function sendLoginDataToServer() {
 		);
 	
 	}else{
+	
 	//Username und passwort sind beide gesetzt worden -->	//prüfe, ob username/password kombination OK ist!
 		//Serveranfrage starten!
-	alert("Login-AJAX-Call gestartet!");
+	//alert("Login-AJAX-Call gestartet!");
 	
 		$.ajax( {
 			url:serverURL + "user/checkCredentials/"+v_username,
@@ -67,7 +68,7 @@ function alertDismissed() {
 
 function handleErrorLogin(returnedObject) {
 	//alert("handleErrorLogin wurde aufgerufen!"+returnedObject);
-	if(returnedObject==="false"){
+	if(returnedObject.status == 401){
 	alert("Die Kombination aus Username und Passwort ist nicht korrekt, bitte versuche es erneut.");
 	}else{
 	alert(unescape("%22Fehler bei %DCberpr%FCfung der Login Daten %28Keine Verbindung zum Server%3F%29 %22")+JSON.stringify(returnedObject));//DEBUG +returnedObject);

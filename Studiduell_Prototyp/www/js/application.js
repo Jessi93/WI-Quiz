@@ -8,6 +8,7 @@ Screenspezifische Funktionen werden in den jeweiligen 'screenname.js' files besc
 steroids.view.navigationBar.show("Studiduell");
 
 var serverURL = "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/";
+var maxZeichenUsername = 20;
 
 /*
 Prüft, ob ein String leer ist, oder nicht (leer = true, nicht leer = false)
@@ -22,22 +23,29 @@ Parameter: Pfad, des neuen screens (html) z.b. "html/neuesSpiel.html"
 */
 function popViewPushView (newView_locationString){
 //alert("popViewPushView wurde aufgerufen!"+steroids.layers);
-/* steroids.layers.pop({}, {
-	onSuccess: function() {
-		alert("screen wird beendet & neuer gestartet!");
-		//go to the new screen 
-		var newView = new steroids.views.WebView(newView_locationString);
-		steroids.layers.push(newView);
-		},
-	onFailure: function(error) {
-   // alert("Could not remove a layer: " + error.errorDescription);
-	alert("Fehler bei pop!");
-		}
-	}); */
 	var newView = new steroids.views.WebView(newView_locationString);
 		steroids.layers.pop();
 		steroids.layers.push(newView);
 	
+}
+
+function fireEvent(event_name){
+	var event; // The custom event that will be created
+	  if (document.createEvent) {
+		event = document.createEvent("HTMLEvents");
+		event.initEvent(event_name, true, true);
+	  } else {
+		event = document.createEventObject();
+		event.eventType = event_name;
+	  }
+	event.eventName = event_name;
+	//feuern des Events
+	if (document.createEvent) {
+		//alert(event_name+" event wurde gefeuert!");
+		document.dispatchEvent(event);
+	  } else {
+		document.fireEvent("on" + event.eventType, event);
+	  }
 }
 
 function isRoundStarter(gameInfo) {
@@ -85,19 +93,26 @@ function authHeaderManual(xhr, username, password){
 }
 
 function addAsFriend(fName) {
-	alert("addAsFriend wurde aufgerufen mit name: "+fName);
+	//alert("addAsFriend wurde aufgerufen mit name: "+fName);
 
 	function onAlertDismissAddAsFriend(){
 		//leer lassen?
-		}
+	}
 	$.ajax( {
 		url:serverURL + "settings/friends/" + fName,
 		type:"PUT",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
-		success:function(){navigator.notification.alert('Sie sind jetzt mit ' + fName + ' befreundet!', onAlertDismissAddAsFriend,'Information','OK');},
+		success:function(){navigator.notification.alert('Du bist jetzt mit ' + fName + ' befreundet!', onAlertDismissAddAsFriend,'Information','OK');},
 		//TODO proper Fehlerbehandlung
-		error:function(obj){alert("Fehler bei der Freundesanfrage!"+JSON.stringify(obj));}
+		error:function(obj){
+			if(obj.status == 409){
+			//409 = "Conflict" = Freundesanfrage fehlgeschlagen, weil Freundschaft bereits herrscht!
+			navigator.notification.alert('Du bist bereits mit '+fName+' befreundet!', onAlertDismissAddAsFriend,'Information','OK');
+			}else{
+			navigator.notification.alert("Fehler bei der Freundesanfrage!"+JSON.stringify(obj), onAlertDismissAddAsFriend,'Information','OK');
+			}
+		}
 		});
 		
 	
@@ -113,26 +128,9 @@ function fetchRundenuebersichtData (spielID){
 		success:function(obj){
 			localStorage.setItem("gameOverview", JSON.stringify(obj));
 			alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
-			//TODO fireEvent RundenuebersichtDataloaded
 			//Event wird erstellt!
-			var event; // The custom event that will be created
-			  if (document.createEvent) {
-				event = document.createEvent("HTMLEvents");
-				event.initEvent("RundenuebersichtDataloaded", true, true);
-			  } else {
-				event = document.createEventObject();
-				event.eventType = "RundenuebersichtDataloaded";
-			  }
-			event.eventName = "RundenuebersichtDataloaded";
-			//feuern des Events
-			if (document.createEvent) {
-				document.dispatchEvent(event);
-			  } else {
-				document.fireEvent("on" + event.eventType, event);
-			  }
+			fireEvent("RundenuebersichtDataloaded");
 		},
 		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
 		});
 }
-
-
