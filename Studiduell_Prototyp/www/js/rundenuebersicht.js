@@ -426,9 +426,8 @@ var GameOverviewData = {
 };
 
 function checkGameGivenUp(){
-	alert("checkGameGivenUp wurde aufgerufen mit status: "+gameInfo.spielstatusName.name);
+	//alert("checkGameGivenUp wurde aufgerufen mit status: "+gameInfo.spielstatusName.name);
 	if(gameInfo.spielstatusName.name == "Q"){
-	alert("checkGameGivenUp hat ermittelt, dass das Duell aufgegeben wurde! gameInfo: "+JSON.stringify(gameInfo));
 	return true;
 	}else{
 	return false;
@@ -436,6 +435,7 @@ function checkGameGivenUp(){
 }
 
 function getCurrentGameInfo(spielID){
+	//alert("getCurrentGameInfo wurde aufgerufen mit SpielID: "+spielID);
 	function writeGameInfoInLS(gameInfoNew){
 	//finde den Spieldatensatz des aktuellen spiels
 		for(var i=0;i<gameInfoNew.length;i++){
