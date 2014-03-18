@@ -24,11 +24,7 @@ function continueInitialize(){
 	}
 	
 	fetchLocalStorageData();
-	if(checkGameGivenUp()){
-	//Meldung & Rückkehr zum haupscreen
-	navigator.notification.alert('Dein Gegner hat dieses Spiel aufgegeben! ', onAlertDismissGameGivenUp,'Information','OK');
-	}else{
-	//spiel wurde nicht aufgegeben --> mach weiter mit initialize!
+	
 	enORdisableSpielenButton();
 	
 	setSpieler1();
@@ -36,7 +32,7 @@ function continueInitialize(){
 	setSpielstand();
 	setownName();
 	setenemyName();
-	}
+	
 }
 
 
@@ -442,7 +438,7 @@ function getCurrentGameInfo(spielID){
 			if(gameInfoNew[i].spielID == spielID){
 				//schreibe Spieldatensatz in LS
 				localStorage.setItem("gameInfo", JSON.stringify(gameInfoNew[i]));
-				alert("gameInfo wurde erneuert im LS: "+JSON.stringify(gameInfoNew[i]));
+				//alert("gameInfo wurde erneuert im LS: "+JSON.stringify(gameInfoNew[i]));
 				break;
 			}
 		}
@@ -481,8 +477,14 @@ function enORdisableSpielenButton() {
 		$("#spielenButton").addClass("topcoat-button--large--cta");
 		$("#spielenButton").removeAttr("disabled");
 		$("#spielenButton").text("Spielen");
+	}else if(gameInfo.spielstatusName.name === "Q"){
+		// spiel wurde aufgegeben
+		$("#spielenButton").removeClass("topcoat-button--large--cta");
+		$("#spielenButton").addClass("topcoat-button--large");
+		$("#spielenButton").attr("disabled", ""); 
+		$("#spielenButton").text("Spiel wurde aufgegeben");
 	}else{
-		// auf den gegner wird gewartet --> disable Spielen button (Text "Warten")
+	//Es wird auf gegner gewartet (Spiel aktiv!)
 		$("#spielenButton").removeClass("topcoat-button--large--cta");
 		$("#spielenButton").addClass("topcoat-button--large");
 		$("#spielenButton").attr("disabled", ""); 
