@@ -83,8 +83,8 @@ INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwo
 ('Programmierung', 'UK 2 zu Programmierung',false,'Welche Personen haben Java entwickelt?', 'true', 'true','true','true',true,true,true,true,true),
 ('Programmierung', 'UK 2 zu Programmierung',false,'Ergänze den folgenden Satz damit die Ausage stimmt: Die Antwort ist ...', 'false', 'true','true','false',false,true,true,false,true),
 ('Programmierung', 'UK 2 zu Programmierung',false,'So ein Mist', 'delete', 'wwer','wo','wann',false,true,false,false,false),
-('Programmierung', 'UK 2 zu Programmierung',false,'Was ist richtiger JAVAScript-Code', '<script type="text/javascript">document.getElementById("kategorieDiv").css("visibility","hidden");</script>', '<script type="text/javascript">$("#kategorieDiv").css("visibility","hidden");</script>','<script type="text/javascript">document.getElementById("antwort1").css("visibility","hidden");</script>', '<script type="text/javascript">$("#antwort1").css("visibility","hidden");</script>',true,true,true,true,true),
-('Programmierung', 'UK 2 zu Programmierung',false,'TestAlert', '<script>alert("Hallo Sie wurden gehäckt")</script>', 'false','false','false',false,false,false,false,true),
+('Programmierung', 'UK 2 zu Programmierung',false,'Was ist richtiger JAVAScript-Code', 'a', 'b','c', 'd',true,true,true,true,true),
+('Programmierung', 'UK 2 zu Programmierung',false,'TestAlert', 'dd', 'false','false','false',false,false,false,false,true),
 ('Programmierung', 'UK 2 zu Programmierung',false,'Alles ist falsch. Bitt drücken Sie auf weiter', 'false', 'false','false','false',false,false,false,false,true),
 ('Wissenschaftliches Arbeiten', 'UK 1 zu Wissenschaftliches Arbeiten',false,'Wissenschaft', '1', '2','3','4',false,false,false,false,true),
 ('Wissenschaftliches Arbeiten', 'UK 2 zu Wissenschaftliches Arbeiten',false,'Wissenschaftliches Arbeiten 2', 'false', 'false','false','false',false,false,false,false,true),
@@ -92,28 +92,10 @@ INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwo
 ('Logik und Algebra', 'UK 1 zu Logik und Algebra',true,'Stichwort Tautologie', 'allgemeingültig', 'Fisch','Joghurt','situationsbedingt',true,false,false,true,true),
 ('Logik und Algebra', 'UK 2 zu Logik und Algebra',true,'Macht den meisten Logik und Algebra Spaß', 'nein', 'ja','nein','nein',false,true,false,false,true),
 ('Logik und Algebra', 'UK 1 zu Logik und Algebra',true,'Da hat wohl einer Spaß am Anlegen von Testdaten', 'ganz bestimmt', 'das hier klicken','das nicht','super cool',false,true,false,false,true),
-('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Fand ich Projektmanagment immer interessant?', 'klaro', 'mega','giga','gar nicht',false,false,false,true,true),
-('Projektmanagement', 'UK 2 zu Projektmanagement',true,'Wer hat am wenigsten mit Projektmanagement zu tun?', 'Britney Spears', 'Luft','Manager','Senior Manager',false,false,false,true,true),
-('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Welchen Begriff gibt es im PM beim Berechnen von Puffern im Projekt?', 'rasante Linie', 'klarer Weg','kritischer Pfad','Höllenweg',false,false,false,true,true);
+('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Fand Person X Projektmanagment immer interessant?', 'klaro', 'mega','bisschen','gar nicht',false,false,true,false,true),
+('Projektmanagement', 'UK 2 zu Projektmanagement',true,'Wer hat am wenigsten mit Projektmanagement zu tun?', 'Britney Spears', 'Luft','Manager','Senior Manager',false,true,false,false,true),
+('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Welchen Begriff gibt es im PM beim Berechnen von Puffern im Projekt?', 'rasante Linie', 'klarer Weg','kritischer Pfad','Höllenweg',false,false,true,false,true);
 
 
 INSERT INTO Spiel VALUES
 (last_insert_id(),'M','Kevin02','Kevin01',null,null,'Kevin01',1,'P','2014-02-18 17:10:47');
-
-
-INSERT INTO Antwort VALUES
-(1,1,'Kevin02',true,false,false,false,true,false),
-(2,1,'Kevin02',false,true,false,false,true,false),
-(3,1,'Kevin02',true,false,false,false,true,false),
-
-(1,1,'Kevin01',false,true,false,false,true,true),
-(2,1,'Kevin01',false,true,true,false,true,true),
-(3,1,'Kevin01',false,false,true,false,true,true),
-
-(4,2,'Kevin01',false,false,false,true,true,true),
-(5,2,'Kevin01',false,true,false,false,true,true),
-(6,2,'Kevin01',true,false,false,false,true,true),
-
-(4,2,'Kevin02',false,false,false,true,true,true),
-(5,2,'Kevin02',true,true,false,false,true,false),
-(6,2,'Kevin02',true,false,false,false,true,true);
