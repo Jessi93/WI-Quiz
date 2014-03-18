@@ -19,13 +19,14 @@ function initialize() {
 
 function continueInitialize(){
 	function onAlertDismissGameGivenUp(){
-	steroids.layers.pop();
+	//steroids.layers.pop();
+	//Tue nichts, da auch beendete Spiele angezeigt werden sollen!
 	}
 	
 	fetchLocalStorageData();
 	if(checkGameGivenUp()){
 	//Meldung & Rückkehr zum haupscreen
-	navigator.notification.alert('Dein Gegner hat das Spiel aufgegeben! ', onAlertDismissGameGivenUp,'Information','OK');
+	navigator.notification.alert('Dein Gegner hat dieses Spiel aufgegeben! ', onAlertDismissGameGivenUp,'Information','OK');
 	}else{
 	//spiel wurde nicht aufgegeben --> mach weiter mit initialize!
 	enORdisableSpielenButton();
@@ -425,7 +426,9 @@ var GameOverviewData = {
 };
 
 function checkGameGivenUp(){
+	alert("checkGameGivenUp wurde aufgerufen mit status: "+gameInfo.spielstatusName.name);
 	if(gameInfo.spielstatusName.name == "Q"){
+	alert("checkGameGivenUp hat ermittelt, dass das Duell aufgegeben wurde! gameInfo: "+JSON.Stringify(gameInfo));
 	return true;
 	}else{
 	return false;
@@ -439,6 +442,7 @@ function getCurrentGameInfo(spielID){
 			if(gameInfoNew[i].spielID == spielID){
 				//schreibe Spieldatensatz in LS
 				localStorage.setItem("gameInfo", JSON.stringify(gameInfoNew[i]));
+				alert("gameInfo wurde erneuert im LS: "+JSON.stringify(gameInfoNew[i]));
 				break;
 			}
 		}
@@ -471,7 +475,7 @@ function enORdisableSpielenButton() {
 	 
 	var waitForUsername = gameInfo.wartenAuf.benutzername;
 	//alert("MyUsername: "+MyUsername+" waitForUsername: "+waitForUsername);
-	if(waitForUsername === MyUsername){
+	if(waitForUsername === MyUsername && gameInfo.spielstatusName.name === "A"){
 		//auf mich wird gewartet(ich bin dran) --> Spielen Button soll aktiv sein!
 		$("#spielenButton").removeClass("topcoat-button--large");
 		$("#spielenButton").addClass("topcoat-button--large--cta");
@@ -568,14 +572,9 @@ function encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zuge
 	//alert("encolourSquare wurde aufgerufen für viereck: "+viereck_id);
 //prüfe rundenNummer === rundenNr
 var fragenergebnis;
-var usernameOfSquare;
-	//setze nutzernamen, um zu identifzieren, zu welchem Spieler das Quadrat gehhört!
-if (zugehoerigerSpieler == 1 ){
-		//Viereck gehört zu "mir" 
-		usernameOfSquare = localStorage.getItem("username");
-	}else {
-		usernameOfSquare = localStorage.getItem("enemyUsername");
-	}
+var myUsername  = localStorage.getItem("username");
+var enemyUsername = localStorage.getItem("enemyUsername");
+
 
 for (var i=0;i<GameOverviewData.rounds.length;i++){
 	//alert("Position in for schleife:"+i);
@@ -588,22 +587,30 @@ for (var i=0;i<GameOverviewData.rounds.length;i++){
 				//lese aus: ergebnisCheck 
 				fragenergebnis = GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-2].ergebnisCheck;
 				break;
-				}
+			}
 			//prüfe benutzername === username an zweiter möglicher stelle
 			else if (GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-1].benutzer.benutzername === username){
 				//lese aus: ergebnisCheck 
 				fragenergebnis = GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-1].ergebnisCheck;
 				break;
-				}
-			} else if(GameOverviewData.rounds[i].answers.length == 3){ 
-			//alert("Gameoverview hat Länge drei!" + JSON.stringify(GameOverviewData));
-			//alert("if von Viereck: "+viereck_id+" prüft: user in frage:"+GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername+" username in LS: "+usernameOfSquare );
-		//Logik für drei Antworten pro Runde in Serverdaten!
-		if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === usernameOfSquare){
-		//alert("Viereck: "+viereck_id+" - Usernamen sind identisch!")
-		//es sollen nur Vierecke angezeigt, wenn man selbst gespielt hat!
-		fragenergebnis = GameOverviewData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
-		break;		}
+			}
+		} else if(GameOverviewData.rounds[i].answers.length == 3){ 
+				//alert("Gameoverview hat Länge drei!" + JSON.stringify(GameOverviewData));
+				//alert("if von Viereck: "+viereck_id+" prüft: user in frage:"+GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername+" username in LS: "+usernameOfSquare );
+				//Logik für drei Antworten pro Runde in Serverdaten!
+				if(zugehoerigerSpieler == 1){
+					//es sollen nur Vierecke angezeigt, wenn man selbst gespielt hat!
+					if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === myUsername){
+					fragenergebnis = GameOverviewData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
+					break;		
+					}
+				}else if(zugehoerigerSpieler == 2){
+				//Gegnerische Antworten, von Runden, die man selbst noch nicht gespielt hat, sollen grau sein!
+					if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === enemyUsername){
+						fragenergebnis = "grey";
+						break;
+					}
+				}		
 			}
 		}
 	} 
@@ -628,7 +635,10 @@ if (fragenergebnis == true){
 	}else if(fragenergebnis == false){
 	//Wenn Frage Falsche beantwortet (ergebnisCheck = false)
 	$("#"+viereck_id).addClass('redBackground');
-	}	
+	}else if(fragenergebnis === "grey"){
+	//Färbe Viereck grau!
+	$("#"+viereck_id).addClass('greyBackground');
+	}
 }
 
 function setownName(){
@@ -714,7 +724,7 @@ function onConfirmGiveUp(buttonIndex, gameID){
 			success:function(obj){
 			alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
 			//gehe zum home screen zurück!
-			steroids.layers.pop();
+			steroids.layers.popAll();
 			},
 			 error:function(obj){
 			 

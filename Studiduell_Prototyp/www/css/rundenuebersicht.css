@@ -64,6 +64,11 @@
 		border: 1px solid black;
 }
 
+.greyBackground {
+	background-color: grey !important;
+		border: 1px solid black;
+}
+
 
 .rundeDetailText {
 	font-size:13px;
