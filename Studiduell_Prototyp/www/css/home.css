@@ -3,6 +3,9 @@ topcoat-button--cta center 	full custom_icon_button_right
 
 #neuesSpielStartenButton {
 	background-image: url("../images/plus.png");
+	margin-top: 0.5rem !important;
+	margin-bottom: 0.5rem !important;
+	
 }
 
 #rundenuebersichtButton {
@@ -11,7 +14,12 @@ topcoat-button--cta center 	full custom_icon_button_right
 
 .yourTurnButton {
 	background-image: url("../images/profilbild.png");
-	
+	border: 1px solid back;
+}
+
+.waitingForButton {
+	background-image: url("../images/profilbild.png");
+	border: 1px solid grey;
 }
 
 .custom_icon_button_left {
@@ -20,6 +28,7 @@ topcoat-button--cta center 	full custom_icon_button_right
 	background-repeat: no-repeat;
 	background-position: left;
 	background-size: 2em;
+	margin-bottom: 0.2rem;
 }
 
 .custom_icon_button_right {
@@ -68,5 +77,8 @@ text-shadow: 0 0px rgba(0,0,0,0.36);
 box-shadow: inset 0 1px rgba(255,255,255,0.36);
 background-position: 0px 0px;
 background-color: #ec514e;
-margin-bottom: 0.5 rem;
+
+}
+#SyncButton{
+margin-bottom: 0.2rem;
 }

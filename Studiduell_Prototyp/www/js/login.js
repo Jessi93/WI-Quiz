@@ -86,7 +86,7 @@ function openHomeScreen(username, password) {
 	//Setze username & passwort im localStorage
 	localStorage.setItem("username", username);
 	localStorage.setItem("password", password);
-	
+	//alert("Username wurde gesetzt" + localStorage.getItem("username", username)+ "Passwort wurde gesetzt:" + localStorage.getItem("password", password));
 	//gehe zum Homescreen (gesetzte credentials im localstorage verhindern, dass login angezeigt wird!
-	 steroids.layers.pop(); //pop schlieﬂt login screen, sodass home sichtbar wird!
+	 steroids.layers.popAll(); //pop schlieﬂt login screen, sodass home sichtbar wird!
 }

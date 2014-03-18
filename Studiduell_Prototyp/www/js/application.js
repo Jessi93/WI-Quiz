@@ -130,7 +130,9 @@ function createNewGameWithOpponent(opponentName){
 		type:"POST",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
-		success:function(){steroids.layers.popAll();},
+		success:function(){
+		//alert("spiel wurde erstellt auf dem Server, nun wird popAll aufgerufen!");
+		steroids.layers.popAll();},
 		error:function(obj){
 			if(obj.status == 409){
 				//409 = "Conflict" = Freundesanfrage fehlgeschlagen, weil Freundschaft bereits herrscht!
