@@ -738,7 +738,7 @@ function onConfirmGiveUp(buttonIndex, gameID){
 			 type:"POST",
 			 beforeSend : function(xhr) {authHeader(xhr);},
 			success:function(obj){
-			alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
+			//alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
 			//gehe zum home screen zurück!
 			steroids.layers.popAll();
 			},
