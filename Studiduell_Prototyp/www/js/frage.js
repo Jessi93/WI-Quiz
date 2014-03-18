@@ -186,15 +186,12 @@ function nextNextQuestion(correctlyAnswered) {
 	};
 	answers.push(submitData);
 	
-	alert("Vorbereitet: " + JSON.stringify(answers));
-	
 	localStorage.setItem("questionCounter", ++questionCounter);
 	
 	if(questionCounter != 3) {
 		localStorage.setItem("answers", JSON.stringify(answers));
 		popViewPushView("html/frage.html");
 	} else {
-		//TODO send data to server at the end of round
 		$.ajax( {
 			url : serverURL + "game/submitRoundResult/" + gameInfo.spielID,
 			type : "POST",
@@ -203,8 +200,34 @@ function nextNextQuestion(correctlyAnswered) {
 			beforeSend : function(xhr) {authHeader(xhr);},
 			statusCode : {
 				200 : function() {
-					localStorage.removeItem("answers");
-					popViewPushView("html/rundenuebersicht.html");
+					// if this round is finished, increase it to avoid syncing first
+					//FIXME
+					/*
+					if(!roundStart && gameInfo.aktuelleRunde != 6) {
+						gameInfo.aktuelleRunde = gameInfo.aktuelleRunde + 1;
+						localStorage.setItem("gameInfo", JSON.stringify(gameInfo));
+					}
+					*/
+					$.ajax( {
+						url: serverURL + "user/sync",
+						type: "POST",
+						contentType: "text/plain",
+						beforeSend: function(xhr){authHeader(xhr);},
+						crossDomain: true,
+						success: function(obj) {
+							for(var i = 0; i < obj.length; i++) {
+								if(obj[i].spielID == gameInfo.spielID) {
+									alert("Jetzt " + gameInfo.spielID);//XXX
+									localStorage.setItem("gameInfo", obj[i]);
+									break;
+								}
+							}
+							localStorage.removeItem("answers");
+							popViewPushView("html/rundenuebersicht.html");
+						},
+						error:function(obj) {alert("Fehler beim Sync! "+JSON.stringify(obj));},
+						data:"0123456789"
+					});
 				},
 				403 : function() {alert("Interner Fehler (403).");},
 				404 : function() {alert("Interner Fehler (404).");},
