@@ -428,7 +428,7 @@ var GameOverviewData = {
 function checkGameGivenUp(){
 	alert("checkGameGivenUp wurde aufgerufen mit status: "+gameInfo.spielstatusName.name);
 	if(gameInfo.spielstatusName.name == "Q"){
-	alert("checkGameGivenUp hat ermittelt, dass das Duell aufgegeben wurde! gameInfo: "+JSON.Stringify(gameInfo));
+	alert("checkGameGivenUp hat ermittelt, dass das Duell aufgegeben wurde! gameInfo: "+JSON.stringify(gameInfo));
 	return true;
 	}else{
 	return false;
