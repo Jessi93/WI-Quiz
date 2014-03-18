@@ -66,4 +66,20 @@ function createNewGameRandom() {
 		});
 }
 
+function onVisibilityChange() {
+    //alert("document.visibilityState: " + document.visibilityState);
+    //alert("document.hidden: " + document.hidden);
+
+	var docHidden = document.hidden;
+	if(docHidden == false){
+	//Nur wenn auf das Dokument zurückgekehrt wird, soll es aktualisiert werden
+	init();
+	}else{
+	//Wenn das Dokument verlassen wird, soll nichts getan werden!
+	}
+ 
+}
+
 document.addEventListener("deviceready", init, false);
+
+document.addEventListener("visibilitychange", onVisibilityChange, false);
