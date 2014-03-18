@@ -47,6 +47,11 @@
 	display: inline-block;
 }
 
+.bilder {
+	width: 30px;
+	height: 30;
+}
+
 .quadrat {
 	width: 2em;
 	height: 2em;

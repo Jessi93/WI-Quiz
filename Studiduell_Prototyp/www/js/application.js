@@ -6,6 +6,10 @@ Screenspezifische Funktionen werden in den jeweiligen 'screenname.js' files besc
 /*Anzeige Titel*/
 
 steroids.view.navigationBar.show("Studiduell");
+steroids.view.navigationBar.show({
+    titleImagePath: "/images/logo.png"
+});
+
 
 var serverURL = "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/";
 var maxZeichenUsername = 20;
