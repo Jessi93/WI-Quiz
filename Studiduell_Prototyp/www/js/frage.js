@@ -200,14 +200,11 @@ function nextNextQuestion(correctlyAnswered) {
 			beforeSend : function(xhr) {authHeader(xhr);},
 			statusCode : {
 				200 : function() {
+					// delete saved random categories
+					localStorage.removeItem("randomCategoriesGameID" + gameInfo.spielID);
 					// if this round is finished, increase it to avoid syncing first
 					//FIXME
-					/*
-					if(!roundStart && gameInfo.aktuelleRunde != 6) {
-						gameInfo.aktuelleRunde = gameInfo.aktuelleRunde + 1;
-						localStorage.setItem("gameInfo", JSON.stringify(gameInfo));
-					}
-					*/
+					
 					$.ajax( {
 						url: serverURL + "user/sync",
 						type: "POST",
@@ -217,8 +214,7 @@ function nextNextQuestion(correctlyAnswered) {
 						success: function(obj) {
 							for(var i = 0; i < obj.length; i++) {
 								if(obj[i].spielID == gameInfo.spielID) {
-									alert("Jetzt " + gameInfo.spielID);//XXX
-									localStorage.setItem("gameInfo", obj[i]);
+									localStorage.setItem("gameInfo", JSON.stringify(obj[i]));
 									break;
 								}
 							}
