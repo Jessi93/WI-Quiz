@@ -24,11 +24,7 @@ function continueInitialize(){
 	}
 	
 	fetchLocalStorageData();
-	if(checkGameGivenUp()){
-	//Meldung & Rückkehr zum haupscreen
-	navigator.notification.alert('Dein Gegner hat dieses Spiel aufgegeben! ', onAlertDismissGameGivenUp,'Information','OK');
-	}else{
-	//spiel wurde nicht aufgegeben --> mach weiter mit initialize!
+	
 	enORdisableSpielenButton();
 	
 	setSpieler1();
@@ -36,7 +32,7 @@ function continueInitialize(){
 	setSpielstand();
 	setownName();
 	setenemyName();
-	}
+	
 }
 
 
@@ -426,9 +422,8 @@ var GameOverviewData = {
 };
 
 function checkGameGivenUp(){
-	alert("checkGameGivenUp wurde aufgerufen mit status: "+gameInfo.spielstatusName.name);
+	//alert("checkGameGivenUp wurde aufgerufen mit status: "+gameInfo.spielstatusName.name);
 	if(gameInfo.spielstatusName.name == "Q"){
-	alert("checkGameGivenUp hat ermittelt, dass das Duell aufgegeben wurde! gameInfo: "+JSON.stringify(gameInfo));
 	return true;
 	}else{
 	return false;
@@ -436,13 +431,14 @@ function checkGameGivenUp(){
 }
 
 function getCurrentGameInfo(spielID){
+	//alert("getCurrentGameInfo wurde aufgerufen mit SpielID: "+spielID);
 	function writeGameInfoInLS(gameInfoNew){
 	//finde den Spieldatensatz des aktuellen spiels
 		for(var i=0;i<gameInfoNew.length;i++){
 			if(gameInfoNew[i].spielID == spielID){
 				//schreibe Spieldatensatz in LS
 				localStorage.setItem("gameInfo", JSON.stringify(gameInfoNew[i]));
-				alert("gameInfo wurde erneuert im LS: "+JSON.stringify(gameInfoNew[i]));
+				//alert("gameInfo wurde erneuert im LS: "+JSON.stringify(gameInfoNew[i]));
 				break;
 			}
 		}
@@ -481,8 +477,14 @@ function enORdisableSpielenButton() {
 		$("#spielenButton").addClass("topcoat-button--large--cta");
 		$("#spielenButton").removeAttr("disabled");
 		$("#spielenButton").text("Spielen");
+	}else if(gameInfo.spielstatusName.name === "Q"){
+		// spiel wurde aufgegeben
+		$("#spielenButton").removeClass("topcoat-button--large--cta");
+		$("#spielenButton").addClass("topcoat-button--large");
+		$("#spielenButton").attr("disabled", ""); 
+		$("#spielenButton").text("Spiel wurde aufgegeben");
 	}else{
-		// auf den gegner wird gewartet --> disable Spielen button (Text "Warten")
+	//Es wird auf gegner gewartet (Spiel aktiv!)
 		$("#spielenButton").removeClass("topcoat-button--large--cta");
 		$("#spielenButton").addClass("topcoat-button--large");
 		$("#spielenButton").attr("disabled", ""); 
@@ -736,7 +738,7 @@ function onConfirmGiveUp(buttonIndex, gameID){
 			 type:"POST",
 			 beforeSend : function(xhr) {authHeader(xhr);},
 			success:function(obj){
-			alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
+			//alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
 			//gehe zum home screen zurück!
 			steroids.layers.popAll();
 			},

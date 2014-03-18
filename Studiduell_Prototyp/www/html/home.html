@@ -27,14 +27,13 @@
 
 	<body>
 		<div class="content-padded">
-		<h2>Homescreen</h2>
 				
 		<img src="../images/profilbild.png">
 		<div id="username_div">Mein Username</div>
 
 		
-		<div class="content-padded">
-			<button id="neuesSpielStartenButton" class="topcoat-button--large--cta center full custom_icon_button_right " ontouchend="openNeuesSpielScreen()">Neues Spiel starten</button>
+		<div >
+			<button id="neuesSpielStartenButton" class="topcoat-button--cta center full custom_icon_button_right " ontouchend="openNeuesSpielScreen()">Neues Spiel starten</button>
 		</div> 
 		
 		<div id="ActionRequiredGames_div">
@@ -61,12 +60,13 @@
 			</ul>
 		</div>
 		<br>
-		<div class="content-padded">
-			<button id="AbmeldenButton" class="topcoat-button--large center full" ontouchend="abmelden()">Logout</button>
+		<div >
+			<button id="SyncButton" class="topcoat-button center full" ontouchend="sync()">Aktualisieren</button>
 		</div> 
-		<div class="content-padded">
-			<button id="SyncButton" class="topcoat-button--large center full" ontouchend="sync()">Aktualisieren</button>
+		<div >
+			<button id="AbmeldenButton" class="topcoat-button center full" ontouchend="abmelden()">Logout</button>
 		</div> 
+		
 		</div>
 	</body>
 </html>

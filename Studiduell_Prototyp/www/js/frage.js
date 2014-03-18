@@ -229,7 +229,7 @@ function nextNextQuestion(correctlyAnswered) {
 				404 : function() {alert("Interner Fehler (404).");},
 				406 : function() {alert("Interner Fehler (406).");},
 				417 : function() {alert("Interner Fehler (417).");}
-			},
+			}
 		});
 	}
 }
