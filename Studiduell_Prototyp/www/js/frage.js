@@ -217,8 +217,8 @@ function nextNextQuestion(correctlyAnswered) {
 						success: function(obj) {
 							for(var i = 0; i < obj.length; i++) {
 								if(obj[i].spielID == gameInfo.spielID) {
-									alert("Jetzt " + gameInfo.spielID);//XXX
-									localStorage.setItem("gameInfo", obj[i]);
+									//alert("Jetzt SpielID: " + gameInfo.spielID+" gameInfo wird gesetzt auf:"+JSON.stringify(obj[i]));//XXX
+									localStorage.setItem("gameInfo", JSON.stringify(obj[i]));
 									break;
 								}
 							}

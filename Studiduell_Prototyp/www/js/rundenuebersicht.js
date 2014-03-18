@@ -11,7 +11,23 @@ function initialize() {
 
 	setNavigationBar();
 	
+	var temp_gameInfo_old = JSON.parse(localStorage.getItem("gameInfo"));
+	var gameid = temp_gameInfo_old.spielID;
+	
+	getCurrentGameInfo(gameid);
+}
+
+function continueInitialize(){
+	function onAlertDismissGameGivenUp(){
+	steroids.layers.pop();
+	}
+	
 	fetchLocalStorageData();
+	if(checkGameGivenUp()){
+	//Meldung & Rückkehr zum haupscreen
+	navigator.notification.alert('Dein Gegner hat das Spiel aufgegeben! ', onAlertDismissGameGivenUp,'Information','OK');
+	}else{
+	//spiel wurde nicht aufgegeben --> mach weiter mit initialize!
 	enORdisableSpielenButton();
 	
 	setSpieler1();
@@ -19,9 +35,7 @@ function initialize() {
 	setSpielstand();
 	setownName();
 	setenemyName();
-	//TEST:
-	//initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
-	//alert("initialize wurde abgeschlossen! "+initializeNotYetFired);
+	}
 }
 
 
@@ -410,6 +424,41 @@ var GameOverviewData = {
        ]
 };
 
+function checkGameGivenUp(){
+	if(gameInfo.spielstatusName.name == "Q"){
+	return true;
+	}else{
+	return false;
+	}
+}
+
+function getCurrentGameInfo(spielID){
+	function writeGameInfoInLS(gameInfoNew){
+	//finde den Spieldatensatz des aktuellen spiels
+		for(var i=0;i<gameInfoNew.length;i++){
+			if(gameInfoNew[i].spielID == spielID){
+				//schreibe Spieldatensatz in LS
+				localStorage.setItem("gameInfo", JSON.stringify(gameInfoNew[i]));
+				break;
+			}
+		}
+		continueInitialize();
+	}
+//hole aktuelle GameInfo Daten und schreibe Sie in den localStorage. 
+	$.ajax( {
+				url:serverURL + "user/sync",
+				type:"POST",
+				contentType:"text/plain",
+				beforeSend:function(xhr){authHeader(xhr);},
+				crossDomain:true,
+				success:function(obj){writeGameInfoInLS(obj);},
+				error:function(obj){alert("Fehler beim holen der Hauptmenü-Spieldaten! "+JSON.stringify(obj));},
+				data:"0123456789" //TODO: Push ID übertragen!
+				}); 
+
+}
+
+
 function fetchLocalStorageData() {
 //alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+localStorage.getItem("gameOverview"));
 // hole Serverdaten und schreibe Sie in GameOverviewData!
@@ -519,7 +568,14 @@ function encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zuge
 	//alert("encolourSquare wurde aufgerufen für viereck: "+viereck_id);
 //prüfe rundenNummer === rundenNr
 var fragenergebnis;
-var myUsername = localStorage.getItem("username");
+var usernameOfSquare;
+	//setze nutzernamen, um zu identifzieren, zu welchem Spieler das Quadrat gehhört!
+if (zugehoerigerSpieler == 1 ){
+		//Viereck gehört zu "mir" 
+		usernameOfSquare = localStorage.getItem("username");
+	}else {
+		usernameOfSquare = localStorage.getItem("enemyUsername");
+	}
 
 for (var i=0;i<GameOverviewData.rounds.length;i++){
 	//alert("Position in for schleife:"+i);
@@ -540,8 +596,11 @@ for (var i=0;i<GameOverviewData.rounds.length;i++){
 				break;
 				}
 			} else if(GameOverviewData.rounds[i].answers.length == 3){ 
+			//alert("Gameoverview hat Länge drei!" + JSON.stringify(GameOverviewData));
+			//alert("if von Viereck: "+viereck_id+" prüft: user in frage:"+GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername+" username in LS: "+usernameOfSquare );
 		//Logik für drei Antworten pro Runde in Serverdaten!
-		if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === myUsername){
+		if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === usernameOfSquare){
+		//alert("Viereck: "+viereck_id+" - Usernamen sind identisch!")
 		//es sollen nur Vierecke angezeigt, wenn man selbst gespielt hat!
 		fragenergebnis = GameOverviewData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
 		break;		}
@@ -653,7 +712,7 @@ function onConfirmGiveUp(buttonIndex, gameID){
 			 type:"POST",
 			 beforeSend : function(xhr) {authHeader(xhr);},
 			success:function(obj){
-			//alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
+			alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
 			//gehe zum home screen zurück!
 			steroids.layers.pop();
 			},
@@ -740,6 +799,7 @@ function sync(){
 	//true: die rundenübersicht wird für dieses Spiel neu aufgerufen (aus hauptmenü heraus)
 	//false: die rundenübersicht wird lediglich aktualisiert! (init wurde bereits mind 1 mal aufgerufen!)
 	//alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
+	//alert("gameInfo: "+localStorage.getItem("gameInfo"));
 	var gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 	if(initializeNotYetFired === "true"){ 
 	//wenn initialize noch nicht aufgerufen wurde, rufe nur initialize auf (Aufruf aus Hauptmenü)

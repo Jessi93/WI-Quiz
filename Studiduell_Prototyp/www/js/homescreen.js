@@ -292,8 +292,12 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 			contentType:"text/plain",
 			beforeSend:function(xhr){authHeader(xhr);},
 			crossDomain:true,
-			success:function(obj){alert("Duellannahme bei Server erfolgreich bestätigt!");},
-			error:function(obj){alert("Fehler bei Bestätigung der Duellannahme"+JSON.stringify(obj));},
+			success:function(obj){
+			//alert("Duellannahme bei Server erfolgreich bestätigt!");
+			},
+			error:function(obj){
+			alert("Fehler bei Bestätigung der Duellannahme"+JSON.stringify(obj));
+			},
 			data:"true"
 			}); 
 			
@@ -307,7 +311,9 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 			contentType:"text/plain",
 			beforeSend:function(xhr){authHeader(xhr);},
 			crossDomain:true,
-			success:function(obj){alert("Duellablehnung bei Server erfolgreich bestätigt!");},
+			success:function(obj){
+			//alert("Duellablehnung bei Server erfolgreich bestätigt!");
+			},
 			error:function(obj){alert("Fehler bei Bestätigung der Duellablehnung"+JSON.stringify(obj));},
 			data:"false"
 			});
