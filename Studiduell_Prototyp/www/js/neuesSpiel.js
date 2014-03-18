@@ -16,7 +16,14 @@ function loadFriendslistFromServer() {
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
 		success:function(obj){addFriendToList(obj);},
-		error:function(obj){alert("Fehler beim Laden der Freundesliste: "+JSON.stringify(obj));}
+		error:function(obj){
+		//WORKAROUND //TODO wird u.A. beim "popAll" in spielerSuchen aufgerufen! --> Fehler bei Status 0 nicht anzeigen!
+			if(obj.status == 0){
+			//Tue nichts (zeige Fehler nicht an!)
+			}else{
+			alert("Fehler beim Laden der Freundesliste: "+JSON.stringify(obj));
+			}
+		}
 		}); 
 	
 	//Test (Testdaten ohne Serveranbindung!)
@@ -41,7 +48,8 @@ function createNewGameRandom() {
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
 		success:function(){steroids.layers.popAll();},
-		error:function(obj){alert("Fehler beim erstellen eines zufälliges Spieles: "+JSON.stringify(obj));}
+		error:function(obj){
+		alert("Fehler beim erstellen eines zufälliges Spieles: "+JSON.stringify(obj));}
 		});
 }
 

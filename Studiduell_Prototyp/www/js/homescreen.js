@@ -1,4 +1,6 @@
 var homescreenServerdata;
+var spielIDsArray = new Array(); //WORKAROUND (mehrfache Duellanfragen!)enthält alle SpielIDs, für die Deullanfragen angezeigt wurden 
+	//--> so kann verhindert werden, dass duellanfragen zweimal angezeigt werden
 
 function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
@@ -194,6 +196,19 @@ var tmpServerData =
 }
 
 function handleServerData(serverSyncData){
+	
+	//WORKAROUND
+	function checkIfDuelRequestShow(spielID){
+		//alert("checkDuellRequestShow wurde aufgerufen mit: array:"+JSON.stringify(spielIDsArray));
+		if($.inArray(spielID, spielIDsArray) != -1){
+		//spielID in Array --> nicht anzeigen!
+		return false;
+		}else{
+		return true;
+		}
+	}
+	
+
 	//alert("handleServerData wurde aufgerufen. Neue Serverdaten:"+JSON.stringify(serverSyncData));
 	//schreibe sync Daten in localstorage
 	homescreenServerdata = serverSyncData;
@@ -221,7 +236,12 @@ function handleServerData(serverSyncData){
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== localStorage.getItem("username")
 		){
-		showDuelRequest(serverSyncData[i],i);
+		//Prüfe, ob die Duellanfrage bereits angezeigt wurde! //WORKAROUND
+		if(checkIfDuelRequestShow(serverSyncData[i].spielID)){
+		//Füge SpielID der Duellanfrage in Array hinzu!
+		spielIDsArray.push(serverSyncData[i].spielID);
+		//zeige Duellanfrage!
+		showDuelRequest(serverSyncData[i],i);}
 		}
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== getEnemyUsername(serverSyncData[i])
