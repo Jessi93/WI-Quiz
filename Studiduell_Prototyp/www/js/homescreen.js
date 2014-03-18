@@ -249,7 +249,7 @@ function addActionRequiredGame(gameData, positionInServerData){
 function addWaitingForGame(gameData, positionInServerData){
 	//alert("addWaitingForGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
-	$("#WaitingForGames_div").append("<button class='topcoat-button--quiet center full custom_icon_button_left Rand1 textklein yourTurnButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a>");
+	$("#WaitingForGames_div").append("<button class='topcoat-button--quiet center full custom_icon_button_left textklein waitingForButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a>");
 }
 
 function getEnemyUsername(gameData){

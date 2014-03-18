@@ -14,6 +14,12 @@ topcoat-button--cta center 	full custom_icon_button_right
 
 .yourTurnButton {
 	background-image: url("../images/profilbild.png");
+	border: 1px solid back;
+}
+
+.waitingForButton {
+	background-image: url("../images/profilbild.png");
+	border: 1px solid grey;
 }
 
 .custom_icon_button_left {
