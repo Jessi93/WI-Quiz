@@ -655,13 +655,27 @@ function openFrage() {
 
 function prepareQuestion() {
 	if(isRoundStarter(gameInfo)) {
-		$.ajax( {
+		var randomCategoriesGameID = JSON.parse(localStorage.getItem("randomCategoriesGameID" + gameInfo.spielID));
+		if(randomCategoriesGameID === null) {
+			$.ajax( {
 			url : serverURL + "game/randomCategoriesFor/" + gameInfo.spielID,
 			type : "POST",
 			beforeSend : function(xhr) {authHeader(xhr);},
-			success : function(cAndQ) {fetchQuestionsRoundStart(cAndQ);},
+			success : function(cAndQ) {
+				/*
+				 * Save cats temporarily for this game to avoid the user to go back
+				 * and forth in order to get different categories.
+				 */
+				localStorage.setItem("randomCategoriesGameID" + gameInfo.spielID, JSON.stringify(cAndQ));
+				
+				fetchQuestionsRoundStart(cAndQ);
+			},
 			error : function(obj) {alert("Die Spieldaten konnten nicht übertragen werden.");}
 		});
+		} else {
+			// user has selected categories before, show the prefetched data
+			fetchQuestionsRoundStart(randomCategoriesGameID);
+		}
 	} else {
 		$.ajax( {
 			url : serverURL + "game/continueRound/" + gameInfo.spielID,
