@@ -7,7 +7,7 @@ Screenspezifische Funktionen werden in den jeweiligen 'screenname.js' files besc
 
 steroids.view.navigationBar.show("Studiduell");
 steroids.view.navigationBar.show({
-    titleImagePath: "/images/logo.png"
+titleImagePath: "/images/navbar_title@2x.png"
 });
 
 
