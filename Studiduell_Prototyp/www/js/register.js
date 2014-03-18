@@ -55,7 +55,7 @@ function sendRegistration(){
 	
 	}else{
 	// Prüfung auf Maximalzeichenzahl im anzulegenden Username! (siehe application.js)
-		if(v_username > maxZeichenUsername){
+		if(v_username.length > maxZeichenUsername){
 			navigator.notification.alert(
 			'Dein gewünschter Username ist leider zu lang - die maximale Zeichenzahl ist: '+maxZeichenUsername, // message  
 			alertDismissedUsernameTooLong, 		//v_username, v_password sollten hier übergeben werden, aber nicht möglich --> nutzung globaler variablen: gv_username & gv_password

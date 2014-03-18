@@ -6,6 +6,8 @@ function spielerSuchen() {
 	function onAlertDismissTextinputEmpty(){
 	//leer lassen!
 	}
+	function onAlertDismissSearch(){
+	}
 	 var text_input = $("#search_username_input").val();
 	 
 	 //Prüfe, ob Textinput leer ist --> Aufforderung zur eingabe von Suchebegriff
@@ -22,7 +24,7 @@ function spielerSuchen() {
 			beforeSend:function(xhr){authHeader(xhr);},
 			crossDomain:true,
 			success:function(obj){addResultToList(obj);},
-			error:function(obj){alert(JSON.stringify(obj));}
+			error:function(obj){navigator.notification.alert("Fehler beim Suchen!"+JSON.stringify(obj), onAlertDismissSearch,'Information','OK');}
 			});
 		
 			//Test (Testdaten ohne Serveranbindung!)
@@ -87,13 +89,22 @@ function spielerSuchen() {
 
 
 function createNewGame(gegnerName){
+function onAlertDismisscreateNewGame(){
+	}
 $.ajax( {
 		url:serverURL + "game/create/with/" + gegnerName,
 		type:"POST",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
 		success:function(){steroids.layers.popAll();},
-		error:function(obj){alert(JSON.stringify(obj));}
+		error:function(obj){
+			if(obj.status == 409){
+				//409 = "Conflict" = Freundesanfrage fehlgeschlagen, weil Freundschaft bereits herrscht!
+				navigator.notification.alert("Du spielst bereits gegen "+friendName+"!", onAlertDismisscreateNewGame,'Information','OK');
+				}else{
+				navigator.notification.alert("Fehler beim Absenden der Duellanfrage!"+JSON.stringify(obj), onAlertDismisscreateNewGame,'Information','OK');
+				}
+			}
 		});
 		
 		//Test
