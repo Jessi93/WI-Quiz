@@ -6,6 +6,10 @@ Screenspezifische Funktionen werden in den jeweiligen 'screenname.js' files besc
 /*Anzeige Titel*/
 
 steroids.view.navigationBar.show("Studiduell");
+steroids.view.navigationBar.show({
+titleImagePath: "/images/navbar_title@2x.png"
+});
+
 
 var serverURL = "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/";
 var maxZeichenUsername = 20;
@@ -116,6 +120,28 @@ function addAsFriend(fName) {
 		});
 		
 	
+}
+
+function createNewGameWithOpponent(opponentName){
+	function onAlertDismissCreateNewGameWithOpponent(){
+	}
+	$.ajax( {
+		url:serverURL + "game/create/with/" + opponentName,
+		type:"POST",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
+		success:function(){
+		//alert("spiel wurde erstellt auf dem Server, nun wird popAll aufgerufen!");
+		steroids.layers.popAll();},
+		error:function(obj){
+			if(obj.status == 409){
+				//409 = "Conflict" = Freundesanfrage fehlgeschlagen, weil Freundschaft bereits herrscht!
+				navigator.notification.alert("Du spielst bereits gegen "+opponentName+"!", onAlertDismissCreateNewGameWithOpponent,'Information','OK');
+				}else{
+				navigator.notification.alert("Fehler beim Absenden der Duellanfrage!"+JSON.stringify(obj), onAlertDismissCreateNewGameWithOpponent,'Information','OK');
+				}
+			}
+		});
 }
 
 function fetchRundenuebersichtData (spielID){

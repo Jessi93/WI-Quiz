@@ -1,4 +1,6 @@
 var homescreenServerdata;
+var spielIDsArray = new Array(); //WORKAROUND (mehrfache Duellanfragen!)enthält alle SpielIDs, für die Deullanfragen angezeigt wurden 
+	//--> so kann verhindert werden, dass duellanfragen zweimal angezeigt werden
 
 function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
@@ -194,6 +196,19 @@ var tmpServerData =
 }
 
 function handleServerData(serverSyncData){
+	
+	//WORKAROUND
+	function checkIfDuelRequestShow(spielID){
+		//alert("checkDuellRequestShow wurde aufgerufen mit: array:"+JSON.stringify(spielIDsArray));
+		if($.inArray(spielID, spielIDsArray) != -1){
+		//spielID in Array --> nicht anzeigen!
+		return false;
+		}else{
+		return true;
+		}
+	}
+	
+
 	//alert("handleServerData wurde aufgerufen. Neue Serverdaten:"+JSON.stringify(serverSyncData));
 	//schreibe sync Daten in localstorage
 	homescreenServerdata = serverSyncData;
@@ -221,7 +236,12 @@ function handleServerData(serverSyncData){
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== localStorage.getItem("username")
 		){
-		showDuelRequest(serverSyncData[i],i);
+		//Prüfe, ob die Duellanfrage bereits angezeigt wurde! //WORKAROUND
+		if(checkIfDuelRequestShow(serverSyncData[i].spielID)){
+		//Füge SpielID der Duellanfrage in Array hinzu!
+		spielIDsArray.push(serverSyncData[i].spielID);
+		//zeige Duellanfrage!
+		showDuelRequest(serverSyncData[i],i);}
 		}
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== getEnemyUsername(serverSyncData[i])
@@ -242,14 +262,14 @@ function addActionRequiredGame(gameData, positionInServerData){
 	//alert("addActionRequiredGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
 	//füge HTML ein:
-	$("#ActionRequiredGames_div").append("<div class='content-padded'><button class='topcoat-button--large center full custom_icon_button_left Rand2 textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Du bist an der Reihe gegen "+enemy_username+" SpielID: "+gameData.spielID+" </a></div>" 
+	$("#ActionRequiredGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Du bist an der Reihe gegen "+enemy_username+" SpielID: "+gameData.spielID+" </a>" 
 	);
 }
 
 function addWaitingForGame(gameData, positionInServerData){
 	//alert("addWaitingForGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
-	$("#WaitingForGames_div").append("<div class='content-padded'><button class='topcoat-button--large--quiet center full custom_icon_button_left Rand1 textklein yourTurnButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a></div>");
+	$("#WaitingForGames_div").append("<button class='topcoat-button--quiet center full custom_icon_button_left textklein waitingForButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a>");
 }
 
 function getEnemyUsername(gameData){
@@ -292,8 +312,12 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 			contentType:"text/plain",
 			beforeSend:function(xhr){authHeader(xhr);},
 			crossDomain:true,
-			success:function(obj){alert("Duellannahme bei Server erfolgreich bestätigt!");},
-			error:function(obj){alert("Fehler bei Bestätigung der Duellannahme"+JSON.stringify(obj));},
+			success:function(obj){
+			//alert("Duellannahme bei Server erfolgreich bestätigt!");
+			},
+			error:function(obj){
+			alert("Fehler bei Bestätigung der Duellannahme"+JSON.stringify(obj));
+			},
 			data:"true"
 			}); 
 			
@@ -307,7 +331,9 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 			contentType:"text/plain",
 			beforeSend:function(xhr){authHeader(xhr);},
 			crossDomain:true,
-			success:function(obj){alert("Duellablehnung bei Server erfolgreich bestätigt!");},
+			success:function(obj){
+			//alert("Duellablehnung bei Server erfolgreich bestätigt!");
+			},
 			error:function(obj){alert("Fehler bei Bestätigung der Duellablehnung"+JSON.stringify(obj));},
 			data:"false"
 			});

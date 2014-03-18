@@ -41,6 +41,9 @@ public class UserController {
 	@Value("${user.search.maxSearchableUsers}")
 	private int maxSearchableUsers;
 	
+	@Value("${user.search.maxEndedGames}")
+	private int maxEndedGames;
+	
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -51,6 +54,7 @@ public class UserController {
 	private SpielRepository spielRepository;
 	@Autowired
 	private SecurityContextFacade securityContextFacade;
+	
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
 			value = "/checkCredentials/{name}")
@@ -130,6 +134,13 @@ public class UserController {
 		// Fetch all active and pending games
 		List<SpielEntity> games = spielRepository.getWithUserInStatus(userUserEntity,
 				Arrays.asList(new SpielstatusEntity[]{SpielstatusEntityEnum.A.getEntity(), SpielstatusEntityEnum.P.getEntity()}));
+		
+//		// Fetch the last specific amount of CLOSED and ABANDONED (Q) games
+		Pageable pageable = new PageRequest(0, maxEndedGames);
+		
+		Page<SpielEntity> endedGames = spielRepository.getWithUserInStatusOrderBySpielIDDesc(userUserEntity, Arrays.asList(
+				new SpielstatusEntity[]{SpielstatusEntityEnum.C.getEntity(), SpielstatusEntityEnum.Q.getEntity()}), pageable);
+		games.addAll(endedGames.getContent());
 		
 		return new ResponseEntity<>(games, HttpStatus.OK);
 	}

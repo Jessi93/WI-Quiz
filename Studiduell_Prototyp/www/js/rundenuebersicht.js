@@ -11,7 +11,20 @@ function initialize() {
 
 	setNavigationBar();
 	
+	var temp_gameInfo_old = JSON.parse(localStorage.getItem("gameInfo"));
+	var gameid = temp_gameInfo_old.spielID;
+	
+	getCurrentGameInfo(gameid);
+}
+
+function continueInitialize(){
+	function onAlertDismissGameGivenUp(){
+	//steroids.layers.pop();
+	//Tue nichts, da auch beendete Spiele angezeigt werden sollen!
+	}
+	
 	fetchLocalStorageData();
+	
 	enORdisableSpielenButton();
 	
 	setSpieler1();
@@ -19,9 +32,7 @@ function initialize() {
 	setSpielstand();
 	setownName();
 	setenemyName();
-	//TEST:
-	//initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
-	//alert("initialize wurde abgeschlossen! "+initializeNotYetFired);
+	
 }
 
 
@@ -410,6 +421,44 @@ var GameOverviewData = {
        ]
 };
 
+function checkGameGivenUp(){
+	//alert("checkGameGivenUp wurde aufgerufen mit status: "+gameInfo.spielstatusName.name);
+	if(gameInfo.spielstatusName.name == "Q"){
+	return true;
+	}else{
+	return false;
+	}
+}
+
+function getCurrentGameInfo(spielID){
+	//alert("getCurrentGameInfo wurde aufgerufen mit SpielID: "+spielID);
+	function writeGameInfoInLS(gameInfoNew){
+	//finde den Spieldatensatz des aktuellen spiels
+		for(var i=0;i<gameInfoNew.length;i++){
+			if(gameInfoNew[i].spielID == spielID){
+				//schreibe Spieldatensatz in LS
+				localStorage.setItem("gameInfo", JSON.stringify(gameInfoNew[i]));
+				//alert("gameInfo wurde erneuert im LS: "+JSON.stringify(gameInfoNew[i]));
+				break;
+			}
+		}
+		continueInitialize();
+	}
+//hole aktuelle GameInfo Daten und schreibe Sie in den localStorage. 
+	$.ajax( {
+				url:serverURL + "user/sync",
+				type:"POST",
+				contentType:"text/plain",
+				beforeSend:function(xhr){authHeader(xhr);},
+				crossDomain:true,
+				success:function(obj){writeGameInfoInLS(obj);},
+				error:function(obj){alert("Fehler beim holen der Hauptmenü-Spieldaten! "+JSON.stringify(obj));},
+				data:"0123456789" //TODO: Push ID übertragen!
+				}); 
+
+}
+
+
 function fetchLocalStorageData() {
 //alert("fetchLocalStorageData wurde aufgerufen! gameOverview:"+localStorage.getItem("gameOverview"));
 // hole Serverdaten und schreibe Sie in GameOverviewData!
@@ -422,14 +471,20 @@ function enORdisableSpielenButton() {
 	 
 	var waitForUsername = gameInfo.wartenAuf.benutzername;
 	//alert("MyUsername: "+MyUsername+" waitForUsername: "+waitForUsername);
-	if(waitForUsername === MyUsername){
+	if(waitForUsername === MyUsername && gameInfo.spielstatusName.name === "A"){
 		//auf mich wird gewartet(ich bin dran) --> Spielen Button soll aktiv sein!
 		$("#spielenButton").removeClass("topcoat-button--large");
 		$("#spielenButton").addClass("topcoat-button--large--cta");
 		$("#spielenButton").removeAttr("disabled");
 		$("#spielenButton").text("Spielen");
+	}else if(gameInfo.spielstatusName.name === "Q"){
+		// spiel wurde aufgegeben
+		$("#spielenButton").removeClass("topcoat-button--large--cta");
+		$("#spielenButton").addClass("topcoat-button--large");
+		$("#spielenButton").attr("disabled", ""); 
+		$("#spielenButton").text("Spiel wurde aufgegeben");
 	}else{
-		// auf den gegner wird gewartet --> disable Spielen button (Text "Warten")
+	//Es wird auf gegner gewartet (Spiel aktiv!)
 		$("#spielenButton").removeClass("topcoat-button--large--cta");
 		$("#spielenButton").addClass("topcoat-button--large");
 		$("#spielenButton").attr("disabled", ""); 
@@ -519,7 +574,9 @@ function encolourSquare(viereck_id, rundenNummer, nrFrageInRunde, username, zuge
 	//alert("encolourSquare wurde aufgerufen für viereck: "+viereck_id);
 //prüfe rundenNummer === rundenNr
 var fragenergebnis;
-var myUsername = localStorage.getItem("username");
+var myUsername  = localStorage.getItem("username");
+var enemyUsername = localStorage.getItem("enemyUsername");
+
 
 for (var i=0;i<GameOverviewData.rounds.length;i++){
 	//alert("Position in for schleife:"+i);
@@ -532,19 +589,30 @@ for (var i=0;i<GameOverviewData.rounds.length;i++){
 				//lese aus: ergebnisCheck 
 				fragenergebnis = GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-2].ergebnisCheck;
 				break;
-				}
+			}
 			//prüfe benutzername === username an zweiter möglicher stelle
 			else if (GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-1].benutzer.benutzername === username){
 				//lese aus: ergebnisCheck 
 				fragenergebnis = GameOverviewData.rounds[i].answers[(nrFrageInRunde * 2)-1].ergebnisCheck;
 				break;
-				}
-			} else if(GameOverviewData.rounds[i].answers.length == 3){ 
-		//Logik für drei Antworten pro Runde in Serverdaten!
-		if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === myUsername){
-		//es sollen nur Vierecke angezeigt, wenn man selbst gespielt hat!
-		fragenergebnis = GameOverviewData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
-		break;		}
+			}
+		} else if(GameOverviewData.rounds[i].answers.length == 3){ 
+				//alert("Gameoverview hat Länge drei!" + JSON.stringify(GameOverviewData));
+				//alert("if von Viereck: "+viereck_id+" prüft: user in frage:"+GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername+" username in LS: "+usernameOfSquare );
+				//Logik für drei Antworten pro Runde in Serverdaten!
+				if(zugehoerigerSpieler == 1){
+					//es sollen nur Vierecke angezeigt, wenn man selbst gespielt hat!
+					if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === myUsername){
+					fragenergebnis = GameOverviewData.rounds[i].answers[nrFrageInRunde-1].ergebnisCheck;
+					break;		
+					}
+				}else if(zugehoerigerSpieler == 2){
+				//Gegnerische Antworten, von Runden, die man selbst noch nicht gespielt hat, sollen grau sein!
+					if(GameOverviewData.rounds[i].answers[nrFrageInRunde-1].benutzer.benutzername === enemyUsername){
+						fragenergebnis = "grey";
+						break;
+					}
+				}		
 			}
 		}
 	} 
@@ -569,7 +637,10 @@ if (fragenergebnis == true){
 	}else if(fragenergebnis == false){
 	//Wenn Frage Falsche beantwortet (ergebnisCheck = false)
 	$("#"+viereck_id).addClass('redBackground');
-	}	
+	}else if(fragenergebnis === "grey"){
+	//Färbe Viereck grau!
+	$("#"+viereck_id).addClass('greyBackground');
+	}
 }
 
 function setownName(){
@@ -596,13 +667,27 @@ function openFrage() {
 
 function prepareQuestion() {
 	if(isRoundStarter(gameInfo)) {
-		$.ajax( {
+		var randomCategoriesGameID = JSON.parse(localStorage.getItem("randomCategoriesGameID" + gameInfo.spielID));
+		if(randomCategoriesGameID === null) {
+			$.ajax( {
 			url : serverURL + "game/randomCategoriesFor/" + gameInfo.spielID,
 			type : "POST",
 			beforeSend : function(xhr) {authHeader(xhr);},
-			success : function(cAndQ) {fetchQuestionsRoundStart(cAndQ);},
+			success : function(cAndQ) {
+				/*
+				 * Save cats temporarily for this game to avoid the user to go back
+				 * and forth in order to get different categories.
+				 */
+				localStorage.setItem("randomCategoriesGameID" + gameInfo.spielID, JSON.stringify(cAndQ));
+				
+				fetchQuestionsRoundStart(cAndQ);
+			},
 			error : function(obj) {alert("Die Spieldaten konnten nicht übertragen werden.");}
 		});
+		} else {
+			// user has selected categories before, show the prefetched data
+			fetchQuestionsRoundStart(randomCategoriesGameID);
+		}
 	} else {
 		$.ajax( {
 			url : serverURL + "game/continueRound/" + gameInfo.spielID,
@@ -655,7 +740,7 @@ function onConfirmGiveUp(buttonIndex, gameID){
 			success:function(obj){
 			//alert("Aufgeben wurde von Server bestätigt!"+JSON.stringify(obj));
 			//gehe zum home screen zurück!
-			steroids.layers.pop();
+			steroids.layers.popAll();
 			},
 			 error:function(obj){
 			 
@@ -740,6 +825,7 @@ function sync(){
 	//true: die rundenübersicht wird für dieses Spiel neu aufgerufen (aus hauptmenü heraus)
 	//false: die rundenübersicht wird lediglich aktualisiert! (init wurde bereits mind 1 mal aufgerufen!)
 	//alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
+	//alert("gameInfo: "+localStorage.getItem("gameInfo"));
 	var gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 	if(initializeNotYetFired === "true"){ 
 	//wenn initialize noch nicht aufgerufen wurde, rufe nur initialize auf (Aufruf aus Hauptmenü)

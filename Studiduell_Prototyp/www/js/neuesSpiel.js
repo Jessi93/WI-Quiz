@@ -16,7 +16,14 @@ function loadFriendslistFromServer() {
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
 		success:function(obj){addFriendToList(obj);},
-		error:function(obj){alert(JSON.stringify(obj));}
+		error:function(obj){
+		//WORKAROUND //TODO wird u.A. beim "popAll" in spielerSuchen aufgerufen! --> Fehler bei Status 0 nicht anzeigen!
+			if(obj.status == 0){
+			//Tue nichts (zeige Fehler nicht an!)
+			}else{
+			alert("Fehler beim Laden der Freundesliste: "+JSON.stringify(obj));
+			}
+		}
 		}); 
 	
 	//Test (Testdaten ohne Serveranbindung!)
@@ -29,29 +36,8 @@ function addFriendToList(obj){
 	//alert("addFriendToList wurde aufgerufen!");
 	//Freundesliste befüllen
 	for(var i=0;i<obj.length;i++){
-	$("#freundeslisteErweitern").append('<li class="topcoat-list__item custom_List_item" ontouchend="createNewGameFriendlist(\''+obj[i]+'\')">'+obj[i]+'</li>');
+	$("#freundeslisteErweitern").append('<li class="topcoat-list__item custom_List_item" ontouchend="createNewGameWithOpponent(\''+obj[i]+'\')">'+obj[i]+'</li>');
 	}
-}
-
-
-function createNewGameFriendlist(friendName){
-	function onAlertDismissCreateNewGameFriendlist(){
-	}
-	$.ajax( {
-		url:serverURL + "game/create/with/" + friendName,
-		type:"POST",
-		beforeSend:function(xhr){authHeader(xhr);},
-		crossDomain:true,
-		success:function(){steroids.layers.popAll();},
-		error:function(obj){
-			if(obj.status == 409){
-				//409 = "Conflict" = Freundesanfrage fehlgeschlagen, weil Freundschaft bereits herrscht!
-				navigator.notification.alert("Du spielst bereits gegen "+friendName+"!", onAlertDismissCreateNewGameFriendlist,'Information','OK');
-				}else{
-				navigator.notification.alert("Fehler beim Absenden der Duellanfrage!"+JSON.stringify(obj), onAlertDismissCreateNewGameFriendlist,'Information','OK');
-				}
-			}
-		});
 }
 
 function createNewGameRandom() {
@@ -62,8 +48,25 @@ function createNewGameRandom() {
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
 		success:function(){steroids.layers.popAll();},
-		error:function(obj){alert(JSON.stringify(obj));}
+		error:function(obj){
+		alert("Fehler beim erstellen eines zufälliges Spieles: "+JSON.stringify(obj));}
 		});
 }
 
+function onVisibilityChange() {
+    //alert("document.visibilityState: " + document.visibilityState);
+    //alert("document.hidden: " + document.hidden);
+
+	var docHidden = document.hidden;
+	if(docHidden == false){
+	//Nur wenn auf das Dokument zurückgekehrt wird, soll es aktualisiert werden
+	init();
+	}else{
+	//Wenn das Dokument verlassen wird, soll nichts getan werden!
+	}
+ 
+}
+
 document.addEventListener("deviceready", init, false);
+
+document.addEventListener("visibilitychange", onVisibilityChange, false);
