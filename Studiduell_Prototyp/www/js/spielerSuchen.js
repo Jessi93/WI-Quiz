@@ -33,42 +33,6 @@ function spielerSuchen() {
 	}
  }
  
-
- // //Sortierung
-// function sortRight(arrayToSort){
-// // Richtige Sortierung: Klein-/Großbuchstaben
-// function stringComparison(a, b)	{
-	// a = a.toLowerCase();
-	// a = a.replace(/ä/g,"a");
-	// a = a.replace(/ö/g,"o");
-	// a = a.replace(/ü/g,"u");
-	// a = a.replace(/ß/g,"s");
-
-	// b = b.toLowerCase();
-	// b = b.replace(/ä/g,"a");
-	// b = b.replace(/ö/g,"o");
-	// b = b.replace(/ü/g,"u");
-	// b = b.replace(/ß/g,"s");
-
-	// return(a==b)?0:(a>b)?1:-1;
-// }
-// arrayToSort.sort(stringComparison);
-// // Richtige Sortierung: Buchstaben mit Zahlen
-// var reA = /[^a-zA-Z]/g;
-// var reN = /[^0-9]/g;
-// function sortAlphaNum(a,b) {
-    // var aA = a.replace(reA, "");
-    // var bA = b.replace(reA, "");
-    // if(aA === bA) {
-        // var aN = parseInt(a.replace(reN, ""), 10);
-        // var bN = parseInt(b.replace(reN, ""), 10);
-        // return aN === bN ? 0 : aN > bN ? 1 : -1;
-    // }
-// }
-// arrayToSort.sort(sortAlphaNum);
-// }
-
-
  function addResultToList(obj){
 	//alert("addResultToList(obj) wurde aufgerufen!");
 	//sortRight(obj);
@@ -79,37 +43,12 @@ function spielerSuchen() {
 	// Ergebnisliste befüllen
 	for(var i=0;i<obj.length;i++){
 	//Button zum befreunden ergänzen
-	$("#ergebnislisteErweitern").append('<div class="row"><li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGame(\''+obj[i]+'\')">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button rightColumn" ontouchend="addAsFriend(\''+obj[i]+'\')"></button></div>');
+	$("#ergebnislisteErweitern").append('<div class="row"><li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGameWithOpponent(\''+obj[i]+'\')">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button rightColumn" ontouchend="addAsFriend(\''+obj[i]+'\')"></button></div>');
 	}
 	
 	// Zeige Ergebnisliste an
 	$("#ergebnislisteDiv").css("visibility","visible");
 	}
-}
-
-
-function createNewGame(gegnerName){
-function onAlertDismisscreateNewGame(){
-	}
-$.ajax( {
-		url:serverURL + "game/create/with/" + gegnerName,
-		type:"POST",
-		beforeSend:function(xhr){authHeader(xhr);},
-		crossDomain:true,
-		success:function(){steroids.layers.popAll();},
-		error:function(obj){
-			if(obj.status == 409){
-				//409 = "Conflict" = Freundesanfrage fehlgeschlagen, weil Freundschaft bereits herrscht!
-				navigator.notification.alert("Du spielst bereits gegen "+friendName+"!", onAlertDismisscreateNewGame,'Information','OK');
-				}else{
-				navigator.notification.alert("Fehler beim Absenden der Duellanfrage!"+JSON.stringify(obj), onAlertDismisscreateNewGame,'Information','OK');
-				}
-			}
-		});
-		
-		//Test
-		//steroids.layers.popAll();
-
 }
 
 document.addEventListener("deviceready", init, false);

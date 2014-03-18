@@ -118,6 +118,26 @@ function addAsFriend(fName) {
 	
 }
 
+function createNewGameWithOpponent(opponentName){
+	function onAlertDismissCreateNewGameWithOpponent(){
+	}
+	$.ajax( {
+		url:serverURL + "game/create/with/" + opponentName,
+		type:"POST",
+		beforeSend:function(xhr){authHeader(xhr);},
+		crossDomain:true,
+		success:function(){steroids.layers.popAll();},
+		error:function(obj){
+			if(obj.status == 409){
+				//409 = "Conflict" = Freundesanfrage fehlgeschlagen, weil Freundschaft bereits herrscht!
+				navigator.notification.alert("Du spielst bereits gegen "+opponentName+"!", onAlertDismissCreateNewGameWithOpponent,'Information','OK');
+				}else{
+				navigator.notification.alert("Fehler beim Absenden der Duellanfrage!"+JSON.stringify(obj), onAlertDismissCreateNewGameWithOpponent,'Information','OK');
+				}
+			}
+		});
+}
+
 function fetchRundenuebersichtData (spielID){
 	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage --> feuere Event, dass Daten bereit stehen
 	$.ajax( {
