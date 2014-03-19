@@ -1,6 +1,3 @@
-body {
-	background-color: #1C1C1C;
-}
 
 .custom_List_item 
 	
@@ -13,20 +10,41 @@ body {
 }
 
 #search_username_input{
-	background-image: url("../images/Lupe.png"); 
+	background-image: url("../images/lupe.png"); 
 }
-#sucheButton{
-	background-image: url("../images/Lupe.png");
+.sucheButton{
 	background-repeat: no-repeat;
-	background-position: right;
-	background-size: 3em;
-	
-	width: 3.4em;
-	height: 3.4em;
-	
-	margin-top: 1em;
-	padding-bottom: 1.6em;
+	background-position: bottom right;
 
+	
+	width: 4.0em;
+	height: 4.5em;
+	
+
+
+}
+.leftColumn, .rightColumn, .middleColumn {
+	display: table-cell;
+	padding-bottom: 0.8em;
+}
+
+.leftColumn, .rightColumn {
+	width: 40%;
+	display: table-cell;
+}
+
+.leftColumn {
+	text-align: left;
+}
+
+.middleColumn {
+	width: 15%;
+	text-align: center;
+}
+
+.rightColumn {
+	text-align: right;
+	vertical-align: middle;
 }
 
 #addFriendButton{
@@ -38,12 +56,16 @@ body {
 	width: 2.4em;
 	height: 2.4em;
 	border-radius: 50%;
-	padding-top: 0.7em;
+	padding-top: 0.6em;
 }
 
 #suchTabelle_div {
 	display: table;
 	width: 100%; 
+}
+
+#iconsDiv {
+	display: table-row;
 }
 
 #ergebnislisteDiv{
