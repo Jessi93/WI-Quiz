@@ -374,6 +374,8 @@ public class SpielController {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/abandon/{gameID}")
 	public ResponseEntity<Void> abandon(@PathVariable("gameID") Integer gameID) {
+		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		
 		if(gameSpielEntity != null) {
@@ -382,7 +384,10 @@ public class SpielController {
 					|| SpielstatusEntityEnum.P.getEntity().equals(gameState)) {
 				
 				gameSpielEntity.setSpielstatusName(SpielstatusEntityEnum.Q.getEntity());
+				// the player that has abandoned the game, is now written in "wartenAuf"
+				gameSpielEntity.setWartenAuf(userUserEntity);
 				spielRepository.save(gameSpielEntity);
+				
 				
 				return new ResponseEntity<Void>(HttpStatus.OK); 
 			} else {
