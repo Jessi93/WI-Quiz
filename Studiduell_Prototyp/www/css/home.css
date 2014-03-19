@@ -1,11 +1,17 @@
-topcoat-button 	center 	full custom_icon_button_left 	Rand2 
-topcoat-button--cta center 	full custom_icon_button_right
-
 #neuesSpielStartenButton {
 	background-image: url("../images/plus.png");
-	margin-top: 0.5rem !important;
+	margin-top: 1.5rem !important;
 	margin-bottom: 0.5rem !important;
 	
+}
+
+#neuesSpielStartenDIV{
+margin-top: 1.5rem !important;
+}
+
+
+#username_div{
+font-weight: bold;
 }
 
 #rundenuebersichtButton {

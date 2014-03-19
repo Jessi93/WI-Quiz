@@ -1,6 +1,23 @@
-body {
-	background-color: #1C1C1C;
-}
+
 .invalidCustom {
 	border: 1px solid #ec514e;
+}
+
+.custom_input{
+width: 97% !important;
+}
+
+.custom_button{
+margin: 0.35rem;
+width: 97% !important;
+}
+
+#LoginButton{
+/*margin-top: 1em;
+margin-bottom: 0.5em;
+*/
+}
+
+#schrift{
+text-align: center;
 }

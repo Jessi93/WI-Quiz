@@ -700,7 +700,7 @@ function prepareQuestion() {
 }
 
 function fetchQuestionsRoundStart(categoriesAndQuestions) {
-alert("fetchQuestionsRoundStart wurde aufgerufen"); //XXX
+//alert("fetchQuestionsRoundStart wurde aufgerufen"); //XXX
 	localStorage.setItem("gameQuestionStart", JSON.stringify(categoriesAndQuestions));
 	
 	var newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
@@ -758,9 +758,10 @@ function giveUp(){
 	}
 
 	var gameID = gameInfo.spielID;
+	//alert("gameInfo:"+JSON.stringify(gameInfo));
 		
 	//aufgeben darf nur möglich sein, wenn das spiel noch aktiv ist!
-	if(gameInfo.spielStatus.name == "A"){
+	if(gameInfo.spielstatusName.name == "A"){
 
 	navigator.notification.confirm(      
 		 'Möchtest du das Duell wirklich aufgeben?', 						// message    
@@ -768,11 +769,11 @@ function giveUp(){
 		 "Bist du sicher?",           			// title      
 		 ['Ja','Nein']   			// buttonLabels    
 		 );
-	}else if (gameInfo.spielStatus.name == "Q"){
+	}else if (gameInfo.spielstatusName.name == "Q"){
 	//Spiel wurde bereits aufgegeben!
 	navigator.notification.alert("Das Spiel wurde bereits aufgegeben!", onAlertDismissCreateFailGiveUp,'Information','OK');
 				
-	}else if(gameInfo.spielStatus.name == "C"){
+	}else if(gameInfo.spielstatusName.name == "C"){
 	//Spiel wurde normal beendet!
 	navigator.notification.alert("Das Spiel wurde bereits zu Ende gespielt!", onAlertDismissCreateFailGiveUp,'Information','OK');
 	

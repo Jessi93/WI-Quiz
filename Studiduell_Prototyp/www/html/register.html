@@ -6,6 +6,7 @@
 	  <title>Register</title>
 	  
 	  <link rel="stylesheet" href="../vendor/topcoat/css/topcoat-mobile-light.css" />
+	  <link rel="stylesheet" href="../css/application.css" />
 	  <link rel="stylesheet" href="../css/register.css" />
 	  
 	  <script src="../js/jquery-1.11.0.min.js"></script>
@@ -20,11 +21,11 @@
 	
 	</head>
 	<body>
-		<div id="Anweisung_div">Bitte gib deinen gew&uuml;nschten Usernamen und dein Passwort ein, um dich zu registrieren. </div>
-		<input id= "username_input" type="text" class="topcoat-text-input" placeholder="Username" value=""> <br>
-		<input id= "password_input" type="password" class="topcoat-text-input" placeholder="Passwort" value=""> <br>
+		<div id="Anweisung_div" class="center"><h2>Bitte gib deinen gew&uuml;nschten Benutzernamen und dein Passwort ein, um dich zu registrieren.</h2> </div>
+		<input id= "username_input" type="text" class="topcoat-text-input custom_input" placeholder="Benutzername" value=""> <br>
+		<input id= "password_input" type="password" class="topcoat-text-input custom_input" placeholder="Passwort" value=""> <br>
 		
-		<button id="RegisterButton" class="topcoat-button--large" ontouchend="sendRegistration();">Los!</button> <br>
+		<button id="RegisterButton" class="topcoat-button center full" ontouchend="sendRegistration();">Los!</button> <br>
 		
 	</body>
 </html>

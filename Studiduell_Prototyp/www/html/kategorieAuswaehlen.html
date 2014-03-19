@@ -7,6 +7,7 @@
 	  
 	  <link rel="stylesheet" href="../vendor/topcoat/css/topcoat-mobile-light.css" />
 	  <link rel="stylesheet" href="../css/kategorieAuswaehlen.css" />
+	  		<link rel="stylesheet" href="../css/application.css" />
 	  
 	  <script src="../js/jquery-1.11.0.min.js"></script>
 	  <!-- cordova.js is served from localhost to ensure the correct version -->
@@ -17,12 +18,11 @@
 	      <script src="../js/application.js"></script>
 	</head>
 	<body>
-		<div id="kategorieText">Wähle eine Kategorie aus:</div>
-		
+		<div id="kategorieText" class="center"><h2>Wähle eine Kategorie aus:</h2></div>
 		<div id="kategorienauswahl" class="center">
-			<button id="kategorie1" class="topcoat-button--large button" ontouchend="kategorieAuswaehlen(this);"></button>
-			<button id="kategorie2" class="topcoat-button--large button" ontouchend="kategorieAuswaehlen(this);"></button>
-			<button id="kategorie3" class="topcoat-button--large button" ontouchend="kategorieAuswaehlen(this);"></button>
+			<button id="kategorie1" class="topcoat-button button" ontouchend="kategorieAuswaehlen(this);"></button>
+			<button id="kategorie2" class="topcoat-button button" ontouchend="kategorieAuswaehlen(this);"></button>
+			<button id="kategorie3" class="topcoat-button button" ontouchend="kategorieAuswaehlen(this);"></button>
 		</div>
 	</body>
 	

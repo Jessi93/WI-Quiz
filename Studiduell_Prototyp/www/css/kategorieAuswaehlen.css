@@ -1,13 +1,9 @@
-body {
-	background-color: #1C1C1C;
-}
 
 #kategorieText {
 	margin-top: 0.3em;
 	color: white;
-	background-color: #00BFFF;
 	opacity: 0.9;
-	font-size: 1.5em;
+	/*font-size: 1.5em; */
 }
 
 .button {
