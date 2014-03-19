@@ -473,20 +473,20 @@ function enORdisableSpielenButton() {
 	//alert("MyUsername: "+MyUsername+" waitForUsername: "+waitForUsername);
 	if(waitForUsername === MyUsername && gameInfo.spielstatusName.name === "A"){
 		//auf mich wird gewartet(ich bin dran) --> Spielen Button soll aktiv sein!
-		$("#spielenButton").removeClass("topcoat-button--large");
-		$("#spielenButton").addClass("topcoat-button--large--cta");
+		$("#spielenButton").removeClass("topcoat-button");
+		$("#spielenButton").addClass("topcoat-button--cta");
 		$("#spielenButton").removeAttr("disabled");
 		$("#spielenButton").text("Spielen");
 	}else if(gameInfo.spielstatusName.name === "Q"){
 		// spiel wurde aufgegeben
-		$("#spielenButton").removeClass("topcoat-button--large--cta");
-		$("#spielenButton").addClass("topcoat-button--large");
+		$("#spielenButton").removeClass("topcoat-button--cta");
+		$("#spielenButton").addClass("topcoat-button");
 		$("#spielenButton").attr("disabled", ""); 
 		$("#spielenButton").text("Aufgegeben von: "+waitForUsername);
 	}else{
 	//Es wird auf gegner gewartet (Spiel aktiv!)
-		$("#spielenButton").removeClass("topcoat-button--large--cta");
-		$("#spielenButton").addClass("topcoat-button--large");
+		$("#spielenButton").removeClass("topcoat-button--cta");
+		$("#spielenButton").addClass("topcoat-button");
 		$("#spielenButton").attr("disabled", ""); 
 		$("#spielenButton").text("Warten");
 	}
@@ -729,7 +729,7 @@ addAsFriend(enemyUsername);
 
 function giveUp(){
 //alert("give up wurde aufgerufen!");
-function onConfirmGiveUp(buttonIndex, gameID){
+	function onConfirmGiveUp(buttonIndex, gameID){
 		switch (buttonIndex) {
 			case 1: //Aufgeben wurde bestätigt!
 			//TODO: Duell bei Server aufgeben!"
@@ -754,15 +754,29 @@ function onConfirmGiveUp(buttonIndex, gameID){
 				break;
 		}
 	}
+	function onAlertDismissCreateFailGiveUp(){//Tue nichts
+	}
 
 	var gameID = gameInfo.spielID;
 		
+	//aufgeben darf nur möglich sein, wenn das spiel noch aktiv ist!
+	if(gameInfo.spielStatus.name == "A"){
+
 	navigator.notification.confirm(      
 		 'Möchtest du das Duell wirklich aufgeben?', 						// message    
 		 function(buttonIndex){onConfirmGiveUp(buttonIndex, gameID);},           	// callback to invoke with index of button pressed       
 		 "Bist du sicher?",           			// title      
 		 ['Ja','Nein']   			// buttonLabels    
 		 );
+	}else if (gameInfo.spielStatus.name == "Q"){
+	//Spiel wurde bereits aufgegeben!
+	navigator.notification.alert("Das Spiel wurde bereits aufgegeben!", onAlertDismissCreateFailGiveUp,'Information','OK');
+				
+	}else if(gameInfo.spielStatus.name == "C"){
+	//Spiel wurde normal beendet!
+	navigator.notification.alert("Das Spiel wurde bereits zu Ende gespielt!", onAlertDismissCreateFailGiveUp,'Information','OK');
+	
+	}
 	 
 }
 
@@ -826,7 +840,7 @@ function sync(){
 	//false: die rundenübersicht wird lediglich aktualisiert! (init wurde bereits mind 1 mal aufgerufen!)
 	//alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
 	//alert("gameInfo: "+localStorage.getItem("gameInfo"));
-	var gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
+	gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 	if(initializeNotYetFired === "true"){ 
 	//wenn initialize noch nicht aufgerufen wurde, rufe nur initialize auf (Aufruf aus Hauptmenü)
 	initialize();
