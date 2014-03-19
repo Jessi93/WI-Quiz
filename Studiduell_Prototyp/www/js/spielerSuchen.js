@@ -35,8 +35,8 @@ function spielerSuchen() {
  
  function addResultToList(obj){
 	//alert("addResultToList(obj) wurde aufgerufen!");
-	//sortRight(obj);
 	if(obj.length == 0){
+	$("#ergebnislisteDiv").css("visibility","visible");
 	navigator.notification.alert("Es wurden keine Ergebnisse gefunden.");
 	}
 	else {
