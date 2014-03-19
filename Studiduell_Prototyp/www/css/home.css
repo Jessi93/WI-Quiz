@@ -22,6 +22,12 @@ topcoat-button--cta center 	full custom_icon_button_right
 	border: 1px solid grey;
 }
 
+.historyButton {
+	background-image: url("../images/profilbild.png");
+	border: 1px solid grey;
+}
+
+
 .custom_icon_button_left {
 	margin-bottom: 1em;
 	width: 100%; 

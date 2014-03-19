@@ -482,7 +482,7 @@ function enORdisableSpielenButton() {
 		$("#spielenButton").removeClass("topcoat-button--large--cta");
 		$("#spielenButton").addClass("topcoat-button--large");
 		$("#spielenButton").attr("disabled", ""); 
-		$("#spielenButton").text("Spiel wurde aufgegeben");
+		$("#spielenButton").text("Aufgegeben von: "+waitForUsername);
 	}else{
 	//Es wird auf gegner gewartet (Spiel aktiv!)
 		$("#spielenButton").removeClass("topcoat-button--large--cta");

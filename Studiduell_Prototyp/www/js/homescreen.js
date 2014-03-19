@@ -207,7 +207,6 @@ function handleServerData(serverSyncData){
 		return true;
 		}
 	}
-	
 
 	//alert("handleServerData wurde aufgerufen. Neue Serverdaten:"+JSON.stringify(serverSyncData));
 	//schreibe sync Daten in localstorage
@@ -217,6 +216,7 @@ function handleServerData(serverSyncData){
 	$("#ActionRequiredGames_div").empty();
 	$("#WaitingForGames_div").empty();
 	$("#OpenDuelRequests_list_container").empty();
+	$("#HistoryGames_div").empty();
 	
 	for(var i=0;i<serverSyncData.length;i++){
 		//alert(JSON.stringify(serverSyncData[i]));
@@ -237,20 +237,32 @@ function handleServerData(serverSyncData){
 					serverSyncData[i].wartenAuf.benutzername	== localStorage.getItem("username")
 		){
 		//Prüfe, ob die Duellanfrage bereits angezeigt wurde! //WORKAROUND
-		if(checkIfDuelRequestShow(serverSyncData[i].spielID)){
-		//Füge SpielID der Duellanfrage in Array hinzu!
-		spielIDsArray.push(serverSyncData[i].spielID);
-		//zeige Duellanfrage!
-		showDuelRequest(serverSyncData[i],i);}
+			if(checkIfDuelRequestShow(serverSyncData[i].spielID)){
+			//Füge SpielID der Duellanfrage in Array hinzu!
+			spielIDsArray.push(serverSyncData[i].spielID);
+			//zeige Duellanfrage!
+			showDuelRequest(serverSyncData[i],i);}
 		}
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== getEnemyUsername(serverSyncData[i])
 		//prüfe, ob der Eintrag eine Duellanfrage darstellt, die noch von einem Gegner beantwortet werden muss! 
 		){
 		addOpenDuelRequest(serverSyncData[i]);
+		}else if( 	serverSyncData[i].spielstatusName.name 		== "Q" || 
+					serverSyncData[i].spielstatusName.name 		== "C" 
+			//Prüfe, ob Eintrag ein aufgegebenes (Q) oder beendetes Spiel (C) ist (aufgeber = waitingFor)
+		){
+		addHistoryGame(serverSyncData[i],i);
 		}
 	}
+}
 
+function addHistoryGame(gameData, positionInServerData){
+	//alert("addHistoryGame aufgerufen mit status: "+gameData.spielstatusName.name+"positionInServerData (i): "+positionInServerData);
+	var enemy_username = getEnemyUsername(gameData);
+	//füge HTML ein:
+	$("#HistoryGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein historyButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Vergangenes Spiel gegen "+enemy_username+" - SpielID: "+gameData.spielID+" </a>" 
+	);
 }
 
 function addOpenDuelRequest(gameData) {
