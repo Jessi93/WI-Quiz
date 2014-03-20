@@ -483,6 +483,13 @@ function enORdisableSpielenButton() {
 		$("#spielenButton").addClass("topcoat-button");
 		$("#spielenButton").attr("disabled", ""); 
 		$("#spielenButton").text("Aufgegeben von: "+waitForUsername);
+	}else if(gameInfo.spielstatusName.name === "C"){
+		// spiel ist bereits abgeschlossen!
+		$("#spielenButton").removeClass("topcoat-button");
+		$("#spielenButton").addClass("topcoat-button--cta");
+		$("#spielenButton").removeAttr("disabled");
+		$("#spielenButton").attr("ontouchend", "playAgain()"); 
+		$("#spielenButton").text("Nochmal!");
 	}else{
 	//Es wird auf gegner gewartet (Spiel aktiv!)
 		$("#spielenButton").removeClass("topcoat-button--cta");
@@ -490,6 +497,12 @@ function enORdisableSpielenButton() {
 		$("#spielenButton").attr("disabled", ""); 
 		$("#spielenButton").text("Warten");
 	}
+}
+
+function playAgain(){
+//Starte ein neues Spiel gegen den selben Gegner!
+alert("Todo: neues Spiel!");
+
 }
 
 function setSpielstand() {
@@ -708,7 +721,7 @@ function fetchQuestionsRoundStart(categoriesAndQuestions) {
 }
 
 function fetchQuestionsRoundContinue(questionsAndAnswersOpponent) {
-alert("fetchQuestionsRoundContinue wurde aufgerufen!"); //XXX
+//alert("fetchQuestionsRoundContinue wurde aufgerufen!"); //XXX
 	localStorage.setItem("gameQuestionContinue", JSON.stringify(questionsAndAnswersOpponent));
 	
 	var newView = new steroids.views.WebView("html/frage.html");
@@ -782,57 +795,7 @@ function giveUp(){
 }
 
 function setNavigationBar(){
-/*
-	alert("setNavigationBar wurde aufgerufen! Step1")
-	//erstelle Button
-	var syncButton = new steroids.buttons.NavigationBarButton();
-	syncButton.title = "Sync";
-	alert("setNavigationBar wurde aufgerufen! Step2")
-	//Funktionalität des Sync Buttons
-	syncButton.onTap = function() {
-    alert("TODO sync!");
-	};
-	alert("setNavigationBar wurde aufgerufen! Step3")
-	//Zeige Button im Navigation Bar an
-	steroids.view.navigationBar.update({
-		buttons: {right: [syncButton]},
-		onSuccess: function() {    alert("Button set!"); },
-		onFailure: function() {    alert("Failed to set button.");   }
-	});
-	alert("setNavigationBar wurde aufgerufen! Step4")
-	
-	
-	//STEROIDS BEISPIEL! http://docs.appgyver.com/en/edge/steroids_Steroids%20Native%20UI_Steroids.view.navigationBar_navigationBar.update.md.html
-	var leftButton = new steroids.buttons.NavigationBarButton();
-	var rightButton = new steroids.buttons.NavigationBarButton();
-	var imageButton = new steroids.buttons.NavigationBarButton();
 
-	leftButton.title = "Left";
-	leftButton.onTap = function() { alert("Left button tapped"); };
-
-	rightButton.title = "Right";
-	rightButton.onTap = function() { alert("Right button tapped"); };
-
-	imageButton.imagePath = "../images/Lupe.png";
-	imageButton.onTap = function() { alert("Image button tapped"); };
-
-	steroids.view.navigationBar.update({
-	  titleImagePath: "../images/Lupe.png",
-	  overrideBackButton: false,
-	  buttons: {
-		left: [leftButton],
-		right: [rightButton, imageButton]
-	  }
-	}, {
-	  onSuccess: function() {
-		alert("Navigation bar updated!");
-	  },
-	  onFailure: function() {
-		alert("Failed to update the navigation bar.");
-	  }
-	});
-	*/
-	
 	//Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
 		syncButton.title = "Aktualisieren";
@@ -843,7 +806,6 @@ function setNavigationBar(){
 		steroids.view.navigationBar.setButtons({
 			right: [syncButton]
 		});
-	
 }
 
 function sync(){
