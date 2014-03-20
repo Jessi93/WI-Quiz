@@ -160,3 +160,55 @@ function fetchRundenuebersichtData (spielID){
 		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
 		});
 }
+
+//TEST
+/*
+var loginButton = new steroids.buttons.NavigationBarButton();
+loginButton.title = "Log in";
+
+var logoutButton = new steroids.buttons.NavigationBarButton();
+logoutButton.title = "Log out";
+
+loginButton.onTap = function() {
+    //loginText.textContent = "Welcome, Agnus M.!";
+	alert("loginButton.onTap");
+    steroids.view.navigationBar.update({
+        buttons: {
+          right: [loginButton]
+        }
+    });
+};
+
+logoutButton.onTap = function() {
+    //loginText.textContent = "Please log in.";
+	alert("logoutButton.onTap");
+    steroids.view.navigationBar.update({
+        buttons: {
+          right: [loginButton]
+        }
+    });
+};
+
+steroids.view.navigationBar.update({
+    overrideBackButton: true,
+    buttons: {
+      right: [loginButton]
+    }
+});
+
+steroids.view.navigationBar.update({
+    title: "Login to the left!",
+    buttons: {
+        left: [loginButton],
+        right: []
+    }
+}, {
+    onSuccess: function() {
+        alert("Button set!");
+    },
+    onFailure: function() {
+        alert("Failed to set button.");
+    }
+});
+*/
+

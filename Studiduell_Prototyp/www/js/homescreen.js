@@ -1,6 +1,21 @@
 var homescreenServerdata;
 var spielIDsArray = new Array(); //WORKAROUND (mehrfache Duellanfragen!)enthält alle SpielIDs, für die Deullanfragen angezeigt wurden 
 	//--> so kann verhindert werden, dass duellanfragen zweimal angezeigt werden
+	
+setNavigationBar();
+
+function setNavigationBar(){
+//Füge "aktualisieren Button" dem NavigationBar hinzu!
+	var syncButton = new steroids.buttons.NavigationBarButton();
+		syncButton.title = "Aktualisieren";
+		syncButton.onTap = function() {
+			sync();
+		};
+
+		steroids.view.navigationBar.setButtons({
+			right: [syncButton]
+		});
+}
 
 function checkCredentials() {
 	//alert("checkCredentials wurde aufgerufen!");
@@ -37,6 +52,7 @@ function openNeuesSpielScreen() {
 }
 
 function sync() {
+	//alert("sync wurde aufgerufen!");
 	//TEST.
 	//popEvent("popAll");
 	
@@ -261,7 +277,7 @@ function addHistoryGame(gameData, positionInServerData){
 	//alert("addHistoryGame aufgerufen mit status: "+gameData.spielstatusName.name+"positionInServerData (i): "+positionInServerData);
 	var enemy_username = getEnemyUsername(gameData);
 	//füge HTML ein:
-	$("#HistoryGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein historyButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Vergangenes Spiel gegen "+enemy_username+" - SpielID: "+gameData.spielID+" </a>" 
+	$("#HistoryGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein historyButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Vergangenes Spiel gegen "+enemy_username+"</button>"//+" - SpielID: "+gameData.spielID+" </a>" 
 	);
 }
 
@@ -274,14 +290,15 @@ function addActionRequiredGame(gameData, positionInServerData){
 	//alert("addActionRequiredGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
 	//füge HTML ein:
-	$("#ActionRequiredGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Du bist an der Reihe gegen "+enemy_username+" SpielID: "+gameData.spielID+" </a>" 
+	$("#ActionRequiredGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Du bist an der Reihe gegen "+enemy_username+"</button>"//+" SpielID: "+gameData.spielID+" </a>" 
 	);
 }
 
 function addWaitingForGame(gameData, positionInServerData){
 	//alert("addWaitingForGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
-	$("#WaitingForGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein waitingForButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+" SpielID: "+gameData.spielID+" </a>");
+	$("#WaitingForGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein waitingForButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+"</button>"//+" SpielID: "+gameData.spielID+" </a>"
+	);
 }
 
 function getEnemyUsername(gameData){
