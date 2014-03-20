@@ -817,7 +817,7 @@ function setNavigationBar(){
 	imageButton.onTap = function() { alert("Image button tapped"); };
 
 	steroids.view.navigationBar.update({
-	  titleImagePath: "/icons/telescope@2x.png",
+	  titleImagePath: "../images/Lupe.png",
 	  overrideBackButton: false,
 	  buttons: {
 		left: [leftButton],
@@ -831,7 +831,18 @@ function setNavigationBar(){
 		alert("Failed to update the navigation bar.");
 	  }
 	});
-*/
+	*/
+	
+	//Füge "aktualisieren Button" dem NavigationBar hinzu!
+	var syncButton = new steroids.buttons.NavigationBarButton();
+		syncButton.title = "Aktualisieren";
+		syncButton.onTap = function() {
+			sync();
+		};
+
+		steroids.view.navigationBar.setButtons({
+			right: [syncButton]
+		});
 	
 }
 
