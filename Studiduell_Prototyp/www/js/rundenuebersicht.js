@@ -468,40 +468,41 @@ gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
 
 function enORdisableSpielenButton() {
 	var MyUsername = localStorage.getItem("username");
-	 
-	var waitForUsername = gameInfo.wartenAuf.benutzername;
-	//alert("MyUsername: "+MyUsername+" waitForUsername: "+waitForUsername);
-	if(waitForUsername === MyUsername && gameInfo.spielstatusName.name === "A"){
-		//auf mich wird gewartet(ich bin dran) --> Spielen Button soll aktiv sein!
-		$("#spielenButton").removeClass("topcoat-button");
-		$("#spielenButton").addClass("topcoat-button--cta");
-		$("#spielenButton").removeAttr("disabled");
-		$("#spielenButton").text("Spielen");
-	}else if(gameInfo.spielstatusName.name === "Q"){
-		// spiel wurde aufgegeben
-		$("#spielenButton").removeClass("topcoat-button--cta");
-		$("#spielenButton").addClass("topcoat-button");
-		$("#spielenButton").attr("disabled", ""); 
-		$("#spielenButton").text("Aufgegeben von: "+waitForUsername);
-	}else if(gameInfo.spielstatusName.name === "C"){
+	//alert("gameInfo: "+JSON.stringify(gameInfo)); 
+	if (gameInfo.wartenAuf != null){
+	var waitForUsername = gameInfo.wartenAuf.benutzername; 
+	//Prüfungen, die auf Spiele nicht im Status C gehen, dürfen nur durchgeführt werden, wenn WartenAuf gesetzt ist!
+		//alert("MyUsername: "+MyUsername+" waitForUsername: "+waitForUsername);
+		if(waitForUsername === MyUsername && gameInfo.spielstatusName.name === "A"){
+			//auf mich wird gewartet(ich bin dran) --> Spielen Button soll aktiv sein!
+			$("#spielenButton").removeClass("topcoat-button");
+			$("#spielenButton").addClass("topcoat-button--cta");
+			$("#spielenButton").removeAttr("disabled");
+			$("#spielenButton").text("Spielen");
+		}else if(gameInfo.spielstatusName.name === "Q"){
+			// spiel wurde aufgegeben
+			$("#spielenButton").removeClass("topcoat-button--cta");
+			$("#spielenButton").addClass("topcoat-button");
+			$("#spielenButton").attr("disabled", ""); 
+			$("#spielenButton").text("Aufgegeben von: "+waitForUsername);
+		}else{
+		//Es wird auf gegner gewartet (Spiel aktiv!)
+			$("#spielenButton").removeClass("topcoat-button--cta");
+			$("#spielenButton").addClass("topcoat-button");
+			$("#spielenButton").attr("disabled", ""); 
+			$("#spielenButton").text("Warten");
+		}
+	}else if(gameInfo.spielstatusName.name === "C"){ //WartenAuf ist also "" --> Spiel muss beendet sein!
 		// spiel ist bereits abgeschlossen!
-		$("#spielenButton").removeClass("topcoat-button");
-		$("#spielenButton").addClass("topcoat-button--cta");
-		$("#spielenButton").removeAttr("disabled");
 		$("#spielenButton").attr("ontouchend", "playAgain()"); 
-		$("#spielenButton").text("Nochmal!");
-	}else{
-	//Es wird auf gegner gewartet (Spiel aktiv!)
-		$("#spielenButton").removeClass("topcoat-button--cta");
-		$("#spielenButton").addClass("topcoat-button");
-		$("#spielenButton").attr("disabled", ""); 
-		$("#spielenButton").text("Warten");
+		$("#spielenButton").text("Nochmal spielen!");
 	}
 }
 
 function playAgain(){
 //Starte ein neues Spiel gegen den selben Gegner!
-alert("Todo: neues Spiel!");
+var enemyUsername = localStorage.getItem("enemyUsername"); 
+createNewGameWithOpponent(enemyUsername);
 
 }
 

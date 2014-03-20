@@ -1,8 +1,19 @@
 var homescreenServerdata;
 var spielIDsArray = new Array(); //WORKAROUND (mehrfache Duellanfragen!)enthält alle SpielIDs, für die Deullanfragen angezeigt wurden 
 	//--> so kann verhindert werden, dass duellanfragen zweimal angezeigt werden
-	
+//Naviagtionbar ist unabhängig von Phonegap/Jquery --> kann bereits hier initialisiert werden!
 setNavigationBar();
+
+function init(){
+//alert("init wurde aufgerufen!");
+//Füge eventhandler für "Tap" Events hinzu!
+$("#AbmeldenButton").on('tap',function(e,data){ abmelden()});
+$("#neuesSpielStartenButton").on('tap',function(e,data){ openNeuesSpielScreen()});
+
+
+sync();
+}
+	
 
 function setNavigationBar(){
 //Füge "aktualisieren Button" dem NavigationBar hinzu!
@@ -277,8 +288,11 @@ function addHistoryGame(gameData, positionInServerData){
 	//alert("addHistoryGame aufgerufen mit status: "+gameData.spielstatusName.name+"positionInServerData (i): "+positionInServerData);
 	var enemy_username = getEnemyUsername(gameData);
 	//füge HTML ein:
-	$("#HistoryGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein historyButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Vergangenes Spiel gegen "+enemy_username+"</button>"//+" - SpielID: "+gameData.spielID+" </a>" 
+	$("#HistoryGames_div").append("<button id='"+gameData.spielID+"' class='topcoat-button center full custom_icon_button_left textklein historyButton'>Vergangenes Spiel gegen "+enemy_username+"</button>"//+" - SpielID: "+gameData.spielID+" </a>" 
 	);
+	$("#"+gameData.spielID).on('tap',function(e,data){ 
+	openRundenuebersicht(gameData.spielID, positionInServerData);
+	});
 }
 
 function addOpenDuelRequest(gameData) {
@@ -290,15 +304,21 @@ function addActionRequiredGame(gameData, positionInServerData){
 	//alert("addActionRequiredGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
 	//füge HTML ein:
-	$("#ActionRequiredGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein yourTurnButton' ontouchend ='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >Du bist an der Reihe gegen "+enemy_username+"</button>"//+" SpielID: "+gameData.spielID+" </a>" 
+	$("#ActionRequiredGames_div").append("<button id='"+gameData.spielID+"' class='topcoat-button center full custom_icon_button_left textklein yourTurnButton' >Du bist an der Reihe gegen "+enemy_username+"</button>"//+" SpielID: "+gameData.spielID+" </a>" 
 	);
+	$("#"+gameData.spielID).on('tap',function(e,data){ 
+	openRundenuebersicht(gameData.spielID, positionInServerData);
+	});
 }
 
 function addWaitingForGame(gameData, positionInServerData){
 	//alert("addWaitingForGame wurde aufgerufen"+JSON.stringify(gameData));
 	var enemy_username = getEnemyUsername(gameData);
-	$("#WaitingForGames_div").append("<button class='topcoat-button center full custom_icon_button_left textklein waitingForButton' ontouchend='openRundenuebersicht("+gameData.spielID+","+positionInServerData+")' >"+enemy_username+"</button>"//+" SpielID: "+gameData.spielID+" </a>"
+	$("#WaitingForGames_div").append("<button id='"+gameData.spielID+"' class='topcoat-button center full custom_icon_button_left textklein waitingForButton' >"+enemy_username+"</button>"//+" SpielID: "+gameData.spielID+" </a>"
 	);
+	$("#"+gameData.spielID).on('tap',function(e,data){ 
+	openRundenuebersicht(gameData.spielID, positionInServerData);
+	});
 }
 
 function getEnemyUsername(gameData){
@@ -330,11 +350,8 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 
 	switch (buttonIndex) {
 		case 1: //Duell wurde angenommen!
-		//Zeige button für dieses Spiel im Homescreen
-		addActionRequiredGame(gameData, positionInServerData);
-		// bestätige Duellannahme bei Server
-		//alert("TODO: Duellannahme bei Server bestätigt");
-				
+		
+		// bestätige Duellannahme bei Server		
 		$.ajax( {
 			url:serverURL + "game/answerInvite/"+gameData.spielID,
 			type:"POST",
@@ -343,6 +360,8 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 			crossDomain:true,
 			success:function(obj){
 			//alert("Duellannahme bei Server erfolgreich bestätigt!");
+			//Zeige button für dieses Spiel im Homescreen
+			addActionRequiredGame(gameData, positionInServerData);
 			},
 			error:function(obj){
 			alert("Fehler bei Bestätigung der Duellannahme"+JSON.stringify(obj));
@@ -375,7 +394,9 @@ function abmelden(){
 localStorage.removeItem("username");
 localStorage.removeItem("password");
 //zeige login screen (neuladen der seite --> username nicht gesetzt --> Login öffnet sich!
-window.location.reload();
+//window.location.reload();
+	var newView = new steroids.views.WebView("html/login.html");
+	steroids.layers.push(newView);
 
 }
 
@@ -400,14 +421,18 @@ function onVisibilityChange() {
  
 }
 
-//sobald die Rundenübersichtsdaten geladen sind, soll in den RundenuebersichtScreen navigiert werden!
-document.addEventListener("RundenuebersichtDataloaded", openRundenuebersichtScreen, false);
 
 //sobald das Dokument rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
-document.addEventListener("deviceready", sync, false);
+$( document ).ready(function() { init(); });
 
+//sobald die Rundenübersichtsdaten geladen sind, soll in den RundenuebersichtScreen navigiert werden!
+document.addEventListener("RundenuebersichtDataloaded", openRundenuebersichtScreen, false);
 //Eventhandler für das aktualisieren beim "zurückkehren" auf den homescreen durch pop/popAll
 document.addEventListener("visibilitychange", onVisibilityChange, false);
+
+
+
+
 
 
 

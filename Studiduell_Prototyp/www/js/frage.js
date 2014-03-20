@@ -219,7 +219,7 @@ function nextNextQuestion(correctlyAnswered) {
 								}
 							}
 							localStorage.removeItem("answers");
-							popViewPushView("html/rundenuebersicht.html");
+							steroids.layers.pop();
 						},
 						error:function(obj) {alert("Fehler beim Sync! "+JSON.stringify(obj));},
 						data:"0123456789"

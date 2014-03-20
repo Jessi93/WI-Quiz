@@ -3,7 +3,7 @@ var gv_password;
 
 function init() {
 registerEnterButtonLoginEventHandler();
-	
+$("#RegisterButton").on('tap',function(e,data){ sendRegistration()});
 }
 
 function registerEnterButtonLoginEventHandler() {
@@ -108,4 +108,4 @@ function openHomeScreen() {
 	steroids.layers.popAll();
 }
 
-document.addEventListener("deviceready", init, false);
+$( document ).ready(function() { init(); });

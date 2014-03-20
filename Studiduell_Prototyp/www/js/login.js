@@ -2,6 +2,10 @@ var gv_username;
 var gv_password;
 
 function init() {
+//alert("init wurde in login aufgerufen!")
+$("#LoginButton").on('tap',function(e,data){ sendLoginDataToServer()});
+$("#RegisterButton").on('tap',function(e,data){ openRegisterScreen()});
+
 registerEnterButtonLoginEventHandler();
 	
 }
@@ -22,7 +26,6 @@ function sendLoginDataToServer() {
 	//if(navigator.notification==="undefined"){
 	//alert("Script navigator.notification wurde nicht geladen!");
 	//}
-	
 	
 	//alert("sendLoginDataToServer wurde aufgerufen!");
 	
@@ -107,4 +110,4 @@ function openHomeScreen(username, password) {
 	 steroids.layers.popAll(); //pop schlieﬂt login screen, sodass home sichtbar wird!
 }
 
-document.addEventListener("deviceready", init, false);
+$( document ).ready(function() { init(); });
