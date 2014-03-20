@@ -1,9 +1,10 @@
 
 .custom_List_item {
+	padding: 0.75rem !important;
 	/*
 	margin-left: 60px; 
 	vertical-align: middle;
-	list-style-image: url('../images/profilbild_Klein.jpg'); 
+	list-style-image: url("../images/profilbild.png"); 
 	list-style-type: none;
 	*/
 }
@@ -11,7 +12,7 @@
 	margin-bottom: 1em;
 	width: 100%; 
 	background-repeat: no-repeat;
-	background-position: right;
+	background-position: 98% 50%;
 	background-size: 3em;
 }
 
