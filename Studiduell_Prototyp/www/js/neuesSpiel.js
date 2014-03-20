@@ -1,5 +1,7 @@
 function init() {
 	loadFriendslistFromServer();
+	//disable SpielerButton as the Backend is not ready for this requirement
+	$("#beliebigerSpielerButton").attr("disabled", ""); 
 }
 
 function spielerSuchenSeite() {
