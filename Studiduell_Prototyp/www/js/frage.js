@@ -18,6 +18,18 @@ function init() {
 	setAntworten(questions[questionCounter]);
 }
 
+/* backButtonHiden();
+function backButtonHiden(){
+
+steroids.view.navigationBar.update({
+
+  overrideBackButton: true,
+alert("BackButtonHiden Methode aufgerufen");
+
+
+});
+} */
+
 
 function setKategorie(question) {
 	$("#kategorieDiv").text(question.kategorieName.name);

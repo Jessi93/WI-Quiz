@@ -18,7 +18,17 @@ sync();
 function setNavigationBar(){
 //Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
-		syncButton.title = "Aktualisieren";
+/* 	var devicePlatform = device.platform; */
+
+	
+/* if (devicePlatform === "iOS") { */
+syncButton.imagePath = "/images/refresh_big@2x.png"
+/* }
+else if (devicePlatform === "Android") {
+  		syncButton.title = "Aktualisieren"; 
+} */
+
+/*  		syncButton.title = "Aktualisieren";  */
 		syncButton.onTap = function() {
 			sync();
 		};
@@ -29,7 +39,7 @@ function setNavigationBar(){
 }
 
 function checkCredentials() {
-	//alert("checkCredentials wurde aufgerufen!");
+	//alert("checkCredentials wurde aufgerufen!");	
 	//zu testzwecken: setze localstorage username & pw auf leer! --> zeige login screen immer an!
 	//localStorage.removeItem("username");
 	var username = localStorage.getItem("username");
