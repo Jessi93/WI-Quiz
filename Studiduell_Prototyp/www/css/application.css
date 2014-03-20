@@ -16,10 +16,7 @@ input, textarea, [contenteditable] * {
 }
 
 body{
-color: white;
-background-image: url('../images/box-bg@2x.png');
--webkit-background-size: cover; /* For WebKit*/
--moz-background-size: cover;    /* Mozilla*/
--o-background-size: cover;      /* Opera*/
-background-size: cover;         /* Generic*/
+color: black;
+background-image: url('../images/background.jpg');
+
 }

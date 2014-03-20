@@ -20,6 +20,18 @@ function init() {
 	startTimer();
 }
 
+/* backButtonHiden();
+function backButtonHiden(){
+
+steroids.view.navigationBar.update({
+
+  overrideBackButton: true,
+alert("BackButtonHiden Methode aufgerufen");
+
+
+});
+} */
+
 
 function setKategorie(question) {
 	$("#kategorieDiv").text(question.kategorieName.name);
@@ -236,7 +248,7 @@ function nextNextQuestion(correctlyAnswered) {
 								}
 							}
 							localStorage.removeItem("answers");
-							popViewPushView("html/rundenuebersicht.html");
+							steroids.layers.pop();
 						},
 						error:function(obj) {alert("Fehler beim Sync! "+JSON.stringify(obj));},
 						data:"0123456789"

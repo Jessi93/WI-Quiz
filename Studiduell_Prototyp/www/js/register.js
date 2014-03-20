@@ -1,6 +1,22 @@
 var gv_username;
 var gv_password;
 
+function init() {
+registerEnterButtonLoginEventHandler();
+$("#RegisterButton").on('tap',function(e,data){ sendRegistration()});
+}
+
+function registerEnterButtonLoginEventHandler() {
+	$( "#username_input" ).on( "keydown", function( event ) {
+	if(event.which == 13){
+	sendRegistration();}
+	});
+	$( "#password_input" ).on( "keydown", function( event ) {
+	if(event.which == 13){
+	sendRegistration();}
+	});
+}
+
 function sendRegistration(){
 	//alert("sendRegistration wurde aufgerufen!");
 	//Fehlerbehandlungsfunktionen:
@@ -91,3 +107,5 @@ function openHomeScreen() {
 	//alert("openHomeScreen wurde aufgerufen!");
 	steroids.layers.popAll();
 }
+
+$( document ).ready(function() { init(); });

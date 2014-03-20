@@ -1,12 +1,31 @@
 var gv_username;
 var gv_password;
 
+function init() {
+//alert("init wurde in login aufgerufen!")
+$("#LoginButton").on('tap',function(e,data){ sendLoginDataToServer()});
+$("#RegisterButton").on('tap',function(e,data){ openRegisterScreen()});
+
+registerEnterButtonLoginEventHandler();
+	
+}
+
+function registerEnterButtonLoginEventHandler() {
+	$( "#username_input" ).on( "keydown", function( event ) {
+	if(event.which == 13){
+	sendLoginDataToServer();}
+	});
+	$( "#password_input" ).on( "keydown", function( event ) {
+	if(event.which == 13){
+	sendLoginDataToServer();}
+	});
+}
+
 function sendLoginDataToServer() {
 	//Prüfe, dass notification steroids plugin geladen wurde!
 	//if(navigator.notification==="undefined"){
 	//alert("Script navigator.notification wurde nicht geladen!");
 	//}
-	
 	
 	//alert("sendLoginDataToServer wurde aufgerufen!");
 	
@@ -90,3 +109,5 @@ function openHomeScreen(username, password) {
 	//gehe zum Homescreen (gesetzte credentials im localstorage verhindern, dass login angezeigt wird!
 	 steroids.layers.popAll(); //pop schließt login screen, sodass home sichtbar wird!
 }
+
+$( document ).ready(function() { init(); });
