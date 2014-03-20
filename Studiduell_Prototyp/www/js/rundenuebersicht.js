@@ -798,7 +798,8 @@ function setNavigationBar(){
 
 	//Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
-		syncButton.title = "Aktualisieren";
+	syncButton.imagePath = "/images/refresh_big@2x.png"
+/* 		syncButton.title = "Aktualisieren"; */
 		syncButton.onTap = function() {
 			sync();
 		};
