@@ -1,7 +1,14 @@
 function init() {
+registerEnterButtonEventHandler();
 	//alert("init in SpielerSuchen wurde aufgerufen!");
 }
 
+function registerEnterButtonEventHandler() {
+	$( "#search_username_input" ).on( "keydown", function( event ) {
+	if(event.which == 13){
+	spielerSuchen();}
+	});
+}
 function spielerSuchen() {
 	function onAlertDismissTextinputEmpty(){
 	//leer lassen!
@@ -52,3 +59,4 @@ function spielerSuchen() {
 }
 
 document.addEventListener("deviceready", init, false);
+	
