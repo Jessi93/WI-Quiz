@@ -16,6 +16,8 @@ function init() {
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
 	setAntworten(questions[questionCounter]);
+	
+	startTimer();
 }
 
 
@@ -33,6 +35,20 @@ function setAntworten(question) {
 	$("#antwort2").text(question.antwortmoeglichkeit2);
 	$("#antwort3").text(question.antwortmoeglichkeit3);
 	$("#antwort4").text(question.antwortmoeglichkeit4);
+}
+
+function startTimer() {
+	$("#timelineDiv").animate( {
+		"width": "0%",
+		"background-color": "red"
+	}, questionTimeout, function() {
+		$("#antwort1").removeClass("buttonAusgewaehlt");
+		$("#antwort2").removeClass("buttonAusgewaehlt");
+		$("#antwort3").removeClass("buttonAusgewaehlt");
+		$("#antwort4").removeClass("buttonAusgewaehlt");
+		
+		nextShowResult();
+	});
 }
 
 function markAnswer(button) {
@@ -91,6 +107,7 @@ function next() {
 
 /**
   * @return whether the user has answered the question correctly.
+  * 		(true/false)
   */
 function nextShowResult() {
 	var correctlyAnswered = true;

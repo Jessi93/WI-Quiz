@@ -88,3 +88,9 @@
 	color: white;
 	text-shadow : 1px 1px blue
 }
+
+#timelineDiv {
+	background-color: #715A00;
+	width: 100%;
+	height: 0.5rem;
+}
