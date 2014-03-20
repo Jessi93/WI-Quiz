@@ -13,6 +13,12 @@ titleImagePath: "/images/navbar_title@2x.png"
 
 var serverURL = "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/";
 var maxZeichenUsername = 20;
+/*
+ * Der Timeout pro Frage in ms.
+ * Sollte der Spieler seine Antworten ab dem Anzeigen der Frage nicht innerhalb
+ * dieser Periode submitten, wird die Frage als falsch gewertet.
+ */
+var questionTimeout = 30000;
 
 /*
 Prüft, ob ein String leer ist, oder nicht (leer = true, nicht leer = false)
