@@ -307,7 +307,7 @@ function addHistoryGame(gameData, positionInServerData){
 
 function addOpenDuelRequest(gameData) {
 var enemy_username = getEnemyUsername(gameData);
-$("#OpenDuelRequests_list_container").append('<li class="topcoat-list__item">'+enemy_username+'</li>');
+$("#OpenDuelRequests_list_container").append('<li class="topcoat-list__item custom_list_item">'+enemy_username+'</li>');
 }
 
 function addActionRequiredGame(gameData, positionInServerData){

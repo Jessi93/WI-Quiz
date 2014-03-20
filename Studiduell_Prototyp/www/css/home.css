@@ -51,6 +51,14 @@ font-weight: bold;
 	background-size: 2em;
 }
 
+.custom_list {
+margin-top: 1rem;
+}
+
+.custom_list_item {
+	padding: 0.75rem !important;
+}
+
 
 .textmid {
 	text-align: center;
