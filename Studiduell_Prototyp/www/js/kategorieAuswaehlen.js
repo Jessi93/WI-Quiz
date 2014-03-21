@@ -36,8 +36,6 @@ function kategorieAuswaehlen(kategorieName) {
 	
 	localStorage.setItem("questions", JSON.stringify(questions));
 	localStorage.setItem("selectedCategory", kategorieName);
-	//questionCounter wird auf 0 gesetzt (erste Frage der Runde wird angezeigt)
-	localStorage.setItem("questionCounter", 0 );
 	
 	//öffne screen ausgewählte kategrie & und schließe aktuellen screen
 	popViewPushView("html/ausgewaehlteKategorie.html");
