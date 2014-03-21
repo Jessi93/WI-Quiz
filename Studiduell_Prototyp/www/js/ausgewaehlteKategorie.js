@@ -5,6 +5,8 @@ function init() {
 	var category = localStorage.getItem("selectedCategory");
 	$("#spielBeschreibung").text("Runde " + round + " gegen " + opponent);
 	$("#ausgewaehlteKategorie").text("Kategorie: " + category);
+	$("#startRoundButton").on('tap',function(e,data){ starteSpiel() });
+	
 }
 function starteSpiel() {
 	popViewPushView("html/frage.html");

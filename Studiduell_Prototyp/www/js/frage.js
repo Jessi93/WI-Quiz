@@ -17,9 +17,21 @@ function init() {
  	setFrage(questions[questionCounter]);
 	setAntworten(questions[questionCounter]);
 	
+	setTapEventHandlers();
+	
 	startTimer();
 }
 
+function setTapEventHandlers(){
+$("#nextButton").on('tap',function(e,data){ next()});
+$("#antwort1").on('tap',function(e,data){ markAnswer($("#antwort1"))});
+$("#antwort2").on('tap',function(e,data){ markAnswer($("#antwort2"))});
+$("#antwort3").on('tap',function(e,data){ markAnswer($("#antwort3"))});
+$("#antwort4").on('tap',function(e,data){ markAnswer($("#antwort4"))});
+
+
+
+}
 /* backButtonHiden();
 function backButtonHiden(){
 
