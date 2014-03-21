@@ -36,6 +36,7 @@ function loadFriendslistFromServer() {
 // Füge dem HTML Dokument für jeden Freund des Users in der Freundesliste einen Eintrag hinzu.
 function addFriendToList(obj){
 	//alert("addFriendToList wurde aufgerufen!");
+	$("#freundeslisteErweitern").empty();
 	//Freundesliste befüllen
 	for(var i=0;i<obj.length;i++){
 	$("#freundeslisteErweitern").append('<li class="topcoat-list__item custom_List_item" ontouchend="createNewGameWithOpponent(\''+obj[i]+'\')">'+obj[i]+'</li>');
