@@ -109,6 +109,11 @@ function getSelectedButtonCount() {
 var result = null;
 function next() {
 	if(result === null) {
+		// stop timeout
+		var timelineDiv = $("#timelineDiv");
+		timelineDiv.stop();
+		timelineDiv.hide();
+		
 		// Color buttons
 		result = nextShowResult();
 	} else {
