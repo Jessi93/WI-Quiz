@@ -24,7 +24,7 @@ function setKategorien(cat1, cat2, cat3) {
 }
 
 function kategorieAuswaehlen(kategorieName) {	
-	alert("KatAUswählen wurde aufgerufen mit katName: "+kategorieName);
+	//alert("kategorieAuswaehlen wurde aufgerufen mit katName: "+kategorieName);
 	var questions;
 	
 	//Speichere Fragen für spätere Anzeige

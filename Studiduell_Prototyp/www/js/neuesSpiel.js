@@ -1,7 +1,12 @@
 function init() {
 	loadFriendslistFromServer();
+	$("#spielerSuchenButton").on('tap',function(e,data){ spielerSuchenSeite()});
+	$(document).on('swipeleft',function(e,data){ spielerSuchenSeite()	});
+	$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+	
 	//disable SpielerButton as the Backend is not ready for this requirement
 	$("#beliebigerSpielerButton").attr("disabled", ""); 
+	//$("#beliebigerSpielerButton").on('tap',function(e,data){ createNewGameRandom()});
 }
 
 function spielerSuchenSeite() {
@@ -38,8 +43,17 @@ function addFriendToList(obj){
 	//alert("addFriendToList wurde aufgerufen!");
 	$("#freundeslisteErweitern").empty();
 	//Freundesliste befüllen
+	var opponentName;
 	for(var i=0;i<obj.length;i++){
-	$("#freundeslisteErweitern").append('<li class="topcoat-list__item custom_List_item" ontouchend="createNewGameWithOpponent(\''+obj[i]+'\')">'+obj[i]+'</li>');
+	opponentName = obj[i];
+	$("#freundeslisteErweitern").append('<li id="'+opponentName+'" class="topcoat-list__item custom_List_item" >'+opponentName+'</li>');
+	addHandlerToListEntry(opponentName);
+	}
+	
+	function addHandlerToListEntry(enemyName){
+		$("#"+enemyName).on('tap',function(e,data){ 
+		createNewGameWithOpponent(enemyName);
+		});
 	}
 }
 

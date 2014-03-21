@@ -21,5 +21,17 @@
 }
 
 #beliebigerSpielerButton {
+<<<<<<< HEAD
 	background-image: url("../images/Würfel_Icon@2x.png");
+=======
+	background-image: url("../images/lupe.png");
+}
+
+#freundeslisteDiv{
+border-radius: 0.2rem;
+}
+
+#freundesliste_header{
+border-radius: 0.2rem;
+>>>>>>> 89ee42fc9cedae18470abd163a20d010080e7437
 }

@@ -72,6 +72,11 @@
 	visibility: hidden;
 	display: table;
 	width: 100%;
+	border-radius: 0.2rem;
+}
+
+#ergebnisliste_header{
+	border-radius: 0.2rem;
 }
 
 .row {

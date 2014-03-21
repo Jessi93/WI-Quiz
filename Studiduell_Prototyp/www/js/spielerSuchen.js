@@ -1,6 +1,8 @@
 function init() {
 registerEnterButtonEventHandler();
 	//alert("init in SpielerSuchen wurde aufgerufen!");
+$("#addImage").on('tap',function(e,data){ spielerSuchen()});
+$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
 }
 
 function registerEnterButtonEventHandler() {
@@ -49,8 +51,20 @@ function spielerSuchen() {
 	else {
 	// Ergebnisliste befüllen
 	for(var i=0;i<obj.length;i++){
-	//Button zum befreunden ergänzen
-	$("#ergebnislisteErweitern").append('<div class="row"><li class="topcoat-list__item custom_List_item leftColumn" ontouchend ="createNewGameWithOpponent(\''+obj[i]+'\')">'+obj[i]+'</li><button id="addFriendButton" class="topcoat-icon-button rightColumn" ontouchend="addAsFriend(\''+obj[i]+'\')"></button></div>');
+	$("#ergebnislisteErweitern").append('<div class="row"><li id='+obj[i]+' class="topcoat-list__item custom_List_item leftColumn" >'+obj[i]+'</li><button id="addFriendButton'+obj[i]+'" class="topcoat-icon-button rightColumn"></button></div>');
+	addHandlersToListEntry(obj[i]);
+	}
+	
+	function addHandlersToListEntry(enemyName){
+		//alert("addHandlersToListEntry aufgerufen mit name:"+enemyName);
+		//Neues Spiel Handler
+		$("#"+enemyName).on('tap',function(e,data){ 
+		createNewGameWithOpponent(enemyName);
+		});
+		//Als Freund hinzufügen handler
+		$("#addFriendButton"+enemyName).on('tap',function(e,data){ 
+		addAsFriend(enemyName);
+		});
 	}
 	
 	// Zeige Ergebnisliste an

@@ -5,6 +5,10 @@ function init() {
 	var category = localStorage.getItem("selectedCategory");
 	$("#spielBeschreibung").text("Runde " + round + " gegen " + opponent);
 	$("#ausgewaehlteKategorie").text("Kategorie: " + category);
+	$("#startRoundButton").on('tap',function(e,data){ starteSpiel() });
+	$(document).on('swipeleft',function(e,data){ starteSpiel()	});
+	$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+	
 }
 function starteSpiel() {
 	popViewPushView("html/frage.html");

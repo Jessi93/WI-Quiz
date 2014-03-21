@@ -4,6 +4,8 @@ var gv_password;
 function init() {
 registerEnterButtonLoginEventHandler();
 $("#RegisterButton").on('tap',function(e,data){ sendRegistration()});
+$(document).on('swipeleft',function(e,data){ sendRegistration()	});
+$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
 }
 
 function registerEnterButtonLoginEventHandler() {

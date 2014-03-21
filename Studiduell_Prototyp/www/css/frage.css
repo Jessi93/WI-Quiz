@@ -71,16 +71,17 @@
 
 .buttonRichtig {
 	background-color: green !important;
+	color: white !important;
 }
 
 .buttonRand {
 	border: 2px solid #819FF7;
 }
-
+/*
 #nextButton {
 	margin-top: 0.75em;
 }
-
+*/
 .popupDiv {
 	position: absolute;
 	
@@ -95,6 +96,6 @@
 	height: 0.5rem;
 	
 	/* set as footer */
-	position: absolute;
+	position: fix;
 	bottom: 0;
 }

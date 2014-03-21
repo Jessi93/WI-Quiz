@@ -1,41 +1,70 @@
 var homescreenServerdata;
+var phoneGapLoaded = false; //true: deviceReady wurde gefeuert, false: deviceready wurde noch nicht gefeuert
 var spielIDsArray = new Array(); //WORKAROUND (mehrfache Duellanfragen!)enthält alle SpielIDs, für die Deullanfragen angezeigt wurden 
 	//--> so kann verhindert werden, dass duellanfragen zweimal angezeigt werden
-//Naviagtionbar ist unabhängig von Phonegap/Jquery --> kann bereits hier initialisiert werden!
-setNavigationBar();
+
+//prüft, ob phoneGap geladen wurde, wenn nicht, läd es manuell nach! (zeit in ms)
+var phoneGapInterval = window.setInterval(function(){loadPhoneGap();},2000);
+
+function loadPhoneGap(){
+	//prüft, ob phoneGap geladen wurde, wenn nicht, läd es manuell nach! 
+	//alert("LoadPhonegap wurde aufgerufen! navigator.notification: "+navigator.notification);
+	if(typeof navigator.notification == "undefined"){
+		$.getScript('http://localhost/cordova.js', function() {
+						//alert("PhoneGap wurde manuell nachgeladen. navigator.notification: "+navigator.notification);
+						phoneGapLoaded = true; //Turn ON the flag
+						fireEvent("deviceready");
+					});
+	}else{//wenn notifcation möglich ist, dann soll aufgehört werden im intervall zu überprüfen, ob es geladen wurde:
+		clearInterval(phoneGapInterval);
+
+	}
+}
 
 function init(){
-//alert("init wurde aufgerufen!");
-//Füge eventhandler für "Tap" Events hinzu!
-$("#AbmeldenButton").on('tap',function(e,data){ abmelden()});
-$("#neuesSpielStartenButton").on('tap',function(e,data){ openNeuesSpielScreen()});
+	//alert("init wurde aufgerufen!");
+	//Füge eventhandler für "Tap" Events hinzu!
+	$("#AbmeldenButton").removeAttr("ontouchend");
+	$("#AbmeldenButton").on('tap',function(e,data){ abmelden()});
+	$("#neuesSpielStartenButton").removeAttr("ontouchend");
+	$("#neuesSpielStartenButton").on('tap',function(e,data){ openNeuesSpielScreen()});
+	$(document).on('swipeleft',function(e,data){ openNeuesSpielScreen()	});
+	//Naviagtionbar ist prinzipiell unabhängig von Phonegap/Jquery , ABER Fallunterscheidung zwischen iOS und Android notwenidig --> PhoneGap muss geladen sein! 
+	setNavigationBar();
+}
+
+function onDeviceReady() {
+	phoneGapLoaded = true;
+	//alert("PhoneGap geladen! navigator.notification: "+navigator.notification);
 
 
-sync();
+	//sobald das Jquery rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
+		$( document ).ready(function() { 
+	//alert("Document ready wurde gefeuert!");
+	init(); });
+	sync();
 }
 	
 
 function setNavigationBar(){
 //Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
-/* 	var devicePlatform = device.platform; */
+	var devicePlatform = device.platform; 
+	alert("devicePlatform: "+devicePlatform);
 
 	
-/* if (devicePlatform === "iOS") { */
-syncButton.imagePath = "/images/refresh_big@2x.png"
-/* }
-else if (devicePlatform === "Android") {
+	 if (devicePlatform === "iOS") {
+		syncButton.imagePath = "/images/refresh_big@2x.png";
+	}else if (devicePlatform === "Android") {
   		syncButton.title = "Aktualisieren"; 
-} */
-
-/*  		syncButton.title = "Aktualisieren";  */
-		syncButton.onTap = function() {
-			sync();
+	} 
+	syncButton.onTap = function() {
+		sync();
 		};
 
-		steroids.view.navigationBar.setButtons({
+	steroids.view.navigationBar.setButtons({
 			right: [syncButton]
-		});
+	});
 }
 
 function checkCredentials() {
@@ -233,7 +262,7 @@ var tmpServerData =
 }
 
 function handleServerData(serverSyncData){
-	
+	//alert("handleServerData mit neues ServerDaten: "+JSON.stringify(serverSyncData));
 	//WORKAROUND
 	function checkIfDuelRequestShow(spielID){
 		//alert("checkDuellRequestShow wurde aufgerufen mit: array:"+JSON.stringify(spielIDsArray));
@@ -273,10 +302,10 @@ function handleServerData(serverSyncData){
 		else if (	serverSyncData[i].spielstatusName.name 		== "P" && 
 					serverSyncData[i].wartenAuf.benutzername	== localStorage.getItem("username")
 		){
+		//alert("Duellanfrage erkannt! SpielID: "+serverSyncData[i].spielID);
 		//Prüfe, ob die Duellanfrage bereits angezeigt wurde! //WORKAROUND
 			if(checkIfDuelRequestShow(serverSyncData[i].spielID)){
-			//Füge SpielID der Duellanfrage in Array hinzu!
-			spielIDsArray.push(serverSyncData[i].spielID);
+			
 			//zeige Duellanfrage!
 			showDuelRequest(serverSyncData[i],i);}
 		}
@@ -343,7 +372,9 @@ function getEnemyUsername(gameData){
 
 function showDuelRequest(gameData, positionInServerData){
 //alert("showDuelRequest wurde aufgerufen"+JSON.stringify(gameData));
-
+//Füge SpielID der Duellanfrage in Array hinzu!
+	spielIDsArray.push(gameData.spielID);
+	//alert("navigator.notification geladen?"+navigator.notification);
 	navigator.notification.confirm(      
 	 gameData.spieler1.benutzername+" fordert dich zu einem Duell heraus!",//+"SpielID: "+gameData.spielID, // message    
      function(buttonIndex){
@@ -417,10 +448,10 @@ function openRundenuebersichtScreen(){
 
 function onVisibilityChange() {
     //alert("document.visibilityState: " + document.visibilityState);
-    //alert("document.hidden: " + document.hidden);
+    //alert("onVisibilityChange aufgerufen mit document.hidden: " + document.hidden+" phoneGapLoaded: "+phoneGapLoaded);
 
 	var docHidden = document.hidden;
-	if(docHidden == false){
+	if(docHidden == false && phoneGapLoaded){
 	//Wenn auf das Dokument zurückgekehrt wird, soll es aktualisiert werden
 	//alert("onVisibilityChange wurde aufgerufen & sync wird aufgerufen!");
 	sync();
@@ -432,13 +463,17 @@ function onVisibilityChange() {
 }
 
 
-//sobald das Dokument rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
-$( document ).ready(function() { init(); });
+
 
 //sobald die Rundenübersichtsdaten geladen sind, soll in den RundenuebersichtScreen navigiert werden!
 document.addEventListener("RundenuebersichtDataloaded", openRundenuebersichtScreen, false);
-//Eventhandler für das aktualisieren beim "zurückkehren" auf den homescreen durch pop/popAll
+
+//Eventhandler für das aktualisieren beim "zurückkehren" auf den homescreen durch pop/popAll 
 document.addEventListener("visibilitychange", onVisibilityChange, false);
+
+//sobald phonegap geladen ist, soll sync aufgerufen werden!
+document.addEventListener("deviceready", onDeviceReady, false);
+
 
 
 

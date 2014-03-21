@@ -2,6 +2,7 @@ var gameInfo;
 var roundStart;
 var questions;
 var questionCounter;
+var result = null; //Ergebnis der Frage (true/false)
 
 var opponentAnswers;
 
@@ -17,9 +18,23 @@ function init() {
  	setFrage(questions[questionCounter]);
 	setAntworten(questions[questionCounter]);
 	
+	setTapSwipeEventHandlers();
+	
 	startTimer();
 }
 
+function setTapSwipeEventHandlers(){
+$("#nextButton").on('tap',function(e,data){ next()});
+$("#antwort1").on('tap',function(e,data){ markAnswer($("#antwort1"))});
+$("#antwort2").on('tap',function(e,data){ markAnswer($("#antwort2"))});
+$("#antwort3").on('tap',function(e,data){ markAnswer($("#antwort3"))});
+$("#antwort4").on('tap',function(e,data){ markAnswer($("#antwort4"))});
+$(document).on('swipeleft',function(e,data){ next()	});
+//$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+
+
+
+}
 /* backButtonHiden();
 function backButtonHiden(){
 
@@ -54,37 +69,47 @@ function startTimer() {
 		"width": "0%",
 		"background-color": "red"
 	}, questionTimeout, function() {
+		/* Alternaitve 1: Wenn Zeit abgelaufen, automatisch falsch! (nichts ausgewählt!)
 		$("#antwort1").removeClass("buttonAusgewaehlt");
 		$("#antwort2").removeClass("buttonAusgewaehlt");
 		$("#antwort3").removeClass("buttonAusgewaehlt");
 		$("#antwort4").removeClass("buttonAusgewaehlt");
-		
-		nextShowResult();
+		*/
+		//Alternative 2: Wenn Zeit abgelaufen, wird aktuelle Auswahl als angewählt angenommen.
+		//Zeige Auflösung der Frage
+		result = nextShowResult();
+		//Schreibe Ergebnis in LocalStorage
+		saveQuestionResult(result);
 	});
 }
 
 function markAnswer(button) {
-	var btn = $(button);
-	if (!btn.hasClass("buttonAusgewaehlt")) {
-		// Weiter-Button aktivieren, falls bisher keine Antworten ausgewählt wurden.
-		if(getSelectedButtonCount() == 0) {
-			$("#nextButton").removeAttr("disabled");
+	//markieren der Antworten darf nur möglich sein, wenn noch kein Ergebnis vorliegt!
+	if (result === null){
+		var btn = $(button);
+		if (!btn.hasClass("buttonAusgewaehlt")) {
+			/* --> nicht mehr notwendig, da next durch swiperight ersetzt wurde!
+			// Weiter-Button aktivieren, falls bisher keine Antworten ausgewählt wurden.
+			if(getSelectedButtonCount() == 0) {
+				$("#nextButton").removeAttr("disabled");
+			}
+			*/
+		
+			// Der Button wird ausgewählt
+			btn.addClass("buttonAusgewaehlt");
+			btn.addClass("buttonRand");
+			
+			
+		}else {
+			// Weiter-Button deaktivieren, wenn keine Antwortmöglichkeit ausgewählt ist
+			if(getSelectedButtonCount() == 1) {
+				$("#nextButton").attr("disabled", "");
+			}
+			
+			// Button wird abgewählt
+			btn.removeClass("buttonAusgewaehlt");
+			btn.removeClass("buttonRand");
 		}
-	
-		// Der Button wird ausgewählt
-		btn.addClass("buttonAusgewaehlt");
-		btn.addClass("buttonRand");
-		
-		
- 	}else {
-		// Weiter-Button deaktivieren, wenn keine Antwortmöglichkeit ausgewählt ist
-		if(getSelectedButtonCount() == 1) {
-			$("#nextButton").attr("disabled", "");
-		}
-		
-		// Button wird abgewählt
-		btn.removeClass("buttonAusgewaehlt");
-		btn.removeClass("buttonRand");
 	}
 }
 
@@ -106,20 +131,53 @@ function getSelectedButtonCount() {
 	return count;
 }
 
-var result = null;
+
 function next() {
 	if(result === null) {
-		// stop timeout
-		var timelineDiv = $("#timelineDiv");
-		timelineDiv.stop();
-		timelineDiv.hide();
+		if(getSelectedButtonCount() > 0 ){ //es wurde mind 1 Antwort ausgewählt --> Gehe weiter! (Auflösung oder nächste Frage)
 		
-		// Color buttons
-		result = nextShowResult();
-	} else {
+			// stop timeout
+			var timelineDiv = $("#timelineDiv");
+			timelineDiv.stop();
+			//lasse Zeitleise angezeigt! --> hide auskommentiert!
+			//timelineDiv.hide();
+			
+			// Color buttons (Auflösung der Frage)
+			result = nextShowResult();
+			//schreibe Ergebnis in localStorage
+			saveQuestionResult(result);
+		} else {
+			// Alert, dass mind 1 Antwort angewählt werden muss:
+			navigator.notification.alert('Du musst mindestens eine Antwort anwählen!', null,'Information','OK');			
+		}
+	}else{
 		// Move to next screen
-		nextNextQuestion(result);
+		nextQuestion();
 	}
+}
+/**
+Schreibt Ergebnis der Fragenbeantwortung in LocalStorage
+*/
+function saveQuestionResult(correctlyAnswered){
+var question = questions[questionCounter];
+var answers;
+	if(questionCounter == 0) {
+		// create new answer array
+		answers = new Array();
+	} else {
+		answers = JSON.parse(localStorage.getItem("answers"));
+	}
+	var submitData = {
+			"runde" : gameInfo.aktuelleRunde,
+			"fragenID" : question.fragenID,
+			"antwortmoeglichkeit1Check" : $("#antwort1").hasClass("buttonAusgewaehlt"),
+			"antwortmoeglichkeit2Check" : $("#antwort2").hasClass("buttonAusgewaehlt"),
+			"antwortmoeglichkeit3Check" : $("#antwort3").hasClass("buttonAusgewaehlt"),
+			"antwortmoeglichkeit4Check" : $("#antwort4").hasClass("buttonAusgewaehlt"),
+			"ergebnisCheck" : correctlyAnswered
+		};
+	answers.push(submitData);
+	localStorage.setItem("questionCounter", ++questionCounter);
 }
 
 /**
@@ -153,13 +211,7 @@ function nextShowResult() {
 		) {
 		correctlyAnswered = false;
 	}
-	
-	// remove actions of answer buttons
-	answer1.attr("ontouchend", "");
-	answer2.attr("ontouchend", "");
-	answer3.attr("ontouchend", "");
-	answer4.attr("ontouchend", "");
-	
+		
 	// Color the buttons
 	if(question.wahrheitAntwortmoeglichkeit1) {
 		answer1.addClass("buttonRichtig");
@@ -198,30 +250,10 @@ function nextShowResult() {
 	return correctlyAnswered;
 }
 
-function nextNextQuestion(correctlyAnswered) {
-	var question = questions[questionCounter];
-	var answers;
+function nextQuestion() {
 	
-	if(questionCounter == 0) {
-		// create new answer array
-		answers = new Array();
-	} else {
-		answers = JSON.parse(localStorage.getItem("answers"));
-	}
-	
-	var submitData = {
-		"runde" : gameInfo.aktuelleRunde,
-		"fragenID" : question.fragenID,
-		"antwortmoeglichkeit1Check" : $("#antwort1").hasClass("buttonAusgewaehlt"),
-		"antwortmoeglichkeit2Check" : $("#antwort2").hasClass("buttonAusgewaehlt"),
-		"antwortmoeglichkeit3Check" : $("#antwort3").hasClass("buttonAusgewaehlt"),
-		"antwortmoeglichkeit4Check" : $("#antwort4").hasClass("buttonAusgewaehlt"),
-		"ergebnisCheck" : correctlyAnswered
-	};
-	answers.push(submitData);
-	
-	localStorage.setItem("questionCounter", ++questionCounter);
-	
+	var answers = JSON.parse(localStorage.getItem("answers"));
+		
 	if(questionCounter != 3) {
 		localStorage.setItem("answers", JSON.stringify(answers));
 		popViewPushView("html/frage.html");
