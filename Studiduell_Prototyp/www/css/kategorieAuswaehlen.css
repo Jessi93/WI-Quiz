@@ -1,7 +1,7 @@
 
 #kategorieText {
 	margin-top: 0.3em;
-	color: white;
+	color: black;
 	opacity: 0.9;
 	/*font-size: 1.5em; */
 }
@@ -10,4 +10,5 @@
 	margin-top: 2em;
 	width: 80%;
 	font-size: 1.0em;
+	opacity: 0.85;
 }

@@ -14,21 +14,19 @@
 	  <script src="../js/onerror.js"></script>
 	  <script src="../js/console.log.js"></script>
 	  
-	<script type="text/javascript" charset="utf-8" src="/cordova.js"></script>
+	<!--<script type="text/javascript" charset="utf-8" src="/cordova.js"></script> 
     <script type="text/javascript" charset="utf-8" src="/components/steroids-js/steroids.js"></script>
-    <script type="text/javascript" charset="utf-8"> </script>
-
-
-
+    <script type="text/javascript" charset="utf-8"> </script> -->
 
 	<script src="../js/jquery-1.11.0.min.js"></script>
 	  <!-- cordova.js is served from localhost to ensure the correct version -->
 	  <script src="http://localhost/cordova.js"></script>
 	  <script src="../components/steroids-js/steroids.js"></script>
+	  <script src="/components/steroids-addons/index.js"></script>
 		<script src="../js/Tocca.js"></script> <!-- Plugin für Tap & Swipe Events! -->
 		<script src="../js/application.js"></script>
 		<script src="../js/homescreen.js"></script>
-			<script src="/components/steroids-addons/index.js"></script>
+			
 	</head>
 
 	<body>
@@ -40,7 +38,7 @@
 
 		
 		<div id="neuesSpielStartenDIV">
-			<button id="neuesSpielStartenButton" class="topcoat-button--cta center full custom_icon_button_right " ">Neues Spiel starten</button>
+			<button id="neuesSpielStartenButton" class="topcoat-button--cta center full custom_icon_button_right " ontouchend="openNeuesSpielScreen" >Neues Spiel starten</button>
 		</div> 
 		
 		<div id="ActionRequiredGames_div">
@@ -74,7 +72,7 @@
 			<button id="SyncButton" class="topcoat-button center full" ontouchend="sync()">Aktualisieren</button>
 		</div> -->
 		<div >
-			<button id="AbmeldenButton" class="topcoat-button center full">Logout</button>
+			<button id="AbmeldenButton" class="topcoat-button center full" ountouchend="abmelden()">Logout</button>
 		</div> 
 		
 		</div>

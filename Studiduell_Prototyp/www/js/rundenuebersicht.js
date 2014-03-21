@@ -4,17 +4,40 @@ var gameInfo;
 //Zeigt an, ob initialize bereits einmal gefeuert wurde, oder nicht! (so werden Serverdaten beim Screenstart nur 1 Mal geladen & in local Storage geschrieben!
 
 function initialize() {
-	var initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
+	initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
 	//alert("initialize wurde aufgerufen! gameOverviewInitialize/initializeNotYetFired: "+initializeNotYetFired);
+	
+	if (initializeNotYetFired === "true"){
+	//Hier steht, was nur beim ersten Aufruf von initialize getan werden soll!
+	setNavigationBar();
+	setTapEventHandlers();
 	//Markiere im localStorage, dass initialize für die Rundenübersicht bereits aufgerufen wurde!
 	localStorage.setItem("gameOverviewInitialize", false);
-
-	setNavigationBar();
-	
+	}
+		
+	//Hole aktuelle ServerDaten für GameInfo
 	var temp_gameInfo_old = JSON.parse(localStorage.getItem("gameInfo"));
 	var gameid = temp_gameInfo_old.spielID;
 	
 	getCurrentGameInfo(gameid);
+}
+
+function setTapEventHandlers(){
+//alert("setTapEventHandlers wurde aufgerufen!");
+$("#kreuzImage").on('tap',function(e,data){ giveUp()});
+$("#addImage").on('tap',function(e,data){ addAsFriendWrapper()});
+$("#spielenButton").on('tap',function(e,data){ performSpielenButtonAction()});
+}
+
+function performSpielenButtonAction(){
+var spielenButtonText = $("#spielenButton").text();
+	if(spielenButtonText === "Spielen"){
+		//Es soll gespielt werden --> open Frage()
+		openFrage();
+	}else if(spielenButtonText === "Nochmal spielen!"){
+		//Es soll ein neues Spiel gegen den selben Gegner eröffnet werden! --> playAgain()
+		playAgain();
+	}
 }
 
 function continueInitialize(){
@@ -493,8 +516,7 @@ function enORdisableSpielenButton() {
 			$("#spielenButton").text("Warten");
 		}
 	}else if(gameInfo.spielstatusName.name === "C"){ //WartenAuf ist also "" --> Spiel muss beendet sein!
-		// spiel ist bereits abgeschlossen!
-		$("#spielenButton").attr("ontouchend", "playAgain()"); 
+		// spiel ist bereits abgeschlossen! 
 		$("#spielenButton").text("Nochmal spielen!");
 	}
 }
@@ -800,7 +822,7 @@ function setNavigationBar(){
 	//Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
 	syncButton.imagePath = "/images/refresh_big@2x.png"
-/* 		syncButton.title = "Aktualisieren"; */
+ 		syncButton.title = "Aktualisieren"; 
 		syncButton.onTap = function() {
 			sync();
 		};
@@ -844,7 +866,7 @@ function onVisibilityChange() {
  
 }
 
-//document.addEventListener("deviceready", initialize, false);
+
 //sobald das Dokument zum ersten Mal geöffnet wird, soll es mit Inhalt befüllt werden!
 document.addEventListener("DOMContentLoaded", sync, false);
 
