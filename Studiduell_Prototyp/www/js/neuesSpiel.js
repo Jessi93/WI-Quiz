@@ -1,6 +1,8 @@
 function init() {
 	loadFriendslistFromServer();
 	$("#spielerSuchenButton").on('tap',function(e,data){ spielerSuchenSeite()});
+	$(document).on('swipeleft',function(e,data){ spielerSuchenSeite()	});
+	$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
 	
 	//disable SpielerButton as the Backend is not ready for this requirement
 	$("#beliebigerSpielerButton").attr("disabled", ""); 

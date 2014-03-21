@@ -10,7 +10,7 @@ function initialize() {
 	if (initializeNotYetFired === "true"){
 	//Hier steht, was nur beim ersten Aufruf von initialize getan werden soll!
 	setNavigationBar();
-	setTapEventHandlers();
+	setTapSwipeEventHandlers();
 	//Markiere im localStorage, dass initialize für die Rundenübersicht bereits aufgerufen wurde!
 	localStorage.setItem("gameOverviewInitialize", false);
 	}
@@ -22,11 +22,13 @@ function initialize() {
 	getCurrentGameInfo(gameid);
 }
 
-function setTapEventHandlers(){
-//alert("setTapEventHandlers wurde aufgerufen!");
+function setTapSwipeEventHandlers(){
+//alert("setTapSwipeEventHandlers wurde aufgerufen!");
 $("#kreuzImage").on('tap',function(e,data){ giveUp()});
 $("#addImage").on('tap',function(e,data){ addAsFriendWrapper()});
 $("#spielenButton").on('tap',function(e,data){ performSpielenButtonAction()});
+$(document).on('swipeleft',function(e,data){ performSpielenButtonAction()	});
+$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
 }
 
 function performSpielenButtonAction(){

@@ -95,6 +95,6 @@
 	height: 0.5rem;
 	
 	/* set as footer */
-	position: absolute;
+	position: fix;
 	bottom: 0;
 }

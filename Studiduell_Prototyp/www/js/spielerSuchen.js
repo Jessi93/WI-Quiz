@@ -2,6 +2,7 @@ function init() {
 registerEnterButtonEventHandler();
 	//alert("init in SpielerSuchen wurde aufgerufen!");
 $("#addImage").on('tap',function(e,data){ spielerSuchen()});
+$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
 }
 
 function registerEnterButtonEventHandler() {

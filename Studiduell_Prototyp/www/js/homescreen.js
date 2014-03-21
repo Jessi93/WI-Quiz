@@ -29,6 +29,7 @@ function init(){
 	$("#AbmeldenButton").on('tap',function(e,data){ abmelden()});
 	$("#neuesSpielStartenButton").removeAttr("ontouchend");
 	$("#neuesSpielStartenButton").on('tap',function(e,data){ openNeuesSpielScreen()});
+	$(document).on('swipeleft',function(e,data){ openNeuesSpielScreen()	});
 }
 
 function onDeviceReady() {

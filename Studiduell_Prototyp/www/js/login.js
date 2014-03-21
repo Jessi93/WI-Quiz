@@ -5,6 +5,7 @@ function init() {
 //alert("init wurde in login aufgerufen!")
 $("#LoginButton").on('tap',function(e,data){ sendLoginDataToServer()});
 $("#RegisterButton").on('tap',function(e,data){ openRegisterScreen()});
+$(document).on('swipeleft',function(e,data){ sendLoginDataToServer()	});
 
 registerEnterButtonLoginEventHandler();
 	
