@@ -2,8 +2,7 @@ var homescreenServerdata;
 var phoneGapLoaded = false; //true: deviceReady wurde gefeuert, false: deviceready wurde noch nicht gefeuert
 var spielIDsArray = new Array(); //WORKAROUND (mehrfache Duellanfragen!)enthält alle SpielIDs, für die Deullanfragen angezeigt wurden 
 	//--> so kann verhindert werden, dass duellanfragen zweimal angezeigt werden
-//Naviagtionbar ist unabhängig von Phonegap/Jquery --> kann bereits hier initialisiert werden!
-setNavigationBar();
+
 //prüft, ob phoneGap geladen wurde, wenn nicht, läd es manuell nach! (zeit in ms)
 var phoneGapInterval = window.setInterval(function(){loadPhoneGap();},2000);
 
@@ -30,6 +29,8 @@ function init(){
 	$("#neuesSpielStartenButton").removeAttr("ontouchend");
 	$("#neuesSpielStartenButton").on('tap',function(e,data){ openNeuesSpielScreen()});
 	$(document).on('swipeleft',function(e,data){ openNeuesSpielScreen()	});
+	//Naviagtionbar ist prinzipiell unabhängig von Phonegap/Jquery , ABER Fallunterscheidung zwischen iOS und Android notwenidig --> PhoneGap muss geladen sein! 
+	setNavigationBar();
 }
 
 function onDeviceReady() {
@@ -48,24 +49,22 @@ function onDeviceReady() {
 function setNavigationBar(){
 //Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
-/* 	var devicePlatform = device.platform; */
+	var devicePlatform = device.platform; 
+	alert("devicePlatform: "+devicePlatform);
 
 	
-/* if (devicePlatform === "iOS") { */
-syncButton.imagePath = "/images/refresh_big@2x.png";
-// }
-// else if (devicePlatform === "Android") {
+	 if (devicePlatform === "iOS") {
+		syncButton.imagePath = "/images/refresh_big@2x.png";
+	}else if (devicePlatform === "Android") {
   		syncButton.title = "Aktualisieren"; 
-//} 
-
-/*  		syncButton.title = "Aktualisieren";  */
-		syncButton.onTap = function() {
-			sync();
+	} 
+	syncButton.onTap = function() {
+		sync();
 		};
 
-		steroids.view.navigationBar.setButtons({
+	steroids.view.navigationBar.setButtons({
 			right: [syncButton]
-		});
+	});
 }
 
 function checkCredentials() {
