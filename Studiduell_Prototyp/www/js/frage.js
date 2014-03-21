@@ -24,16 +24,12 @@ function init() {
 }
 
 function setTapSwipeEventHandlers(){
-$("#nextButton").on('tap',function(e,data){ next()});
-$("#antwort1").on('tap',function(e,data){ markAnswer($("#antwort1"))});
-$("#antwort2").on('tap',function(e,data){ markAnswer($("#antwort2"))});
-$("#antwort3").on('tap',function(e,data){ markAnswer($("#antwort3"))});
-$("#antwort4").on('tap',function(e,data){ markAnswer($("#antwort4"))});
-$(document).on('swipeleft',function(e,data){ next()	});
-//$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
-
-
-
+	$("#antwort1").on('tap',function(e,data){ markAnswer($("#antwort1"))});
+	$("#antwort2").on('tap',function(e,data){ markAnswer($("#antwort2"))});
+	$("#antwort3").on('tap',function(e,data){ markAnswer($("#antwort3"))});
+	$("#antwort4").on('tap',function(e,data){ markAnswer($("#antwort4"))});
+	$(document).on('swipeleft',function(e,data){ next()	});
+	//$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
 }
 /* backButtonHiden();
 function backButtonHiden(){
@@ -159,8 +155,9 @@ function next() {
 Schreibt Ergebnis der Fragenbeantwortung in LocalStorage
 */
 function saveQuestionResult(correctlyAnswered){
-var question = questions[questionCounter];
-var answers;
+	var question = questions[questionCounter];
+	var answers;
+	
 	if(questionCounter == 0) {
 		// create new answer array
 		answers = new Array();
@@ -177,7 +174,9 @@ var answers;
 			"ergebnisCheck" : correctlyAnswered
 		};
 	answers.push(submitData);
+	
 	localStorage.setItem("questionCounter", ++questionCounter);
+	localStorage.setItem("answers", JSON.stringify(answers));
 }
 
 /**
