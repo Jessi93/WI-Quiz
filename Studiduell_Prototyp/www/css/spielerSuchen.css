@@ -48,15 +48,15 @@
 }
 
 #addFriendButton{
-	background-image: url("../images/addicon.png");
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: 3em;
+	background-image: url("../images/Plus.png");
+/* 	background-position: center;
+	background-repeat: no-repeat; */
+/* 	background-size: 3em;
 	
 	width: 2.4em;
 	height: 2.4em;
 	border-radius: 50%;
-	padding-top: 0.6em;
+	padding-top: 0.6em; */
 }
 
 #suchTabelle_div {
@@ -71,7 +71,7 @@
 #ergebnislisteDiv{
 	visibility: hidden;
 	display: table;
-	width: 100%;
+	width: 126%;
 	border-radius: 0.2rem;
 }
 
@@ -101,4 +101,11 @@
 	display: table-cell;
 	text-align: middle;
 	width: 10%;
+}
+
+.picture {
+	background-image: url("../images/Plus@2x.png");
+	width: 20px;
+	height: 27px;
+	 	background-position: center;
 }

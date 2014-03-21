@@ -50,7 +50,7 @@ function setNavigationBar(){
 //Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
 	var devicePlatform = device.platform; 
-	alert("devicePlatform: "+devicePlatform);
+/* 	alert("devicePlatform: "+devicePlatform); */
 
 	
 	 if (devicePlatform === "iOS") {

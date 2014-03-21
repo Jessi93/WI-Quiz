@@ -51,7 +51,7 @@ function spielerSuchen() {
 	else {
 	// Ergebnisliste befüllen
 	for(var i=0;i<obj.length;i++){
-	$("#ergebnislisteErweitern").append('<div class="row"><li id='+obj[i]+' class="topcoat-list__item custom_List_item leftColumn" >'+obj[i]+'</li><button id="addFriendButton'+obj[i]+'" class="topcoat-icon-button rightColumn"></button></div>');
+	$("#ergebnislisteErweitern").append('<div class="row"><li id='+obj[i]+' class="topcoat-list__item custom_List_item leftColumn" >'+obj[i]+'</li><button id="addFriendButton'+obj[i]+'" class="topcoat-icon-button--large--quiet rightColumn picture"></button></div>');
 	addHandlersToListEntry(obj[i]);
 	}
 	
