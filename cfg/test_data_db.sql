@@ -6,7 +6,8 @@ INSERT INTO Kategorie
 	('Logik und Algebra'),
 	('Programmierung'),
 	('Projektmanagement'),
-	('Wissenschaftliches Arbeiten');
+	('Wissenschaftliches Arbeiten'),
+	('Business Intelligence');
 
 
 INSERT INTO Benutzer VALUES
@@ -67,7 +68,8 @@ INSERT INTO Unterkategorie VALUES
 ('UK 1 zu Logik und Algebra', 'Logik und Algebra'),
 ('UK 2 zu Logik und Algebra', 'Logik und Algebra'),
 ('UK 1 zu Projektmanagement', 'Projektmanagement'),
-('UK 2 zu Projektmanagement', 'Projektmanagement');
+('UK 2 zu Projektmanagement', 'Projektmanagement'),
+('UK 1 zu Business Intelligence','Business Intelligence');
 
 INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwortmoeglichkeit1,antwortmoeglichkeit2,antwortmoeglichkeit3,antwortmoeglichkeit4,wahrheitAntwortmoeglichkeit1,wahrheitAntwortmoeglichkeit2,wahrheitAntwortmoeglichkeit3,wahrheitAntwortmoeglichkeit4,flagFrageValidiert) VALUES
 ('IT-Management','UK 1 zu IT-Management',false,'Welche Gase wurden behandelt?','Exert','Inert','Exposé','Imposé',false,true,false,false,true),
@@ -94,7 +96,18 @@ INSERT INTO Frage(kategorieName,unterkategorieName,flagFragenTypMult,frage,antwo
 ('Logik und Algebra', 'UK 1 zu Logik und Algebra',true,'Da hat wohl einer Spaß am Anlegen von Testdaten', 'ganz bestimmt', 'das hier klicken','das nicht','super cool',false,true,false,false,true),
 ('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Fand Person X Projektmanagment immer interessant?', 'klaro', 'mega','bisschen','gar nicht',false,false,true,false,true),
 ('Projektmanagement', 'UK 2 zu Projektmanagement',true,'Wer hat am wenigsten mit Projektmanagement zu tun?', 'Britney Spears', 'Luft','Manager','Senior Manager',false,true,false,false,true),
-('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Welchen Begriff gibt es im PM beim Berechnen von Puffern im Projekt?', 'rasante Linie', 'klarer Weg','kritischer Pfad','Höllenweg',false,false,true,false,true);
+('Projektmanagement', 'UK 1 zu Projektmanagement',true,'Welchen Begriff gibt es im PM beim Berechnen von Puffern im Projekt?', 'rasante Linie', 'klarer Weg','kritischer Pfad','Höllenweg',false,false,true,false,true),
+/* Phil's Fragen */
+('Projektmanagement','UK 1 zu Projektmanagement',false,'Welche Projektphasen gibt es?','Projektsteuerung','PRojektanschluss','Projektabschuss','Projektstatus',true,false,false,false,true),
+('Projektmanagement','UK 1 zu Projektmanagement',false,'Was kennzeichnet ein Projekt?','Gewisse Komplexität','Einzigartigkeit','Genialität','Internationalität',true,true,false,false,true),
+('Projektmanagement','UK 1 zu Projektmanagement',false,'Was kennzeichnet einen Meilenstein','einschlägiges Ereignis','erster Monat vorbei','zwischen 2 Phasen','Beteiligung mehrerer Menschen',true,false,true,false,true),
+('Projektmanagement','UK 1 zu Projektmanagement',false,'Für was steht ''EV'' im Projektmanagement?','Extrem Vegan','Earned Value','End Value','Elite Veterans',false,true,false,false,true),
+('Projektmanagement','UK 1 zu Projektmanagement',false,'Für was steht PMO im Projektmanagement?','Project Management Onshore','Project Mastering Onshore','Project Management Office','Project Mission Office',false,false,true,false,true),
+('Business Intelligence','UK 1 zu Business Intelligence',false,'Was heißt OLAP?','Online Analysis At Perfection','Online Analytical Processing','Offline Laverage Assessment Process','Offline Analytical Process',false,true,false,false,true),
+('Business Intelligence','UK 1 zu Business Intelligence',false,'Was sind Hersteller von Business Intelligence Lösungen?','Siemens','SAP','Qlikview','HP',false,true,true,false,true),
+('Business Intelligence','UK 1 zu Business Intelligence',false,'Für was steht DWH?','Data Warehouse','Datawall housing','Datawide House','HP',true,false,false,false,true),
+('Business Intelligence','UK 1 zu Business Intelligence',false,'Was bezeichnet einen OLAP Operator?','Slice & Mice','Drill Up','Roll Down','Zoom in',false,true,false,false,true),
+('Business Intelligence','UK 1 zu Business Intelligence',false,'Was sind Teildisziplinen des Data Mining?','Häufung(Clustering)','Assoziationsregeln','Business Analysis','OLAP',true,true,false,false,true);
 
 
 INSERT INTO Spiel VALUES
