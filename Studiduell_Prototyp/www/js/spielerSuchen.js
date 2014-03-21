@@ -56,7 +56,7 @@ function spielerSuchen() {
 	}
 	
 	function addHandlersToListEntry(enemyName){
-		alert("addHandlersToListEntry aufgerufen mit name:"+enemyName);
+		//alert("addHandlersToListEntry aufgerufen mit name:"+enemyName);
 		//Neues Spiel Handler
 		$("#"+enemyName).on('tap',function(e,data){ 
 		createNewGameWithOpponent(enemyName);

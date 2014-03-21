@@ -23,3 +23,11 @@
 #beliebigerSpielerButton {
 	background-image: url("../images/lupe.png");
 }
+
+#freundeslisteDiv{
+border-radius: 0.2rem;
+}
+
+#freundesliste_header{
+border-radius: 0.2rem;
+}

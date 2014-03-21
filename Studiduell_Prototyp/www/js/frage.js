@@ -88,10 +88,12 @@ function markAnswer(button) {
 	if (result === null){
 		var btn = $(button);
 		if (!btn.hasClass("buttonAusgewaehlt")) {
+			/* --> nicht mehr notwendig, da next durch swiperight ersetzt wurde!
 			// Weiter-Button aktivieren, falls bisher keine Antworten ausgewählt wurden.
 			if(getSelectedButtonCount() == 0) {
 				$("#nextButton").removeAttr("disabled");
 			}
+			*/
 		
 			// Der Button wird ausgewählt
 			btn.addClass("buttonAusgewaehlt");
@@ -209,13 +211,7 @@ function nextShowResult() {
 		) {
 		correctlyAnswered = false;
 	}
-	
-	// remove actions of answer buttons
-	answer1.attr("ontouchend", "");
-	answer2.attr("ontouchend", "");
-	answer3.attr("ontouchend", "");
-	answer4.attr("ontouchend", "");
-	
+		
 	// Color the buttons
 	if(question.wahrheitAntwortmoeglichkeit1) {
 		answer1.addClass("buttonRichtig");
