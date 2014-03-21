@@ -91,11 +91,11 @@
 }
 
 #timelineDiv {
-	background-color: #715A00;
+	background-color: #2C7EAB;
 	width: 100%;
 	height: 0.5rem;
 	
 	/* set as footer */
-	position: fix;
-	bottom: 0;
+	position: absolute;
+	bottom: 0px; /* include unit as android's html viewer needs this */
 }
