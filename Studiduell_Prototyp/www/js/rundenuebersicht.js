@@ -820,18 +820,24 @@ function giveUp(){
 }
 
 function setNavigationBar(){
-
-	//Füge "aktualisieren Button" dem NavigationBar hinzu!
+alert("setNavigationBar wurde aufgerufen!");
+//Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
-	syncButton.imagePath = "/images/refresh_big@2x.png"
- 		syncButton.title = "Aktualisieren"; 
-		syncButton.onTap = function() {
-			sync();
+	var devicePlatform = device.platform; 
+/* 	alert("devicePlatform: "+devicePlatform); */
+	
+	 if (devicePlatform === "iOS") {
+		syncButton.imagePath = "/images/refresh_big@2x.png";
+	}else if (devicePlatform === "Android") {
+  		syncButton.title = "Aktualisieren"; 
+	} 
+	syncButton.onTap = function() {
+		sync();
 		};
 
-		steroids.view.navigationBar.setButtons({
+	steroids.view.navigationBar.setButtons({
 			right: [syncButton]
-		});
+	});
 }
 
 function sync(){
@@ -870,7 +876,8 @@ function onVisibilityChange() {
 
 
 //sobald das Dokument zum ersten Mal geöffnet wird, soll es mit Inhalt befüllt werden!
-document.addEventListener("DOMContentLoaded", sync, false);
+document.addEventListener("deviceready", sync, false);
+//document.addEventListener("DOMContentLoaded", sync, false);
 
 //wenn auf die Rundenübersicht zurückgekehrt wird, soll sie aktualisiert werden! (auch bei Rückkehr aus bildschirm-standby!)
 document.addEventListener("visibilitychange", onVisibilityChange, false);
