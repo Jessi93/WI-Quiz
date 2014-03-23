@@ -8,11 +8,11 @@ var opponentAnswers;
 
 function init() {
 	gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
-	roundStart = localStorage.getItem("gameQuestionContinue") === null;
-	questions = roundStart ? JSON.parse(localStorage.getItem("questions")) : JSON.parse(localStorage.getItem("gameQuestionContinue")).questions;
-	questionCounter = localStorage.getItem("questionCounter");
+	roundStart = localStorage.getItem("gameQuestionContinue" + gameInfo.spielID) === null;
+	questions = roundStart ? JSON.parse(localStorage.getItem("questions" + gameInfo.spielID)) : JSON.parse(localStorage.getItem("gameQuestionContinue" + gameInfo.spielID)).questions;
+	questionCounter = localStorage.getItem("questionCounter" + gameInfo.spielID);
 	// continue-specific
-	opponentAnswers = roundStart ? null : JSON.parse(localStorage.getItem("gameQuestionContinue")).answers;
+	opponentAnswers = roundStart ? null : JSON.parse(localStorage.getItem("gameQuestionContinue" + gameInfo.spielID)).answers;
 	
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
@@ -162,7 +162,7 @@ function saveQuestionResult(correctlyAnswered){
 		// create new answer array
 		answers = new Array();
 	} else {
-		answers = JSON.parse(localStorage.getItem("answers"));
+		answers = JSON.parse(localStorage.getItem("answers" + gameInfo.spielID));
 	}
 	var submitData = {
 			"runde" : gameInfo.aktuelleRunde,
@@ -175,8 +175,8 @@ function saveQuestionResult(correctlyAnswered){
 		};
 	answers.push(submitData);
 	
-	localStorage.setItem("questionCounter", ++questionCounter);
-	localStorage.setItem("answers", JSON.stringify(answers));
+	localStorage.setItem("questionCounter" + gameInfo.spielID, ++questionCounter);
+	localStorage.setItem("answers" + gameInfo.spielID, JSON.stringify(answers));
 }
 
 /**
@@ -251,10 +251,10 @@ function nextShowResult() {
 
 function nextQuestion() {
 	
-	var answers = JSON.parse(localStorage.getItem("answers"));
+	var answers = JSON.parse(localStorage.getItem("answers" + gameInfo.spielID));
 		
 	if(questionCounter != 3) {
-		localStorage.setItem("answers", JSON.stringify(answers));
+		localStorage.setItem("answers" + gameInfo.spielID, JSON.stringify(answers));
 		popViewPushView("html/frage.html");
 	} else {
 		$.ajax( {
@@ -265,30 +265,17 @@ function nextQuestion() {
 			beforeSend : function(xhr) {authHeader(xhr);},
 			statusCode : {
 				200 : function() {
-					// delete saved random categories
+					// clean up
 					localStorage.removeItem("randomCategoriesGameID" + gameInfo.spielID);
-					// if this round is finished, increase it to avoid syncing first
-					//FIXME
-					
-					$.ajax( {
-						url: serverURL + "user/sync",
-						type: "POST",
-						contentType: "text/plain",
-						beforeSend: function(xhr){authHeader(xhr);},
-						crossDomain: true,
-						success: function(obj) {
-							for(var i = 0; i < obj.length; i++) {
-								if(obj[i].spielID == gameInfo.spielID) {
-									localStorage.setItem("gameInfo", JSON.stringify(obj[i]));
-									break;
-								}
-							}
-							localStorage.removeItem("answers");
-							steroids.layers.pop();
-						},
-						error:function(obj) {alert("Fehler beim Sync! "+JSON.stringify(obj));},
-						data:"0123456789"
-					});
+					localStorage.removeItem("answers" + gameInfo.spielID);
+					localStorage.removeItem("selectedCategory" + gameInfo.spielID);
+					localStorage.removeItem("questions" + gameInfo.spielID);
+					localStorage.removeItem("questionCounter" + gameInfo.spielID);
+					localStorage.removeItem("gameQuestionStart" + gameInfo.spielID);
+					localStorage.removeItem("gameQuestionContinue" + gameInfo.spielID);
+					localStorage.removeItem("answers" + gameInfo.spielID);
+
+					steroids.layers.pop();
 				},
 				403 : function() {alert("Interner Fehler (403).");},
 				404 : function() {alert("Interner Fehler (404).");},
