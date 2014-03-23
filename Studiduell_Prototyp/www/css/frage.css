@@ -58,24 +58,32 @@
 	
 	margin: 0.2em;
 	height: 8em;
+	opacity: 0.85;
+	
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #E4E4E4), to( #A4A4A4)); /* Saf4+, Chrome */
+       /* background-image: -webkit-linear-gradient(#3c3c3c, #000000) !important; /* Chrome 10+, Saf5.1+ */
+	text-shadow : 0px 0px white;
 }
 
 .buttonAusgewaehlt {
-	background-color: blue !important;
+	/*background-color: #BEBEB9 !important; /* #39425B*/
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ECECEA), to(#BEBEB9)) !important; /* Saf4+, Chrome */
 	color: white !important;
 }
 
 .buttonFalsch {
-	background-color: red !important;
+	/*background-color:  #CC0000 !important; */
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #F5CCCC), to( #CC0000)) !important; /* Saf4+, Chrome */
 }
 
 .buttonRichtig {
-	background-color: green !important;
+	/*background-color: #00FF00 !important; */
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #99FF99), to( #00FF00)) !important; /* Saf4+, Chrome */
 	color: white !important;
 }
 
 .buttonRand {
-	border: 2px solid #819FF7;
+	border: 2px solid #39425B;  /*819FF7*/
 }
 /*
 #nextButton {
@@ -87,7 +95,7 @@
 	
 	/* opponent name's properties */
 	color: white;
-	text-shadow : 1px 1px blue
+	text-shadow : 1px 1px blue;
 }
 
 #timelineDiv {

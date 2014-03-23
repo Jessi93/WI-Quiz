@@ -820,7 +820,7 @@ function giveUp(){
 }
 
 function setNavigationBar(){
-alert("setNavigationBar wurde aufgerufen!");
+//alert("setNavigationBar wurde aufgerufen!");
 //Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
 	var devicePlatform = device.platform; 
