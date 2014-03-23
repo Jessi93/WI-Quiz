@@ -10,6 +10,8 @@ width: 97% !important;
 .custom_button{
 margin: 0.35rem;
 width: 97% !important;
+background-image: -webkit-gradient(linear, left top, left bottom, from( #E4E4E4), to( #A4A4A4)); /* Saf4+, Chrome */
+	
 }
 
 #LoginButton{
