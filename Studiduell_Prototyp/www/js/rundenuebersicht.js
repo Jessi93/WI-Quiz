@@ -694,7 +694,7 @@ $('#spielerBDiv').text(enemyUsername);
 }
 
 function openFrage() {
-	localStorage.setItem("questionCounter", 0);
+	localStorage.setItem("questionCounter" + gameInfo.spielID, 0);
 	//TODO disable button if not waiting for me!
 	prepareQuestion();
 	
@@ -739,7 +739,7 @@ function prepareQuestion() {
 
 function fetchQuestionsRoundStart(categoriesAndQuestions) {
 //alert("fetchQuestionsRoundStart wurde aufgerufen"); //XXX
-	localStorage.setItem("gameQuestionStart", JSON.stringify(categoriesAndQuestions));
+	localStorage.setItem("gameQuestionStart" + gameInfo.spielID, JSON.stringify(categoriesAndQuestions));
 	
 	var newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
 	steroids.layers.push(newView);
@@ -747,7 +747,7 @@ function fetchQuestionsRoundStart(categoriesAndQuestions) {
 
 function fetchQuestionsRoundContinue(questionsAndAnswersOpponent) {
 //alert("fetchQuestionsRoundContinue wurde aufgerufen!"); //XXX
-	localStorage.setItem("gameQuestionContinue", JSON.stringify(questionsAndAnswersOpponent));
+	localStorage.setItem("gameQuestionContinue" + gameInfo.spielID, JSON.stringify(questionsAndAnswersOpponent));
 	
 	var newView = new steroids.views.WebView("html/frage.html");
 	steroids.layers.push(newView);

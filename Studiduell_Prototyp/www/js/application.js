@@ -66,8 +66,8 @@ function isRoundStarter(gameInfo) {
 	// persist some info
 	localStorage.setItem("gameInfo", JSON.stringify(gameInfo));
 	// delete questions
-	localStorage.removeItem("gameQuestionStart");
-	localStorage.removeItem("gameQuestionContinue");
+	localStorage.removeItem("gameQuestionStart" + gameInfo.spielID);
+	localStorage.removeItem("gameQuestionContinue" + gameInfo.spielID);
 	
 	if(gameInfo.aktuelleRunde % 2 == 0) {
 		// even round
