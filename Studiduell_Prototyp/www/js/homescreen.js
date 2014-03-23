@@ -2,6 +2,7 @@ var homescreenServerdata;
 var phoneGapLoaded = false; //true: deviceReady wurde gefeuert, false: deviceready wurde noch nicht gefeuert
 var spielIDsArray = new Array(); //WORKAROUND (mehrfache Duellanfragen!)enthält alle SpielIDs, für die Deullanfragen angezeigt wurden 
 	//--> so kann verhindert werden, dass duellanfragen zweimal angezeigt werden
+var initNotYetCalled = true;
 
 //prüft, ob phoneGap geladen wurde, wenn nicht, läd es manuell nach! (zeit in ms)
 var phoneGapInterval = window.setInterval(function(){loadPhoneGap();},2000);
@@ -13,7 +14,8 @@ function loadPhoneGap(){
 		$.getScript('http://localhost/cordova.js', function() {
 						//alert("PhoneGap wurde manuell nachgeladen. navigator.notification: "+navigator.notification);
 						phoneGapLoaded = true; //Turn ON the flag
-						fireEvent("deviceready");
+						onDeviceReady();
+						//fireEvent("deviceready");
 					});
 	}else{//wenn notifcation möglich ist, dann soll aufgehört werden im intervall zu überprüfen, ob es geladen wurde:
 		clearInterval(phoneGapInterval);
@@ -31,17 +33,19 @@ function init(){
 	$(document).on('swipeleft',function(e,data){ openNeuesSpielScreen()	});
 	//Naviagtionbar ist prinzipiell unabhängig von Phonegap/Jquery , ABER Fallunterscheidung zwischen iOS und Android notwenidig --> PhoneGap muss geladen sein! 
 	setNavigationBar();
+	initNotYetCalled = false;
 }
 
 function onDeviceReady() {
 	phoneGapLoaded = true;
 	//alert("PhoneGap geladen! navigator.notification: "+navigator.notification);
 
-
 	//sobald das Jquery rdy ist, sollen die Serverdaten geladen & das Dokument mit den Datenbefüllt werden
-		$( document ).ready(function() { 
+	//$( document ).ready(function() { 
 	//alert("Document ready wurde gefeuert!");
-	init(); });
+	init();
+
+	//});
 	sync();
 }
 	
@@ -103,8 +107,11 @@ function openNeuesSpielScreen() {
 
 function sync() {
 	//alert("sync wurde aufgerufen!");
-	//TEST.
-	//popEvent("popAll");
+	
+	if(initNotYetCalled){
+	//falls init noch nicht aufgerufen wurde (z.b. aktualisieren button nicht angezeigt, weil Jqueryzu langsam geladen!) --> ausführen!
+	init();
+	}
 	
 	var credentialsAvailable = checkCredentials();
 	//var test_uname = localStorage.getItem("username");
