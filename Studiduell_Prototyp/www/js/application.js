@@ -32,11 +32,22 @@ Schlieﬂt den aktuellen Screen und startet den Neuen!
 Parameter: Pfad, des neuen screens (html) z.b. "html/neuesSpiel.html"
 */
 function popViewPushView (newView_locationString){
-//alert("popViewPushView wurde aufgerufen!"+steroids.layers);
+	alert("popViewPushView wurde aufgerufen!"+steroids.layers);
 	var newView = new steroids.views.WebView(newView_locationString);
-		steroids.layers.pop();
-		steroids.layers.push(newView);
 	
+	steroids.layers.pop();
+	steroids.layers.push(newView);
+	
+	
+	/* window.setTimeout(function(){
+		//alert("setTimeout wurde aufgerufen!");
+		
+		var newView = new steroids.views.WebView(newView_locationString);
+						steroids.layers.push(newView);
+						steroids.layers.pop();
+						}
+						,2000); 
+						*/
 }
 
 function fireEvent(event_name){
