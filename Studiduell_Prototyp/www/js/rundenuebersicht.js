@@ -694,7 +694,9 @@ $('#spielerBDiv').text(enemyUsername);
 }
 
 function openFrage() {
-	localStorage.setItem("questionCounter" + gameInfo.spielID, 0);
+	if(localStorage.getItem("questionCounter" + gameInfo.spielID) === null) {
+		localStorage.setItem("questionCounter" + gameInfo.spielID, 0);
+	}
 	//TODO disable button if not waiting for me!
 	prepareQuestion();
 	
