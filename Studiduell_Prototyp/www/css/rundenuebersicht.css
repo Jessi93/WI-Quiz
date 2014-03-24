@@ -62,16 +62,21 @@
 }
 
 .greenBackground {
-	background-color: green !important;
+	/*background-color: green !important; */
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #99FF99), to( #00FF00)) !important; /* Saf4+, Chrome */
+
 		border: 1px solid black;
 }
 .redBackground {
-	background-color: red !important;
+	/*background-color: red !important; */
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #F5CCCC), to( #CC0000)) !important; /* Saf4+, Chrome */
+
 		border: 1px solid black;
 }
 
 .greyBackground {
-	background-color: grey !important;
+	/*	background-color: grey !important; */
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #E4E4E4), to( #A4A4A4)); /* Saf4+, Chrome */
 		border: 1px solid black;
 }
 

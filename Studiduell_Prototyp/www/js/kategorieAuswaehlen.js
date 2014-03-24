@@ -1,7 +1,9 @@
 var gameQuestionStart;
+var gameInfo;
 
 function init() {
-	gameQuestionStart = JSON.parse(localStorage.getItem("gameQuestionStart"));
+	gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
+	gameQuestionStart = JSON.parse(localStorage.getItem("gameQuestionStart" + gameInfo.spielID));
 	//alert("gameQuestionStart in init von kategorie auswählen: "+JSON.stringify(gameQuestionStart));
 	fillScreen();
 	$("#kategorie1").on('tap',function(e,data){ kategorieAuswaehlen($("#kategorie1").text()) });
@@ -34,10 +36,9 @@ function kategorieAuswaehlen(kategorieName) {
 		}
 	}
 	
-	localStorage.setItem("questions", JSON.stringify(questions));
-	localStorage.setItem("selectedCategory", kategorieName);
-	//questionCounter wird auf 0 gesetzt (erste Frage der Runde wird angezeigt)
-	localStorage.setItem("questionCounter", 0 );
+	var tmpGameInfo = JSON.parse(localStorage.getItem("gameInfo"));
+	localStorage.setItem("questions" + tmpGameInfo.spielID, JSON.stringify(questions));
+	localStorage.setItem("selectedCategory" + tmpGameInfo.spielID, kategorieName);
 	
 	//öffne screen ausgewählte kategrie & und schließe aktuellen screen
 	popViewPushView("html/ausgewaehlteKategorie.html");

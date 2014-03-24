@@ -40,9 +40,10 @@ import studiduell.security.SecurityContextFacade;
 public class UserController {
 	@Value("${user.search.maxSearchableUsers}")
 	private int maxSearchableUsers;
-	
 	@Value("${user.search.maxEndedGames}")
 	private int maxEndedGames;
+	@Value("${user.name.conventionsRegex}")
+	private String nameConventionsRegex;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -86,28 +87,34 @@ public class UserController {
 	public ResponseEntity<Void> register(@PathVariable("name") String name,
 			@RequestBody String password) {
 		if(!password.isEmpty()) {
-			// cannot be null because RequestBody is required by default
-			if(userRepository.findOne(name) == null) {
-				// persist user
-				UserEntity user = new UserEntity(name);
-				String encryptedPassword = DigestUtils.md5DigestAsHex(password.getBytes());
-				user.setPasswortHash(encryptedPassword);
-				user.setPushId(null);
-				user.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
-				
-				user = userRepository.save(user); // use attached entity. This way, kategorienfilterRepository does not want to save user
-				
-				// persist user's category settings
-				List<KategorieEntity> categories = kategorieRepository.findAll();
-				for(KategorieEntity c : categories) {
-					KategorienfilterEntity filter = new KategorienfilterEntity(user, c, true);
-					kategorienfilterRepository.save(filter);
+			// password cannot be null because RequestBody is required by default
+			if(name.matches(nameConventionsRegex)) {
+				// the username has matched the regex
+				if(userRepository.findOne(name) == null) {
+					// persist user
+					UserEntity user = new UserEntity(name);
+					String encryptedPassword = DigestUtils.md5DigestAsHex(password.getBytes());
+					user.setPasswortHash(encryptedPassword);
+					user.setPushId(null);
+					user.setLetzteAktivitaet(new Timestamp(System.currentTimeMillis()));
+					
+					user = userRepository.save(user); // use attached entity. This way, kategorienfilterRepository does not want to save user
+					
+					// persist user's category settings
+					List<KategorieEntity> categories = kategorieRepository.findAll();
+					for(KategorieEntity c : categories) {
+						KategorienfilterEntity filter = new KategorienfilterEntity(user, c, true);
+						kategorienfilterRepository.save(filter);
+					}
+					//TODO if sth. went wrong: 500 Internal Server Error
+					
+					return new ResponseEntity<>(HttpStatus.CREATED);
+				} else {
+					return new ResponseEntity<>(HttpStatus.CONFLICT);
 				}
-				//TODO if sth. went wrong: 500 Internal Server Error
-				
-				return new ResponseEntity<>(HttpStatus.CREATED);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			}
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
