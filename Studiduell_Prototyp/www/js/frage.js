@@ -69,7 +69,7 @@ function startTimer() {
 	$("#timelineDiv").animate( {
 		"width": "0%",
 		"background-color": "red"
-	}, questionTimeout, function() {
+	}, config.questionTimeout, function() {
 		/* Alternaitve 1: Wenn Zeit abgelaufen, automatisch falsch! (nichts ausgewählt!)
 		$("#antwort1").removeClass("buttonAusgewaehlt");
 		$("#antwort2").removeClass("buttonAusgewaehlt");
@@ -294,7 +294,7 @@ function nextQuestion() {
 
 function submitData(answers, successCallback) {
 $.ajax( {
-		url : serverURL + "game/submitRoundResult/" + gameInfo.spielID,
+		url : config.serverURL + "game/submitRoundResult/" + gameInfo.spielID,
 		type : "POST",
 		data : JSON.stringify(answers),
 		contentType : "application/json",

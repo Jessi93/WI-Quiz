@@ -10,11 +10,11 @@ $(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 
 function registerEnterButtonLoginEventHandler() {
 	$( "#username_input" ).on( "keydown", function( event ) {
-	if(event.which == keyEnter){
+	if(event.which == config.keyEnter){
 	sendRegistration();}
 	});
 	$( "#password_input" ).on( "keydown", function( event ) {
-	if(event.which == keyEnter){
+	if(event.which == config.keyEnter){
 	sendRegistration();}
 	});
 }
@@ -73,9 +73,9 @@ function sendRegistration(){
 	
 	}else{
 	// Prüfung auf Maximalzeichenzahl im anzulegenden Username! (siehe application.js)
-		if(v_username.length > maxZeichenUsername){
+		if(v_username.length > config.maxZeichenUsername){
 			navigator.notification.alert(
-			'Dein gewünschter Username ist leider zu lang - die maximale Zeichenzahl ist: '+maxZeichenUsername, // message  
+			'Dein gewünschter Username ist leider zu lang - die maximale Zeichenzahl ist: '+config.maxZeichenUsername, // message  
 			alertDismissedUsernameTooLong, 		//v_username, v_password sollten hier übergeben werden, aber nicht möglich --> nutzung globaler variablen: gv_username & gv_password
 			'Username zu lang!',    // title   
 			'Ok'                  	// buttonName
@@ -85,7 +85,7 @@ function sendRegistration(){
 			//Username und passwort sind beide gesetzt worden & Username ist nicht zu lang!--> Serveranfrage starten!
 			//alert("Register-AJAX-gestartet!");
 			$.ajax( {
-					url:serverURL + "user/register/"+v_username,
+					url:config.serverURL + "user/register/"+v_username,
 					type:"PUT",
 					contentType:"text/plain",
 					success:function(obj){handleRegistrationOK(v_username, v_password);},

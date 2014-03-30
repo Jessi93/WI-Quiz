@@ -10,20 +10,26 @@ steroids.view.navigationBar.show({
 titleImagePath: "/images/navbar_title@2x.png"
 });
 
-
-var serverURL = "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/";
-var maxZeichenUsername = 20;
-
 /*
- * Der Keycode für die Enter-/Return-Taste.
+ * Globale Konfiguration.
  */
-var keyEnter = 13;
-/*
- * Der Timeout pro Frage in ms.
- * Sollte der Spieler seine Antworten ab dem Anzeigen der Frage nicht innerhalb
- * dieser Periode submitten, wird die Frage als falsch gewertet.
- */
-var questionTimeout = 30000;
+var config = {
+	serverURL : "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/",
+	
+	maxZeichenUsername : 20,
+	
+	/*
+	 * Der Keycode für die Enter-/Return-Taste.
+	 */
+	keyEnter : 13,
+	
+	/*
+	 * Der Timeout pro Frage in ms.
+	 * Sollte der Spieler seine Antworten ab dem Anzeigen der Frage nicht innerhalb
+	 * dieser Periode submitten, wird die Frage als falsch gewertet.
+	 */
+	questionTimeout : 30000
+};
 
 /*
 Prüft, ob ein String leer ist, oder nicht (leer = true, nicht leer = false)
@@ -107,13 +113,13 @@ function isRoundStarter(gameInfo) {
 }
 
 function authHeader(xhr) {
-	//alert("username: "+localStorage.getItem("username")+" password: "+localStorage.getItem("password")+"URL: "+serverURL);
+	//alert("username: "+localStorage.getItem("username")+" password: "+localStorage.getItem("password")+"URL: "+config.serverURL);
 	var usernameColonPassword = localStorage.getItem("username") + ":" + localStorage.getItem("password");
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
 
 function authHeaderManual(xhr, username, password){
-	//alert("3 parameter auth Header Methode! username: "+username+" password: "+password+" URL: "+serverURL);
+	//alert("3 parameter auth Header Methode! username: "+username+" password: "+password+" URL: "+config.serverURL);
 	var usernameColonPassword = username + ":" + password;
 	xhr.setRequestHeader('Authorization', 'Basic ' + btoa(usernameColonPassword));
 }
@@ -125,7 +131,7 @@ function addAsFriend(fName) {
 		//leer lassen?
 	}
 	$.ajax( {
-		url:serverURL + "settings/friends/" + fName,
+		url:config.serverURL + "settings/friends/" + fName,
 		type:"PUT",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
@@ -148,7 +154,7 @@ function createNewGameWithOpponent(opponentName){
 	function onAlertDismissCreateNewGameWithOpponent(){
 	}
 	$.ajax( {
-		url:serverURL + "game/create/with/" + opponentName,
+		url:config.serverURL + "game/create/with/" + opponentName,
 		type:"POST",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
@@ -169,7 +175,7 @@ function createNewGameWithOpponent(opponentName){
 function fetchRundenuebersichtData (spielID){
 	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage --> feuere Event, dass Daten bereit stehen
 	$.ajax( {
-		url:serverURL + "game/overview/" + spielID,
+		url:config.serverURL + "game/overview/" + spielID,
 		type:"GET",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,

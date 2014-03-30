@@ -471,7 +471,7 @@ function getCurrentGameInfo(spielID){
 	}
 //hole aktuelle GameInfo Daten und schreibe Sie in den localStorage. 
 	$.ajax( {
-				url:serverURL + "user/sync",
+				url:config.serverURL + "user/sync",
 				type:"POST",
 				contentType:"text/plain",
 				beforeSend:function(xhr){authHeader(xhr);},
@@ -710,7 +710,7 @@ function prepareQuestion() {
 		var randomCategoriesGameID = JSON.parse(localStorage.getItem("randomCategoriesGameID" + gameInfo.spielID));
 		if(randomCategoriesGameID === null) {
 			$.ajax( {
-			url : serverURL + "game/randomCategoriesFor/" + gameInfo.spielID,
+			url : config.serverURL + "game/randomCategoriesFor/" + gameInfo.spielID,
 			type : "POST",
 			beforeSend : function(xhr) {authHeader(xhr);},
 			success : function(cAndQ) {
@@ -730,7 +730,7 @@ function prepareQuestion() {
 		}
 	} else {
 		$.ajax( {
-			url : serverURL + "game/continueRound/" + gameInfo.spielID,
+			url : config.serverURL + "game/continueRound/" + gameInfo.spielID,
 			type : "GET",
 			beforeSend : function(xhr) {authHeader(xhr);},
 			success : function(qAndA) {fetchQuestionsRoundContinue(qAndA);},
@@ -774,7 +774,7 @@ function giveUp(){
 			case 1: //Aufgeben wurde bestätigt!
 			//TODO: Duell bei Server aufgeben!"
 			 $.ajax( {
-			 url:serverURL + "game/abandon/" + gameID,
+			 url:config.serverURL + "game/abandon/" + gameID,
 			 type:"POST",
 			 beforeSend : function(xhr) {authHeader(xhr);},
 			success:function(obj){

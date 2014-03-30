@@ -86,7 +86,7 @@ function checkCredentials() {
 }
 
 function openRundenuebersicht(spielID, positionInServerdata) {
-	//alert("URL"+serverURL + "game/overview/" + spielID + "homescreenServerdata[positionInServerdata]:"+JSON.stringify(homescreenServerdata[positionInServerdata])+" position:"+positionInServerdata);
+	//alert("URL"+config.serverURL + "game/overview/" + spielID + "homescreenServerdata[positionInServerdata]:"+JSON.stringify(homescreenServerdata[positionInServerdata])+" position:"+positionInServerdata);
 	
 	//Schreibe Spieldaten in localstorage (für Fragescreen und enemy_username)
 	localStorage.setItem("enemyUsername", getEnemyUsername(homescreenServerdata[positionInServerdata]) );
@@ -140,7 +140,7 @@ function sync() {
 function fetchServerData() {
 	//alert("fetchServerData aufgerufen");
 	$.ajax( {
-			url:serverURL + "user/sync",
+			url:config.serverURL + "user/sync",
 			type:"POST",
 			contentType:"text/plain",
 			beforeSend:function(xhr){authHeader(xhr);},
@@ -401,7 +401,7 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 		
 		// bestätige Duellannahme bei Server		
 		$.ajax( {
-			url:serverURL + "game/answerInvite/"+gameData.spielID,
+			url:config.serverURL + "game/answerInvite/"+gameData.spielID,
 			type:"POST",
 			contentType:"text/plain",
 			beforeSend:function(xhr){authHeader(xhr);},
@@ -422,7 +422,7 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 		//bestätige Duellablehnung bei Server
 		//alert("TODO: Duellablehnung bei Server bestätigt");		
 		$.ajax( {
-			url:serverURL + "game/answerInvite/"+gameData.spielID,
+			url:config.serverURL + "game/answerInvite/"+gameData.spielID,
 			type:"POST",
 			contentType:"text/plain",
 			beforeSend:function(xhr){authHeader(xhr);},

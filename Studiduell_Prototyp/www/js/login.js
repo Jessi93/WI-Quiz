@@ -13,12 +13,12 @@ function registerEnterButtonLoginEventHandler() {
 	$("#RegisterButton").hammer({}).on("tap", function(e) {openRegisterScreen();});
 	
 	$( "#username_input" ).on( "keydown", function( event ) {
-		if(event.which == keyEnter) {
+		if(event.which == config.keyEnter) {
 			sendLoginDataToServer();
 		}
 	});
 	$( "#password_input" ).on( "keydown", function( event ) {
-		if(event.which == keyEnter) {
+		if(event.which == config.keyEnter) {
 			sendLoginDataToServer();
 		}
 	});
@@ -58,7 +58,7 @@ function sendLoginDataToServer() {
 	//alert("Login-AJAX-Call gestartet!");
 	
 		$.ajax( {
-			url:serverURL + "user/checkCredentials/"+v_username,
+			url:config.serverURL + "user/checkCredentials/"+v_username,
 			type:"POST",
 			contentType:"text/plain",
 			crossDomain:true,

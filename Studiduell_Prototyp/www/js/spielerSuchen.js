@@ -7,7 +7,7 @@ $(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 
 function registerEnterButtonEventHandler() {
 	$( "#search_username_input" ).on( "keydown", function( event ) {
-	if(event.which == keyEnter){
+	if(event.which == config.keyEnter){
 	spielerSuchen();}
 	});
 }
@@ -28,7 +28,7 @@ function spielerSuchen() {
 		
 		//Daten vom Server holen
 		$.ajax( {
-			url:serverURL + "user/search/" + text_input,
+			url:config.serverURL + "user/search/" + text_input,
 			type:"GET",
 			beforeSend:function(xhr){authHeader(xhr);},
 			crossDomain:true,

@@ -18,7 +18,7 @@ function loadFriendslistFromServer() {
 	//alert("loadFriendslistFromServer wurde aufgerufen!");
 	//Hole die Freundesliste des Users vom Server
 	$.ajax( {
-		url:serverURL + "settings/friends",
+		url:config.serverURL + "settings/friends",
 		type:"GET",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
@@ -60,7 +60,7 @@ function addFriendToList(obj){
 function createNewGameRandom() {
 	// Schicke Anfrage an Server
 	$.ajax( {
-		url:serverURL + "game/create/random",
+		url:config.serverURL + "game/create/random",
 		type:"POST",
 		beforeSend:function(xhr){authHeader(xhr);},
 		crossDomain:true,
