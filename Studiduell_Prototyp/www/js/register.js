@@ -8,7 +8,6 @@ $(document).hammer({}).on('swipeleft',function(e){ sendRegistration()	});
 $(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 }
 
-var keyEnter = 13;
 function registerEnterButtonLoginEventHandler() {
 	$( "#username_input" ).on( "keydown", function( event ) {
 	if(event.which == keyEnter){

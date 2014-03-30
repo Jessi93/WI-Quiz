@@ -13,12 +13,12 @@ function registerEnterButtonLoginEventHandler() {
 	$("#RegisterButton").hammer({}).on("tap", function(e) {openRegisterScreen();});
 	
 	$( "#username_input" ).on( "keydown", function( event ) {
-		if(event.which == 13) {
+		if(event.which == keyEnter) {
 			sendLoginDataToServer();
 		}
 	});
 	$( "#password_input" ).on( "keydown", function( event ) {
-		if(event.which == 13) {
+		if(event.which == keyEnter) {
 			sendLoginDataToServer();
 		}
 	});

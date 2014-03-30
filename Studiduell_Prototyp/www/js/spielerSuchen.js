@@ -7,7 +7,7 @@ $(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 
 function registerEnterButtonEventHandler() {
 	$( "#search_username_input" ).on( "keydown", function( event ) {
-	if(event.which == 13){
+	if(event.which == keyEnter){
 	spielerSuchen();}
 	});
 }
