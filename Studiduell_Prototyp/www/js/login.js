@@ -9,13 +9,18 @@ registerEnterButtonLoginEventHandler();
 }
 
 function registerEnterButtonLoginEventHandler() {
+	$("#LoginButton").hammer({}).on("tap", function(e) {sendLoginDataToServer();});
+	$("#RegisterButton").hammer({}).on("tap", function(e) {openRegisterScreen();});
+	
 	$( "#username_input" ).on( "keydown", function( event ) {
-	if(event.which == 13){
-	sendLoginDataToServer();}
+		if(event.which == 13) {
+			sendLoginDataToServer();
+		}
 	});
 	$( "#password_input" ).on( "keydown", function( event ) {
-	if(event.which == 13){
-	sendLoginDataToServer();}
+		if(event.which == 13) {
+			sendLoginDataToServer();
+		}
 	});
 }
 
