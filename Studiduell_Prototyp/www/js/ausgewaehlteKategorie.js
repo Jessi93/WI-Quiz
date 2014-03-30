@@ -5,9 +5,9 @@ function init() {
 	var category = localStorage.getItem("selectedCategory" + tmpGameInfo.spielID);
 	$("#spielBeschreibung").text("Runde " + round + " gegen " + opponent);
 	$("#ausgewaehlteKategorie").text("Kategorie: " + category);
-	$("#startRoundButton").on('tap',function(e,data){ starteSpiel() });
-	$(document).on('swipeleft',function(e,data){ starteSpiel()	});
-	$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+	$("#startRoundButton").hammer({}).on('tap',function(e){ starteSpiel() });
+	$(document).hammer({}).on('swipeleft',function(e){ starteSpiel()	});
+	$(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 	
 }
 function starteSpiel() {

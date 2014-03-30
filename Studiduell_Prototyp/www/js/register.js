@@ -3,18 +3,19 @@ var gv_password;
 
 function init() {
 registerEnterButtonLoginEventHandler();
-$("#RegisterButton").on('tap',function(e,data){ sendRegistration()});
-$(document).on('swipeleft',function(e,data){ sendRegistration()	});
-$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+$("#RegisterButton").hammer({}).on('tap',function(e){ sendRegistration()});
+$(document).hammer({}).on('swipeleft',function(e){ sendRegistration()	});
+$(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 }
 
+var keyEnter = 13;
 function registerEnterButtonLoginEventHandler() {
 	$( "#username_input" ).on( "keydown", function( event ) {
-	if(event.which == 13){
+	if(event.which == keyEnter){
 	sendRegistration();}
 	});
 	$( "#password_input" ).on( "keydown", function( event ) {
-	if(event.which == 13){
+	if(event.which == keyEnter){
 	sendRegistration();}
 	});
 }

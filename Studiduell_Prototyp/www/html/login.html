@@ -1,4 +1,14 @@
+<!--
+	TODO
+	THIS IS A HACK!
+	TEMPORARILY DISABLED DOCTYPE DUE TO APPGYVER BUG.
+	REFER TO AN UPCOMING SOLUTION ON https://github.com/AppGyver/scanner/issues/35 .
+	
+	IDEALLY, DOCTYPE IS REACTIVATED AS SOON AS A SOLUTION IS AVAILABLE TO PREVENT
+	THE BROWSER FROM QUIRKS MODE.
+	
 <!DOCTYPE html>
+-->
 <html>
 	<head>
 	  <meta charset="utf8">
@@ -13,12 +23,11 @@
 	  <!-- cordova.js is served from localhost to ensure the correct version -->
 	  <script src="http://localhost/cordova.js"></script>
 	  <script src="../components/steroids-js/steroids.js"></script>
-	  <script src="/components/steroids-addons/index.js"></script>
-	  <script src="../js/Tocca.js"></script> <!-- Plugin für Tap & Swipe Events! -->
+	  <script src="../vendor/hammerjs/hammer.min.js"></script>
+	  <script src="../vendor/hammerjs/jquery.hammer.min.js"></script>
 	  
 	  <script src="../js/application.js"></script>
 	  <script src="../js/login.js"></script>
-	  
 	  
 	  
 	</head>

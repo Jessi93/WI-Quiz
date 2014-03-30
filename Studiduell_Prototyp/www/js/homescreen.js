@@ -27,10 +27,10 @@ function init(){
 	//alert("init wurde aufgerufen!");
 	//Füge eventhandler für "Tap" Events hinzu!
 	$("#AbmeldenButton").removeAttr("ontouchend");
-	$("#AbmeldenButton").on('tap',function(e,data){ abmelden()});
+	$("#AbmeldenButton").hammer({}).on('tap',function(e){ abmelden()});
 	$("#neuesSpielStartenButton").removeAttr("ontouchend");
-	$("#neuesSpielStartenButton").on('tap',function(e,data){ openNeuesSpielScreen()});
-	$(document).on('swipeleft',function(e,data){ openNeuesSpielScreen()	});
+	$("#neuesSpielStartenButton").hammer({}).on('tap',function(e){ openNeuesSpielScreen()});
+	$(document).hammer({}).on('swipeleft',function(e){ openNeuesSpielScreen()	});
 	//Naviagtionbar ist prinzipiell unabhängig von Phonegap/Jquery , ABER Fallunterscheidung zwischen iOS und Android notwenidig --> PhoneGap muss geladen sein! 
 	setNavigationBar();
 	initNotYetCalled = false;
@@ -336,7 +336,7 @@ function addHistoryGame(gameData, positionInServerData){
 	//füge HTML ein:
 	$("#HistoryGames_div").append("<button id='"+gameData.spielID+"' class='topcoat-button center full custom_icon_button_left textklein historyButton'>Vergangenes Spiel gegen "+enemy_username+"</button>"//+" - SpielID: "+gameData.spielID+" </a>" 
 	);
-	$("#"+gameData.spielID).on('tap',function(e,data){ 
+	$("#"+gameData.spielID).hammer({}).on('tap',function(e){ 
 	openRundenuebersicht(gameData.spielID, positionInServerData);
 	});
 }
@@ -352,7 +352,7 @@ function addActionRequiredGame(gameData, positionInServerData){
 	//füge HTML ein:
 	$("#ActionRequiredGames_div").append("<button id='"+gameData.spielID+"' class='topcoat-button center full custom_icon_button_left textklein yourTurnButton' >Du bist an der Reihe gegen "+enemy_username+"</button>"//+" SpielID: "+gameData.spielID+" </a>" 
 	);
-	$("#"+gameData.spielID).on('tap',function(e,data){ 
+	$("#"+gameData.spielID).hammer({}).on('tap',function(e){ 
 	openRundenuebersicht(gameData.spielID, positionInServerData);
 	});
 }
@@ -362,7 +362,7 @@ function addWaitingForGame(gameData, positionInServerData){
 	var enemy_username = getEnemyUsername(gameData);
 	$("#WaitingForGames_div").append("<button id='"+gameData.spielID+"' class='topcoat-button center full custom_icon_button_left textklein waitingForButton' >"+enemy_username+"</button>"//+" SpielID: "+gameData.spielID+" </a>"
 	);
-	$("#"+gameData.spielID).on('tap',function(e,data){ 
+	$("#"+gameData.spielID).hammer({}).on('tap',function(e){ 
 	openRundenuebersicht(gameData.spielID, positionInServerData);
 	});
 }

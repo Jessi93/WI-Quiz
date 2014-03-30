@@ -1,12 +1,12 @@
 function init() {
 	loadFriendslistFromServer();
-	$("#spielerSuchenButton").on('tap',function(e,data){ spielerSuchenSeite()});
-	$(document).on('swipeleft',function(e,data){ spielerSuchenSeite()	});
-	$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+	$("#spielerSuchenButton").hammer({}).on('tap',function(e){ spielerSuchenSeite()});
+	$(document).hammer({}).on('swipeleft',function(e){ spielerSuchenSeite()	});
+	$(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 	
 	//disable SpielerButton as the Backend is not ready for this requirement
 	$("#beliebigerSpielerButton").attr("disabled", ""); 
-	//$("#beliebigerSpielerButton").on('tap',function(e,data){ createNewGameRandom()});
+	//$("#beliebigerSpielerButton").hammer({}).on('tap',function(e){ createNewGameRandom()});
 }
 
 function spielerSuchenSeite() {
@@ -51,7 +51,7 @@ function addFriendToList(obj){
 	}
 	
 	function addHandlerToListEntry(enemyName){
-		$("#"+enemyName).on('tap',function(e,data){ 
+		$("#"+enemyName).hammer({}).on('tap',function(e){ 
 		createNewGameWithOpponent(enemyName);
 		});
 	}

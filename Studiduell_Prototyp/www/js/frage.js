@@ -29,12 +29,12 @@ function init() {
 }
 
 function setTapSwipeEventHandlers(){
-	$("#antwort1").on('tap',function(e,data){ markAnswer($("#antwort1"))});
-	$("#antwort2").on('tap',function(e,data){ markAnswer($("#antwort2"))});
-	$("#antwort3").on('tap',function(e,data){ markAnswer($("#antwort3"))});
-	$("#antwort4").on('tap',function(e,data){ markAnswer($("#antwort4"))});
-	$(document).on('swipeleft',function(e,data){ next()	});
-	//$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+	$("#antwort1").hammer({}).on('tap',function(e){ markAnswer($("#antwort1"))});
+	$("#antwort2").hammer({}).on('tap',function(e){ markAnswer($("#antwort2"))});
+	$("#antwort3").hammer({}).on('tap',function(e){ markAnswer($("#antwort3"))});
+	$("#antwort4").hammer({}).on('tap',function(e){ markAnswer($("#antwort4"))});
+	$(document).hammer({}).on('swipeleft',function(e){ next()	});
+	//$(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 }
 /* backButtonHiden();
 function backButtonHiden(){

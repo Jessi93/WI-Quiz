@@ -1,8 +1,8 @@
 function init() {
 registerEnterButtonEventHandler();
 	//alert("init in SpielerSuchen wurde aufgerufen!");
-$("#addImage").on('tap',function(e,data){ spielerSuchen()});
-$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+$("#addImage").hammer({}).on('tap',function(e){ spielerSuchen()});
+$(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 }
 
 function registerEnterButtonEventHandler() {
@@ -58,11 +58,11 @@ function spielerSuchen() {
 	function addHandlersToListEntry(enemyName){
 		//alert("addHandlersToListEntry aufgerufen mit name:"+enemyName);
 		//Neues Spiel Handler
-		$("#"+enemyName).on('tap',function(e,data){ 
+		$("#"+enemyName).hammer({}).on('tap',function(e){ 
 		createNewGameWithOpponent(enemyName);
 		});
 		//Als Freund hinzufügen handler
-		$("#addFriendButton"+enemyName).on('tap',function(e,data){ 
+		$("#addFriendButton"+enemyName).hammer({}).on('tap',function(e){ 
 		addAsFriend(enemyName);
 		});
 	}

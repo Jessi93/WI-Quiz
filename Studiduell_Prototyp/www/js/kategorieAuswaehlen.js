@@ -6,9 +6,9 @@ function init() {
 	gameQuestionStart = JSON.parse(localStorage.getItem("gameQuestionStart" + gameInfo.spielID));
 	//alert("gameQuestionStart in init von kategorie auswählen: "+JSON.stringify(gameQuestionStart));
 	fillScreen();
-	$("#kategorie1").on('tap',function(e,data){ kategorieAuswaehlen($("#kategorie1").text()) });
-	$("#kategorie2").on('tap',function(e,data){ kategorieAuswaehlen($("#kategorie2").text()) });
-	$("#kategorie3").on('tap',function(e,data){ kategorieAuswaehlen($("#kategorie3").text()) });
+	$("#kategorie1").hammer({}).on('tap',function(e){ kategorieAuswaehlen($("#kategorie1").text()) });
+	$("#kategorie2").hammer({}).on('tap',function(e){ kategorieAuswaehlen($("#kategorie2").text()) });
+	$("#kategorie3").hammer({}).on('tap',function(e){ kategorieAuswaehlen($("#kategorie3").text()) });
 	
 }
 

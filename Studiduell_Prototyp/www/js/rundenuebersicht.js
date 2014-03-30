@@ -24,11 +24,11 @@ function initialize() {
 
 function setTapSwipeEventHandlers(){
 //alert("setTapSwipeEventHandlers wurde aufgerufen!");
-$("#kreuzImage").on('tap',function(e,data){ giveUp()});
-$("#addImage").on('tap',function(e,data){ addAsFriendWrapper()});
-$("#spielenButton").on('tap',function(e,data){ performSpielenButtonAction()});
-$(document).on('swipeleft',function(e,data){ performSpielenButtonAction()	});
-$(document).on('swiperight',function(e,data){ steroids.layers.pop()	});
+$("#kreuzImage").hammer({}).on('tap',function(e){ giveUp()});
+$("#addImage").hammer({}).on('tap',function(e){ addAsFriendWrapper()});
+$("#spielenButton").hammer({}).on('tap',function(e){ performSpielenButtonAction()});
+$(document).hammer({}).on('swipeleft',function(e){ performSpielenButtonAction()	});
+$(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 }
 
 function performSpielenButtonAction(){
