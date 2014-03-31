@@ -20,6 +20,10 @@ function registerEnterButtonLoginEventHandler() {
 }
 
 function sendRegistration(){
+	// Evtl. vorher gesetzte Klassen entfernen
+	$("#username_input").removeClass("invalidCustom");
+	$("#password_input").removeClass("invalidCustom");
+	
 	//alert("sendRegistration wurde aufgerufen!");
 	//Fehlerbehandlungsfunktionen:
 	function handleErrorRegister(returnedObject) {
@@ -48,6 +52,10 @@ function sendRegistration(){
 	function alertDismissedUsernameTooLong(){
 		$("#username_input").addClass("invalidCustom");
 	}
+	
+	function alertDismissedUsernameNotMatchesRegex() {
+		$("#username_input").addClass("invalidCustom");
+	}
 		
 	var v_username = $("#username_input").val();
 	var v_password = $("#password_input").val();
@@ -72,26 +80,36 @@ function sendRegistration(){
 		);
 	
 	}else{
-	// Prüfung auf Maximalzeichenzahl im anzulegenden Username! (siehe application.js)
-		if(v_username.length > config.maxZeichenUsername){
+		// Prüfung auf ungültige Zeichen im Name
+		if(!v_username.match(config.usernameRegex)) {
 			navigator.notification.alert(
-			'Dein gewünschter Username ist leider zu lang - die maximale Zeichenzahl ist: '+config.maxZeichenUsername, // message  
-			alertDismissedUsernameTooLong, 		//v_username, v_password sollten hier übergeben werden, aber nicht möglich --> nutzung globaler variablen: gv_username & gv_password
-			'Username zu lang!',    // title   
+			unescape("Dein gew%FCnschter Username enth%E4lt ung%FCltige Zeichen. Es sind nur alphanumerische Zeichen erlaubt."), // message  
+			alertDismissedUsernameNotMatchesRegex,
+			unescape("Ung%FCltiger Benutzername%21"),    // title   
 			'Ok'                  	// buttonName
 			);
-		
-		}else{
-			//Username und passwort sind beide gesetzt worden & Username ist nicht zu lang!--> Serveranfrage starten!
-			//alert("Register-AJAX-gestartet!");
-			$.ajax( {
-					url:config.serverURL + "user/register/"+v_username,
-					type:"PUT",
-					contentType:"text/plain",
-					success:function(obj){handleRegistrationOK(v_username, v_password);},
-					error:function(obj){handleErrorRegister(obj);}, 
-					data:v_password
-				}); 
+		} else {
+			// Prüfung auf Maximalzeichenzahl im anzulegenden Username! (siehe application.js)
+			if(v_username.length > config.maxZeichenUsername){
+				navigator.notification.alert(
+				unescape("Dein gew%FCnschter Username ist leider zu lang - die maximale Zeichenzahl ist%3A ")+config.maxZeichenUsername, // message  
+				alertDismissedUsernameTooLong, 		//v_username, v_password sollten hier übergeben werden, aber nicht möglich --> nutzung globaler variablen: gv_username & gv_password
+				'Username zu lang!',    // title   
+				'Ok'                  	// buttonName
+				);
+			
+			}else{
+				//Username und passwort sind beide gesetzt worden & Username ist nicht zu lang!--> Serveranfrage starten!
+				//alert("Register-AJAX-gestartet!");
+				$.ajax( {
+						url:config.serverURL + "user/register/"+v_username,
+						type:"PUT",
+						contentType:"text/plain",
+						success:function(obj){handleRegistrationOK(v_username, v_password);},
+						error:function(obj){handleErrorRegister(obj);}, 
+						data:v_password
+					}); 
+			}
 		}
 	}
 }

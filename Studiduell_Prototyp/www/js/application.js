@@ -28,7 +28,13 @@ var config = {
 	 * Sollte der Spieler seine Antworten ab dem Anzeigen der Frage nicht innerhalb
 	 * dieser Periode submitten, wird die Frage als falsch gewertet.
 	 */
-	questionTimeout : 30000
+	questionTimeout : 30000,
+	
+	/*
+	 * Der Regex für zulässige Benutzernamen.
+	 * (Nur alphanumerische Zeichen)
+	 */
+	usernameRegex : /^[a-z0-9]+$/i
 };
 
 /*
@@ -188,4 +194,3 @@ function fetchRundenuebersichtData (spielID){
 		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
 		});
 }
-

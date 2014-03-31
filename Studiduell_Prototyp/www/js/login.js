@@ -25,10 +25,18 @@ function registerEnterButtonLoginEventHandler() {
 }
 
 function sendLoginDataToServer() {
+	// Evtl. vorher gesetzte Klassen entfernen
+	$("#username_input").removeClass("invalidCustom");
+	$("#password_input").removeClass("invalidCustom");
+	
 	//Prüfe, dass notification steroids plugin geladen wurde!
 	//if(navigator.notification==="undefined"){
 	//alert("Script navigator.notification wurde nicht geladen!");
 	//}
+	
+	function alertDismissedUsernameNotMatchesRegex() {
+		$("#username_input").addClass("invalidCustom");
+	}
 	
 	//alert("sendLoginDataToServer wurde aufgerufen!");
 	
@@ -51,27 +59,34 @@ function sendLoginDataToServer() {
 		'Ok'                  	// buttonName
 		);
 	
-	}else{
-	
-	//Username und passwort sind beide gesetzt worden -->	//prüfe, ob username/password kombination OK ist!
-		//Serveranfrage starten!
-	//alert("Login-AJAX-Call gestartet!");
-	
-		$.ajax( {
-			url:config.serverURL + "user/checkCredentials/"+v_username,
-			type:"POST",
-			contentType:"text/plain",
-			crossDomain:true,
-			success:function(obj){
-				//alert("Login Ajax erfolgreich!");
-				openHomeScreen(v_username, v_password);
-			},
-			error:function(obj){handleErrorLogin(obj);},
-			data:v_password
+	} else {
+		// Prüfung auf ungültige Zeichen im Name
+		if(!v_username.match(config.usernameRegex)) {
+			navigator.notification.alert(
+			unescape("Der Username enth%E4lt ung%FCltige Zeichen. Es sind nur alphanumerische Zeichen erlaubt."), // message  
+			alertDismissedUsernameNotMatchesRegex,
+			unescape("Ung%FCltiger Benutzername%21"),    // title   
+			'Ok'                  	// buttonName
+			);
+		} else {
+			//Username und passwort sind beide gesetzt worden -->	//prüfe, ob username/password kombination OK ist!
+			//Serveranfrage starten!
+			//alert("Login-AJAX-Call gestartet!");
+		
+			$.ajax( {
+				url:config.serverURL + "user/checkCredentials/"+v_username,
+				type:"POST",
+				contentType:"text/plain",
+				crossDomain:true,
+				success:function(obj){
+					//alert("Login Ajax erfolgreich!");
+					openHomeScreen(v_username, v_password);
+				},
+				error:function(obj){handleErrorLogin(obj);},
+				data:v_password
 			});
-		 
+		}
 	}
-			
 }
 
 function alertDismissed() {

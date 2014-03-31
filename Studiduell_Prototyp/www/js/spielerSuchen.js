@@ -12,33 +12,46 @@ function registerEnterButtonEventHandler() {
 	});
 }
 function spielerSuchen() {
+	$("#search_username_input").removeClass("invalidCustom");
+	
 	function onAlertDismissTextinputEmpty(){
 	//leer lassen!
 	}
 	function onAlertDismissSearch(){
 	}
-	 var text_input = $("#search_username_input").val();
+	
+	function alertDismissedUsernameNotMatchesRegex() {
+		$("#search_username_input").addClass("invalidCustom");
+	}
+	
+	var text_input = $("#search_username_input").val();
 	 
 	 //Prüfe, ob Textinput leer ist --> Aufforderung zur eingabe von Suchebegriff
-	 if(isEmpty(text_input)){
+	 if(isEmpty(text_input)) {
 	 navigator.notification.alert('Bitte gib einen Suchbegriff ein.' , onAlertDismissTextinputEmpty,'Information','OK');
-	 }else{
-		//Alle Listeelemente löschen
-		$("#ergebnislisteErweitern").empty();
-		
-		//Daten vom Server holen
-		$.ajax( {
-			url:config.serverURL + "user/search/" + text_input,
-			type:"GET",
-			beforeSend:function(xhr){authHeader(xhr);},
-			crossDomain:true,
-			success:function(obj){addResultToList(obj);},
-			error:function(obj){navigator.notification.alert("Fehler beim Suchen!"+JSON.stringify(obj), onAlertDismissSearch,'Information','OK');}
+	 } else {
+		// Prüfung auf ungültige Zeichen im Name
+		if(!text_input.match(config.usernameRegex)) {
+			navigator.notification.alert(
+			unescape("Der zu suchende Username enth%E4lt ung%FCltige Zeichen. Es sind nur alphanumerische Zeichen erlaubt."), // message  
+			alertDismissedUsernameNotMatchesRegex,
+			unescape("Ung%FCltiger Benutzername%21"),    // title   
+			'Ok'                  	// buttonName
+			);
+		} else {
+			//Alle Listeelemente löschen
+			$("#ergebnislisteErweitern").empty();
+			
+			//Daten vom Server holen
+			$.ajax( {
+				url:config.serverURL + "user/search/" + text_input,
+				type:"GET",
+				beforeSend:function(xhr){authHeader(xhr);},
+				crossDomain:true,
+				success:function(obj){addResultToList(obj);},
+				error:function(obj){navigator.notification.alert("Fehler beim Suchen!"+JSON.stringify(obj), onAlertDismissSearch,'Information','OK');}
 			});
-		
-			//Test (Testdaten ohne Serveranbindung!)
-		//var tmpServerData = new Array("Anna10", "Anna2", "anna0003", "Anna001", "Anna1");
-		//addResultToList(tmpServerData);  
+		}
 	}
  }
  
