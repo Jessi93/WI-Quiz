@@ -20,3 +20,10 @@ color: black;
 background-image: url('../images/background.jpg');
 
 }
+
+/*
+ * Border for a field that contains incorrect input.
+ */
+.invalidCustom {
+  border: 1px solid #ec514e;
+}
