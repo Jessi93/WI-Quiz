@@ -33,10 +33,10 @@ $(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 
 function performSpielenButtonAction(){
 var spielenButtonText = $("#spielenButton").text();
-	if(spielenButtonText === "Spielen"){
+	if(spielenButtonText === "Spielen"){ // FIXME richtig gefährlich! Wird der Text geändert, funktioniert die Logik nicht mehr.
 		//Es soll gespielt werden --> open Frage()
 		openFrage();
-	}else if(spielenButtonText === "Nochmal spielen!"){
+	}else if(spielenButtonText === "Nochmal spielen!"){ // FIXME richtig gefährlich! Wird der Text geändert, funktioniert die Logik nicht mehr.
 		//Es soll ein neues Spiel gegen den selben Gegner eröffnet werden! --> playAgain()
 		playAgain();
 	}
