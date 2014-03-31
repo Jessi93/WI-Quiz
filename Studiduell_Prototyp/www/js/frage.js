@@ -278,13 +278,13 @@ function nextShowResult() {
 }
 
 function nextQuestion() {
-	
 	var answers = JSON.parse(localStorage.getItem("answers" + gameInfo.spielID));
 	
 	if(questionCounter != 2) { // 3 - 1 as the questionCounter is incremented in its variable on reload
 		localStorage.setItem("answers" + gameInfo.spielID, JSON.stringify(answers));
 		popViewPushView("html/frage.html");
 	} else {
+		// end of current round for that player
 		submitData(answers, function() {
 			cleanUp();
 			steroids.layers.pop();

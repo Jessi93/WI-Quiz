@@ -713,14 +713,14 @@ function prepareQuestion() {
 			url : config.serverURL + "game/randomCategoriesFor/" + gameInfo.spielID,
 			type : "POST",
 			beforeSend : function(xhr) {authHeader(xhr);},
-			success : function(cAndQ) {
+			success : function(catsAndQuestions) {
 				/*
 				 * Save cats temporarily for this game to avoid the user to go back
 				 * and forth in order to get different categories.
 				 */
-				localStorage.setItem("randomCategoriesGameID" + gameInfo.spielID, JSON.stringify(cAndQ));
+				localStorage.setItem("randomCategoriesGameID" + gameInfo.spielID, JSON.stringify(catsAndQuestions));
 				
-				fetchQuestionsRoundStart(cAndQ);
+				fetchQuestionsRoundStart(catsAndQuestions);
 			},
 			error : function(obj) {alert("Die Spieldaten konnten nicht übertragen werden.");}
 		});
@@ -743,7 +743,13 @@ function fetchQuestionsRoundStart(categoriesAndQuestions) {
 //alert("fetchQuestionsRoundStart wurde aufgerufen"); //XXX
 	localStorage.setItem("gameQuestionStart" + gameInfo.spielID, JSON.stringify(categoriesAndQuestions));
 	
-	var newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
+	var newView;
+	if(localStorage.getItem("selectedCategory" + gameInfo.spielID) === null) {
+		newView = new steroids.views.WebView("html/kategorieAuswaehlen.html");
+	} else {
+		newView = new steroids.views.WebView("html/frage.html");
+	}
+	
 	steroids.layers.push(newView);
 }
 
