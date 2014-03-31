@@ -438,9 +438,10 @@ function onConfirmDuelRequest(buttonIndex, gameData, positionInServerData){
 }
 
 function abmelden(){
-//lösche credentials in localstorage
-localStorage.removeItem("username");
-localStorage.removeItem("password");
+// Alles zur Domain gehörige im localStorage löschen
+// (also auch credentials)
+localStorage.clear();
+
 //zeige login screen (neuladen der seite --> username nicht gesetzt --> Login öffnet sich!
 //window.location.reload();
 	var newView = new steroids.views.WebView("html/login.html");
