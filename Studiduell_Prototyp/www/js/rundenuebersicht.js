@@ -573,6 +573,16 @@ encolourSquare("runde6frage3spieler1", 6, 3, username, 1);
 
 function setSpieler2(){
 //alert("setSpieler2 wurde aufgerufen"));
+	var tmpAnswersString = localStorage.getItem("answers" + gameInfo.spielID);
+	if(tmpAnswersString != null) {
+		/*
+		 * Fall der User schon Fragen beantwortet hat, aber vor Rundenende
+		 * diese verlassen hat, werden hier die dementsprechenden Quadrate
+		 * eingefärbt.
+		 */
+		encolourTemporaryProgress(JSON.parse(tmpAnswersString));
+	}
+
 
 //Setze Spielstand zurück, damit bei aktualisieren von 0 gezählt wird.
 SpielstandSpieler2 = 0;
@@ -603,8 +613,6 @@ encolourSquare("runde5frage3spieler2", 5, 3, enemy_username, 2);
 encolourSquare("runde6frage1spieler2", 6, 1, enemy_username, 2);	
 encolourSquare("runde6frage2spieler2", 6, 2, enemy_username, 2);	
 encolourSquare("runde6frage3spieler2", 6, 3, enemy_username, 2);	
-
-	 				
 }
 
 //Logik zum setzen/ einblenden eines Quadrats
@@ -678,6 +686,19 @@ if (fragenergebnis == true){
 	}else if(fragenergebnis === "grey"){
 	//Färbe Viereck grau!
 	$("#"+viereck_id).addClass('greyBackground');
+	}
+}
+
+function encolourTemporaryProgress(answers) {
+	for(var i = 0; i < answers.length; i++) {
+		var currSquare = $("#runde" + answers[i].runde + "frage" + (i+1) + "spieler1");
+		
+		if(answers[i].ergebnisCheck) {
+			currSquare.addClass("greenBackground");
+			SpielstandSpieler1++;
+		} else {
+			currSquare.addClass("redBackground");
+		}
 	}
 }
 
