@@ -870,22 +870,40 @@ function setNavigationBar(){
 }
 
 function sync(){
-	var initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
-	//true: die rundenübersicht wird für dieses Spiel neu aufgerufen (aus hauptmenü heraus)
-	//false: die rundenübersicht wird lediglich aktualisiert! (init wurde bereits mind 1 mal aufgerufen!)
-	//alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
-	//alert("gameInfo: "+localStorage.getItem("gameInfo"));
 	gameInfo = JSON.parse(localStorage.getItem("gameInfo"));
-	if(initializeNotYetFired === "true"){ 
-	//wenn initialize noch nicht aufgerufen wurde, rufe nur initialize auf (Aufruf aus Hauptmenü)
-	initialize();
-	}else{
-	//rundenübersicht wird aktualisiert! --> neue Daten holen & screen aktualisieren!
-	 //alert("im else von sync! initializeNotYetFired= "+initializeNotYetFired);
-	var gameID = gameInfo.spielID;
-	 //hole neue Serverdaten 
-	fetchRundenuebersichtData (gameID); //bei erfolg wird RundenuebersichtDataloaded gefeuert (als event!)
 	
+	/*
+	 * Eine beendete Runde, die noch nicht gesynced wurde, hier an den Server senden.
+	 * Dies ist notwendig, wenn der Spieler die dritte Frage gesehen, aber nicht beantwortet,
+	 * sondern abgebrochen hat. Diese Frage wird dann als falsch gewertet, das Rundenergebnis
+	 * jedoch nicht zum Server gesendet.
+	 * Dies wird hier getan.
+	 */
+	var tmpAnswersString = localStorage.getItem("answers" + gameInfo.spielID);
+	var answers = (tmpAnswersString !== null) ? JSON.parse(tmpAnswersString) : null;
+	if(answers !== null && answers.length == 3) {
+		submitData(answers, function() {
+			cleanUp(gameInfo);
+			sync(); // ruft reguläres sync auf, da answers nun gelöscht sind
+		});
+	} else {
+		//REGULÄRE SYNC INSTRUKTIONEN
+		var initializeNotYetFired = localStorage.getItem("gameOverviewInitialize");
+		//true: die rundenübersicht wird für dieses Spiel neu aufgerufen (aus hauptmenü heraus)
+		//false: die rundenübersicht wird lediglich aktualisiert! (init wurde bereits mind 1 mal aufgerufen!)
+		//alert("sync wurde aufgerufen! initializeNotYetFired= "+initializeNotYetFired);
+		//alert("gameInfo: "+localStorage.getItem("gameInfo"));
+		if(initializeNotYetFired === "true"){ 
+		//wenn initialize noch nicht aufgerufen wurde, rufe nur initialize auf (Aufruf aus Hauptmenü)
+		initialize();
+		}else{
+		//rundenübersicht wird aktualisiert! --> neue Daten holen & screen aktualisieren!
+		 //alert("im else von sync! initializeNotYetFired= "+initializeNotYetFired);
+		var gameID = gameInfo.spielID;
+		 //hole neue Serverdaten 
+		fetchRundenuebersichtData (gameID); //bei erfolg wird RundenuebersichtDataloaded gefeuert (als event!)
+		
+		}
 	}
 }
 

@@ -178,6 +178,28 @@ function createNewGameWithOpponent(opponentName){
 		});
 }
 
+/**
+  * Submits a bunch of answers to the server.
+  */
+function submitData(answers, successCallback) {
+$.ajax( {
+		url : config.serverURL + "game/submitRoundResult/" + gameInfo.spielID,
+		type : "POST",
+		data : JSON.stringify(answers),
+		contentType : "application/json",
+		beforeSend : function(xhr) {authHeader(xhr);},
+		statusCode : {
+			200 : function() {
+				successCallback();
+			},
+			403 : function() {alert("Interner Fehler (403).");},
+			404 : function() {alert("Interner Fehler (404).");},
+			406 : function() {alert("Interner Fehler (406).");},
+			417 : function() {alert("Interner Fehler (417).");}
+		}
+	});
+}
+
 function fetchRundenuebersichtData (spielID){
 	//hole Serverdaten für die Rundenübersicht und schreibe sie in den LocalStorage --> feuere Event, dass Daten bereit stehen
 	$.ajax( {
@@ -193,4 +215,19 @@ function fetchRundenuebersichtData (spielID){
 		},
 		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
 		});
+}
+
+/**
+  * Removes the game-specific info from the localStorage.
+  */
+function cleanUp(gameInfo) {
+	// clean up
+	localStorage.removeItem("randomCategoriesGameID" + gameInfo.spielID);
+	localStorage.removeItem("answers" + gameInfo.spielID);
+	localStorage.removeItem("selectedCategory" + gameInfo.spielID);
+	localStorage.removeItem("questions" + gameInfo.spielID);
+	localStorage.removeItem("questionCounter" + gameInfo.spielID);
+	localStorage.removeItem("gameQuestionStart" + gameInfo.spielID);
+	localStorage.removeItem("gameQuestionContinue" + gameInfo.spielID);
+	localStorage.removeItem("answers" + gameInfo.spielID);
 }

@@ -14,8 +14,6 @@ function init() {
 	// continue-specific
 	opponentAnswers = roundStart ? null : JSON.parse(localStorage.getItem("gameQuestionContinue" + gameInfo.spielID)).answers;
 	
-	// Frage 3 abgebrochen und jetzt nur noch Antworten dem Server senden?
-	checkOnlySubmitDataNeeded();
 	
 	setKategorie(questions[questionCounter]);
  	setFrage(questions[questionCounter]);
@@ -178,7 +176,7 @@ function setQuestionSeen() {
 	};
 	answers.push(submitData);
 	
-	// Diese Frage darf beim Abbrechen der Runde nicht nochmal angezeigt werden.
+	// Diese Frage darf beim Abbrechen der Runde nicht nochmal angezeigt werden. Sobald Frage gesehen, Counter erhöhen.
 	localStorage.setItem("questionCounter" + gameInfo.spielID, questionCounter + 1);
 	localStorage.setItem("answers" + gameInfo.spielID, JSON.stringify(answers));
 }
@@ -284,58 +282,8 @@ function nextQuestion() {
 		localStorage.setItem("answers" + gameInfo.spielID, JSON.stringify(answers));
 		popViewPushView("html/frage.html");
 	} else {
-		// end of current round for that player
-		submitData(answers, function() {
-			cleanUp();
-			steroids.layers.pop();
-		});
-	}
-}
-
-function submitData(answers, successCallback) {
-$.ajax( {
-		url : config.serverURL + "game/submitRoundResult/" + gameInfo.spielID,
-		type : "POST",
-		data : JSON.stringify(answers),
-		contentType : "application/json",
-		beforeSend : function(xhr) {authHeader(xhr);},
-		statusCode : {
-			200 : function() {
-				successCallback();
-			},
-			403 : function() {alert("Interner Fehler (403).");},
-			404 : function() {alert("Interner Fehler (404).");},
-			406 : function() {alert("Interner Fehler (406).");},
-			417 : function() {alert("Interner Fehler (417).");}
-		}
-	});
-}
-
-function cleanUp() {
-	// clean up
-	localStorage.removeItem("randomCategoriesGameID" + gameInfo.spielID);
-	localStorage.removeItem("answers" + gameInfo.spielID);
-	localStorage.removeItem("selectedCategory" + gameInfo.spielID);
-	localStorage.removeItem("questions" + gameInfo.spielID);
-	localStorage.removeItem("questionCounter" + gameInfo.spielID);
-	localStorage.removeItem("gameQuestionStart" + gameInfo.spielID);
-	localStorage.removeItem("gameQuestionContinue" + gameInfo.spielID);
-	localStorage.removeItem("answers" + gameInfo.spielID);
-}
-
-/**
-  * Wenn der Spieler die letzte (also dritte) Frage gesehen hat, abgebrochen hat und
-  * nun wieder auf Spielen klickt, soll nicht auf die nicht existente vierte Frage
-  * verwiesen werden, sondern die Ergebnisse im localStorage gesendet werden.
-  */
-function checkOnlySubmitDataNeeded() {
-	if(questionCounter > 2) { // 3 - 1 as the questionCounter is incremented in its variable on reload
-		var answers = JSON.parse(localStorage.getItem("answers" + gameInfo.spielID));
-		submitData(answers, function() {
-			cleanUp();
-			navigator.notification.alert('Die letzte Frage wird falsch gewertet und das Ergebnis gesendet, da du diese Frage bereits angesehen hast.', null,'Information','OK');
-			steroids.layers.pop();
-		});
+		// submitting data to server handles rundenuebersicht
+		steroids.layers.pop();
 	}
 }
 
