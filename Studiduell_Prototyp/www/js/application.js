@@ -48,8 +48,7 @@ function isEmpty(str) {
 Schlieﬂt den aktuellen Screen und startet den Neuen! 
 Parameter: Pfad, des neuen screens (html) z.b. "html/neuesSpiel.html"
 */
-function popViewPushView (newView_locationString){
-	alert("popViewPushView wurde aufgerufen!"+steroids.layers);
+function popViewPushView (newView_locationString) {
 	var newView = new steroids.views.WebView(newView_locationString);
 	
 	steroids.layers.pop();
