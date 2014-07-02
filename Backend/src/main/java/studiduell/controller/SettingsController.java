@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import studiduell.model.FreundeslisteEntity;
+import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.UserEntity;
 import studiduell.model.id.FreundeslisteEntityPk;
@@ -65,6 +66,21 @@ public class SettingsController {
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/**
+	 * Returns all user categories and whether this category is activated.
+	 * 
+	 * @param authUsername the user name (autowired)
+	 * @return all user categories including the status whether a category is activated
+	 */
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/getCategories")
+	public ResponseEntity<List<KategorienfilterEntity>> getCategories(@CurrentUsername String authUsername) {
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
+		// category must never be null as it is created at user registration process
+		List<KategorienfilterEntity> categoryFilters = kategorienfilterRepository.findByBenutzername(userUserEntity);
+		
+		return new ResponseEntity<>(categoryFilters, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/friends")
