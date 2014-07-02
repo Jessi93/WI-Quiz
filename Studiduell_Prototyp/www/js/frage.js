@@ -328,7 +328,7 @@ function animateOpponentsAnswers() {
 	$(".popupDiv").animate( {
 		"font-size" : "60px",
 		"opacity" : 0
-	}, 600, function() {
+	}, 1200, function() {
 		// on completion
 		$(this).remove();
 	});
