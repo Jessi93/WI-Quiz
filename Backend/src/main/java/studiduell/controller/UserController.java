@@ -82,7 +82,7 @@ public class UserController {
 	 * @return 201/409
 	 */
 	@RequestMapping(method = RequestMethod.PUT, consumes = MediaType.TEXT_PLAIN_VALUE,
-					produces = MediaType.TEXT_PLAIN_VALUE, value = "/register/{name}")
+					value = "/register/{name}")
 	public ResponseEntity<Void> register(@PathVariable("name") String name,
 			@RequestBody String password) {
 		if(!password.isEmpty()) {
