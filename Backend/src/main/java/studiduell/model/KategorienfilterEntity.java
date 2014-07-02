@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import studiduell.model.id.KategorienfilterEntityPk;
 
 @Entity
@@ -28,6 +30,7 @@ public class KategorienfilterEntity {
 	@Id
 	@OneToOne
 	@JoinColumn(name = "benutzername", unique = true, nullable = false, referencedColumnName = "benutzername")
+	@JsonIgnore
 	private UserEntity benutzername;
 	
 	@Id
