@@ -22,6 +22,7 @@ import studiduell.model.id.KategorienfilterEntityPk;
 import studiduell.repository.FreundeslisteRepository;
 import studiduell.repository.KategorienfilterRepository;
 import studiduell.repository.UserRepository;
+import studiduell.security.CurrentUsername;
 import studiduell.security.SecurityContextFacade;
 
 @Controller
@@ -33,8 +34,6 @@ public class SettingsController {
 	@Autowired
 	private KategorienfilterRepository kategorienfilterRepository;
 	@Autowired
-	private SecurityContextFacade securityContextFacade;
-	@Autowired
 	private FreundeslisteRepository freundeslisteRepository;
 
 	/**
@@ -44,10 +43,7 @@ public class SettingsController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/updateCategories")
 	public ResponseEntity<Void> updateCategories(
-			@RequestBody KategorienfilterEntity[] categories) {
-		String authUsername = securityContextFacade.getContext()
-				.getAuthentication().getName();
-
+			@RequestBody KategorienfilterEntity[] categories, @CurrentUsername String authUsername) {
 		// check whether submitted categories exist
 		for (KategorienfilterEntity category : categories) {
 			KategorienfilterEntity filterEntity = kategorienfilterRepository
@@ -72,10 +68,7 @@ public class SettingsController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, value = "/friends")
-	public ResponseEntity<List<String>> listFriends() {
-		String authUsername = securityContextFacade.getContext()
-				.getAuthentication().getName();
-
+	public ResponseEntity<List<String>> listFriends(@CurrentUsername String authUsername) {
 		List<FreundeslisteEntity> friendRelationships = freundeslisteRepository
 				.findByBenutzername(new UserEntity(authUsername));
 
@@ -94,10 +87,8 @@ public class SettingsController {
 	 * @return 201/404/409
 	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/friends/{friend}")
-	public ResponseEntity<Void> addFriend(@PathVariable("friend") String friend) {
-		String authUsername = securityContextFacade.getContext()
-				.getAuthentication().getName();
-
+	public ResponseEntity<Void> addFriend(@PathVariable("friend") String friend,
+			@CurrentUsername String authUsername) {
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity friendUserEntity = userRepository.findOne(friend);
 

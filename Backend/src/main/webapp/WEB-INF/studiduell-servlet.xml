@@ -11,7 +11,11 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+		<mvc:argument-resolvers>
+			<bean class="studiduell.security.UsernameArgumentResolver"></bean>
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
 
 	<tx:annotation-driven />
 	

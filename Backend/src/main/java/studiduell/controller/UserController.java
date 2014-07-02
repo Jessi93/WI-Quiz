@@ -32,6 +32,7 @@ import studiduell.repository.KategorieRepository;
 import studiduell.repository.KategorienfilterRepository;
 import studiduell.repository.SpielRepository;
 import studiduell.repository.UserRepository;
+import studiduell.security.CurrentUsername;
 import studiduell.security.SecurityContextFacade;
 
 @Controller
@@ -53,8 +54,6 @@ public class UserController {
 	private KategorienfilterRepository kategorienfilterRepository;
 	@Autowired
 	private SpielRepository spielRepository;
-	@Autowired
-	private SecurityContextFacade securityContextFacade;
 	
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
@@ -127,8 +126,8 @@ public class UserController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
 					produces = MediaType.APPLICATION_JSON_VALUE, value = "/sync")
-	public ResponseEntity<List<SpielEntity>> sync(@RequestBody(required = false) String pushID) {
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+	public ResponseEntity<List<SpielEntity>> sync(@RequestBody(required = false) String pushID,
+			@CurrentUsername String authUsername) {
 		// null check not required as spring security guarantees this code to be executed only for authorized users
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		
@@ -155,11 +154,11 @@ public class UserController {
 	/**
 	 * 
 	 * @return 200
+	 * @deprecated not implemented
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
 			value = "/stats")
-	public ResponseEntity<ObjectNode> stats() {
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+	public ResponseEntity<ObjectNode> stats(@CurrentUsername String authUsername) {
 		// null check not required as spring security guarantees this code to be executed only for authorized users
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		

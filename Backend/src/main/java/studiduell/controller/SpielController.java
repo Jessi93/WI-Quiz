@@ -45,6 +45,7 @@ import studiduell.repository.KategorienfilterRepository;
 import studiduell.repository.RundeRepository;
 import studiduell.repository.SpielRepository;
 import studiduell.repository.UserRepository;
+import studiduell.security.CurrentUsername;
 import studiduell.security.SecurityContextFacade;
 
 @Controller
@@ -64,8 +65,6 @@ public class SpielController {
 	@Autowired
 	private KategorienfilterRepository kategorienfilterRepository;
 	@Autowired
-	private SecurityContextFacade securityContextFacade;
-	@Autowired
 	private QuestionsSorter questionsSorter;
 	
 	private Random random = new Random();
@@ -82,11 +81,13 @@ public class SpielController {
 	@Value("${game.questionsPerRound}")
 	private int questionsPerRound;
 	
+	/**
+	 * @deprecated not implemented
+	 */
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE,
 			value = "/create/random")
-	public ResponseEntity<String> createRandom() {
+	public ResponseEntity<String> createRandom(@CurrentUsername String authUsername) {
 		// TODO logic: regard user that also wants to play (MEETING FOR DB-CLARIFICATION!) - regard user with same category intersections - no regard of time?
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		
 		// select opponent
@@ -111,9 +112,9 @@ public class SpielController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/create/with/{opponent}")
-	public synchronized ResponseEntity<Void> create(@PathVariable("opponent") String opponent) {
-		UserEntity userUserEntity = userRepository.findOne(
-				securityContextFacade.getContext().getAuthentication().getName());
+	public synchronized ResponseEntity<Void> create(@PathVariable("opponent") String opponent,
+			@CurrentUsername String authUsername) {
+		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		UserEntity opponentUserEntity = userRepository.findOne(opponent);
 		
 		if(opponentUserEntity != null) {
@@ -167,9 +168,8 @@ public class SpielController {
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE,
 			value = "/answerInvite/{gameID}")
-	public ResponseEntity<Void> answerInvite(@PathVariable("gameID") Integer gameID, @RequestBody String flag) {
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
-		
+	public ResponseEntity<Void> answerInvite(@PathVariable("gameID") Integer gameID, @RequestBody String flag,
+			@CurrentUsername String authUsername) {
 		boolean flagVal;
 		
 		if (flag.equalsIgnoreCase("true")) {
@@ -217,8 +217,8 @@ public class SpielController {
 	
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
 			value = "/randomCategoriesFor/{gameID}") //TODO GET instead of POST
-	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID) {
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID,
+			@CurrentUsername String authUsername) {
 		//FIXME 500 if not enough questions
 		//XXX is it authUsername's turn? -> does not matter, as the user can just submit answers if it's his turn
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
@@ -296,9 +296,8 @@ public class SpielController {
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
 			value = "/submitRoundResult/{gameID}")
 	public ResponseEntity<Void> submitRoundResult(@PathVariable("gameID") Integer gameID,
-			@RequestBody RoundResultPOJO[] roundResult) {
+			@RequestBody RoundResultPOJO[] roundResult, @CurrentUsername String authUsername) {
 		//TODO update wartenAuf!
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
 		//TODO is it authUsername's turn? check wartenAuf!
 		
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
@@ -373,8 +372,8 @@ public class SpielController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/abandon/{gameID}")
-	public ResponseEntity<Void> abandon(@PathVariable("gameID") Integer gameID) {
-		String authUsername = securityContextFacade.getContext().getAuthentication().getName();
+	public ResponseEntity<Void> abandon(@PathVariable("gameID") Integer gameID,
+			@CurrentUsername String authUsername) {
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		
