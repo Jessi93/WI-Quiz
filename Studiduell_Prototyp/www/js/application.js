@@ -3,18 +3,16 @@ In diesem File werden Funktionen beschrieben, die in mehr als nur einem einzigen
 Screenspezifische Funktionen werden in den jeweiligen 'screenname.js' files beschrieben.
 */
 
-/*Anzeige Titel*/
-
-steroids.view.navigationBar.show("Studiduell");
-steroids.view.navigationBar.show({
-titleImagePath: "/images/navbar_title@2x.png"
-});
-
 /*
- * Globale Konfiguration.
+ * GLOBALE KONFIGURATION.
  */
 var config = {
 	serverURL : "http://kevinstrobel.de:8080/Studiduell-0.0.1-SNAPSHOT/",
+	
+	/*
+	 * The period to wait for a server answer in ms before the request times out.
+	 */
+	ajaxTimeout : 10000,
 	
 	maxZeichenUsername : 20,
 	
@@ -36,6 +34,47 @@ var config = {
 	 */
 	usernameRegex : /^[a-z0-9]+$/i
 };
+
+/*
+ *
+ * GLOBALER CODE, DER AUF JEDER WEBSEITE AUSGEFÜHRT WERDEN SOLL.
+ *
+ */
+
+// Ajax-Konfiguration
+// Ajax-Timeout
+$.ajaxSetup({
+	timeout: config.ajaxTimeout
+});
+// Ajax-Animation
+$(document).ajaxStart(function() {
+	$(document.body).append('<div class="loading" style="display:none;"></div>');
+	$(".loading").fadeIn();
+});
+$(document).ajaxStop(_ajaxStop);
+$(document).ajaxError(function() {
+	_ajaxStop();
+	alert("Verbindung zu Server fehlgeschlagen.");
+});
+
+function _ajaxStop() {
+	var loading = $(".loading");
+	loading.fadeOut(function() {
+		loading.remove();
+	});
+}
+
+// Anzeige Titel
+steroids.view.navigationBar.show("Studiduell");
+steroids.view.navigationBar.show({
+titleImagePath: "/images/navbar_title@2x.png"
+});
+
+/*
+ *
+ * FUNKTIONSDEKLARATIONEN
+ *
+ */
 
 /*
 Prüft, ob ein String leer ist, oder nicht (leer = true, nicht leer = false)
