@@ -51,7 +51,9 @@ $(document).ajaxStart(function() {
 	$(document.body).append('<div class="loading" style="display:none;"></div>');
 	$(".loading").fadeIn();
 });
-$(document).ajaxStop(_ajaxStop);
+$(document).ajaxStop(function() {
+	_ajaxStop();
+});
 $(document).ajaxError(function() {
 	_ajaxStop();
 	alert("Verbindung zu Server fehlgeschlagen.");
