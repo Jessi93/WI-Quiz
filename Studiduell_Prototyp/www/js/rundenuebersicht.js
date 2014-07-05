@@ -498,28 +498,33 @@ function enORdisableSpielenButton() {
 	var waitForUsername = gameInfo.wartenAuf.benutzername; 
 	//Prüfungen, die auf Spiele nicht im Status C gehen, dürfen nur durchgeführt werden, wenn WartenAuf gesetzt ist!
 		//alert("MyUsername: "+MyUsername+" waitForUsername: "+waitForUsername);
+		var spielenButton = $("#spielenButton");
 		if(waitForUsername === MyUsername && gameInfo.spielstatusName.name === "A"){
 			//auf mich wird gewartet(ich bin dran) --> Spielen Button soll aktiv sein!
-			$("#spielenButton").removeClass("topcoat-button");
-			$("#spielenButton").addClass("topcoat-button--cta");
-			$("#spielenButton").removeAttr("disabled");
-			$("#spielenButton").text("Spielen");
+			spielenButton.removeClass("topcoat-button");
+			spielenButton.addClass("topcoat-button--cta");
+			spielenButton.removeAttr("disabled");
+			spielenButton.text("Spielen");
 		}else if(gameInfo.spielstatusName.name === "Q"){
 			// spiel wurde aufgegeben
-			$("#spielenButton").removeClass("topcoat-button--cta");
-			$("#spielenButton").addClass("topcoat-button");
-			$("#spielenButton").attr("disabled", ""); 
-			$("#spielenButton").text("Aufgegeben von: "+waitForUsername);
+			spielenButton.removeClass("topcoat-button--cta");
+			spielenButton.addClass("topcoat-button");
+			spielenButton.attr("disabled", ""); 
+			spielenButton.text("Aufgegeben von: "+waitForUsername);
 		}else{
 		//Es wird auf gegner gewartet (Spiel aktiv!)
-			$("#spielenButton").removeClass("topcoat-button--cta");
-			$("#spielenButton").addClass("topcoat-button");
-			$("#spielenButton").attr("disabled", ""); 
-			$("#spielenButton").text("Warten");
+			spielenButton.removeClass("topcoat-button--cta");
+			spielenButton.addClass("topcoat-button");
+			spielenButton.attr("disabled", ""); 
+			spielenButton.text("Warten");
 		}
 	}else if(gameInfo.spielstatusName.name === "C"){ //WartenAuf ist also "" --> Spiel muss beendet sein!
-		// spiel ist bereits abgeschlossen! 
-		$("#spielenButton").text("Nochmal spielen!");
+		// spiel ist bereits abgeschlossen! Zeige "Nochmal spielen!"-Button
+		var spielenButton = $("#spielenButton");
+		spielenButton.removeClass("topcoat-button");
+		spielenButton.addClass("topcoat-button--cta");
+		spielenButton.text("Nochmal spielen!");
+		spielenButton.removeAttr("disabled");
 	}
 }
 
