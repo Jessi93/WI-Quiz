@@ -57,9 +57,13 @@ $(document).ajaxStart(function() {
 $(document).ajaxStop(function() {
 	_ajaxStop();
 });
-$(document).ajaxError(function() {
+$(document).ajaxError(function(e, xhr) {
 	_ajaxStop();
-	alert("Verbindung zu Server fehlgeschlagen.");
+	
+	// determine whether this is a connection error
+	if(xhr.status == 0 && xhr.readyState == 0) {
+		alert("Verbindung zu Server fehlgeschlagen.");
+	}
 });
 
 function _ajaxStop() {
