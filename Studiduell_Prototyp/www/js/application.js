@@ -42,6 +42,7 @@ var config = {
  */
 
 // Ajax-Konfiguration
+var timeoutFunc;
 // Ajax-Timeout
 $.ajaxSetup({
 	timeout: config.ajaxTimeout
@@ -50,6 +51,8 @@ $.ajaxSetup({
 $(document).ajaxStart(function() {
 	$(document.body).append('<div class="loading" style="display:none;"></div>');
 	$(".loading").fadeIn();
+	// if no ajax stop event is triggered, automatically timeout after some time
+	timeoutFunc = setTimeout(function() { _ajaxStop(); }, config.ajaxTimeout);
 });
 $(document).ajaxStop(function() {
 	_ajaxStop();
@@ -60,6 +63,9 @@ $(document).ajaxError(function() {
 });
 
 function _ajaxStop() {
+	// clear the timeout, as the ajax request has been stopped
+	clearTimeout(timeoutFunc);
+	
 	var loading = $(".loading");
 	loading.fadeOut(function() {
 		loading.remove();
