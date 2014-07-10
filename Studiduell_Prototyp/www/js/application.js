@@ -12,7 +12,7 @@ var config = {
 	/*
 	 * The period to wait for a server answer in ms before the request times out.
 	 */
-	ajaxTimeout : 10000,
+	ajaxTimeout : 6000,
 	
 	maxZeichenUsername : 20,
 	
