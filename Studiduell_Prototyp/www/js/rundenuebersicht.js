@@ -9,8 +9,8 @@ function initialize() {
 	
 	if (initializeNotYetFired === "true"){
 	//Hier steht, was nur beim ersten Aufruf von initialize getan werden soll!
-	setNavigationBar();
 	setTapSwipeEventHandlers();
+	setNavigationBar();
 	//Markiere im localStorage, dass initialize für die Rundenübersicht bereits aufgerufen wurde!
 	localStorage.setItem("gameOverviewInitialize", false);
 	}
