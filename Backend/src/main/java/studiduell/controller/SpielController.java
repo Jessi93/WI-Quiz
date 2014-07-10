@@ -41,6 +41,7 @@ import studiduell.model.SpieltypEntity;
 import studiduell.model.UserEntity;
 import studiduell.repository.AntwortRepository;
 import studiduell.repository.FrageRepository;
+import studiduell.repository.KategorieRepository;
 import studiduell.repository.KategorienfilterRepository;
 import studiduell.repository.RundeRepository;
 import studiduell.repository.SpielRepository;
@@ -62,6 +63,8 @@ public class SpielController {
 	private AntwortRepository antwortRepository;
 	@Autowired
 	private FrageRepository frageRepository;
+	@Autowired
+	private KategorieRepository kategorieRepository;
 	@Autowired
 	private KategorienfilterRepository kategorienfilterRepository;
 	@Autowired
@@ -226,13 +229,15 @@ public class SpielController {
 		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
 		//FIXME CRITICAL: sort questions in categories (criteria: questionID)
 		if(userUserEntity.equals(gameSpielEntity.getSpieler1()) || userUserEntity.equals(gameSpielEntity.getSpieler2())) {
-			Set<KategorienfilterEntity> commonCategories = kategorienfilterRepository.commonCategories(userUserEntity, opponentUserEntity);
-			if(commonCategories.size() >= suggestedCategoriesCount) {
+			/*
+			 * Ignore Kategorienfilter entities data. Every player forcibly selects every category provided.
+			 */
+			List<KategorieEntity> categories = kategorieRepository.findAll();
+			if(categories.size() >= suggestedCategoriesCount) {
 				// the certain amount of common categories exists
 				
 				ArrayNode json = JsonNodeFactory.instance.arrayNode();
 				
-				Set<KategorieEntity> categories = randomCommonCategoryIntersection(commonCategories, suggestedCategoriesCount);
 				Iterator<KategorieEntity> categoryIterator = categories.iterator();
 				while(categoryIterator.hasNext()) {
 					// create an array entry for each selected category
