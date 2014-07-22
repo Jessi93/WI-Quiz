@@ -131,7 +131,8 @@ CREATE TABLE Antwort (
 /* User creation */
 CREATE USER 'studiduell'@'localhost' IDENTIFIED BY 'development';
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON studiduell .* TO 'studiduell'@'localhost';
+/* Grant access rights - alter is for adding indexes by JPA */
+GRANT SELECT, INSERT, UPDATE, DELETE, ALTER ON studiduell .* TO 'studiduell'@'localhost';
 
 
 /* Insertions of constant values, such as enum types. */
