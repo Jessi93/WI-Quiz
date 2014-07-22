@@ -32,7 +32,7 @@ public class AntwortEntity {
 	@Id
 	@OneToOne
 	@JoinColumn(name = "benutzername", nullable = false, referencedColumnName = "benutzername")
-	private UserEntity benutzer; //TODO UserEntity!
+	private UserEntity benutzer;
 	
 	@Column(name = "antwortmoeglichkeit1Check", nullable = false)
 	private boolean antwortmoeglichkeit1Check;
@@ -51,27 +51,6 @@ public class AntwortEntity {
 	
 	@Column(name = "ergebnisCheck", nullable = false)
 	private boolean ergebnisCheck; // Has the user answered correctly?
-
-	public AntwortEntity() {
-	}
-
-	public AntwortEntity(FrageEntity frage, RundeEntity rundenID,
-			UserEntity benutzer, boolean antwortmoeglichkeit1Check,
-			boolean antwortmoeglichkeit2Check,
-			boolean antwortmoeglichkeit3Check,
-			boolean antwortmoeglichkeit4Check, boolean flagFrageAngezeigt,
-			boolean ergebnisCheck) {
-		//XXX
-		this.frage = frage;
-		this.rundenID = rundenID;
-		this.benutzer = benutzer;
-		this.antwortmoeglichkeit1Check = antwortmoeglichkeit1Check;
-		this.antwortmoeglichkeit2Check = antwortmoeglichkeit2Check;
-		this.antwortmoeglichkeit3Check = antwortmoeglichkeit3Check;
-		this.antwortmoeglichkeit4Check = antwortmoeglichkeit4Check;
-		this.flagFrageAngezeigt = flagFrageAngezeigt;
-		this.ergebnisCheck = ergebnisCheck;
-	}
 	
 	public FrageEntity getFrage() {
 		return frage;

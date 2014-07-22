@@ -1,9 +1,6 @@
 package studiduell.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import studiduell.model.RundeEntity;
 import studiduell.model.SpielEntity;

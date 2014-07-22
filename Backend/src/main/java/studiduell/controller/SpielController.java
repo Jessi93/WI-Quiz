@@ -3,7 +3,6 @@ package studiduell.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,7 +46,6 @@ import studiduell.repository.RundeRepository;
 import studiduell.repository.SpielRepository;
 import studiduell.repository.UserRepository;
 import studiduell.security.CurrentUsername;
-import studiduell.security.SecurityContextFacade;
 
 @Controller
 @Transactional(rollbackFor=RuntimeException.class)
@@ -83,36 +81,6 @@ public class SpielController {
 	private int suggestedCategoriesCount;
 	@Value("${game.questionsPerRound}")
 	private int questionsPerRound;
-	
-	/**
-	 * @deprecated not implemented
-	 */
-	@RequestMapping(method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE,
-			value = "/create/random")
-	public ResponseEntity<String> createRandom(@CurrentUsername String authUsername) {
-		// TODO logic: regard user that also wants to play (MEETING FOR DB-CLARIFICATION!) - regard user with same category intersections - no regard of time?
-		UserEntity userUserEntity = userRepository.findOne(authUsername);
-		
-		// select opponent
-		Calendar activityAfter = Calendar.getInstance();
-		activityAfter.add(calendarField, calendarOffset);
-		List<UserEntity> users = userRepository.findOthersActiveAfter(authUsername, new Timestamp(activityAfter.getTimeInMillis()));
-		//TODO and no running game with that user
-		
-		if(!users.isEmpty()) {
-			UserEntity opponentUserEntity = users.get(random.nextInt(users.size()));
-			
-			SpielEntity game = createGame(userUserEntity, opponentUserEntity,
-					SpieltypEntityEnum.M.getEntity(), SpielstatusEntityEnum.P.getEntity());
-			spielRepository.save(game);
-			
-			//TODO Push notification for opponent here
-			
-			return new ResponseEntity<>(opponentUserEntity.getBenutzername(), HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/create/with/{opponent}")
 	public synchronized ResponseEntity<Void> create(@PathVariable("opponent") String opponent,
@@ -182,8 +150,7 @@ public class SpielController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
-		// TODO LOW: If server breaks down before commit, the roundID is
-		// incremented, too. Prevent that?
+		
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		if (gameSpielEntity != null) {
 			// only accept invite if it is a pending game whose player 2 is this
@@ -219,15 +186,12 @@ public class SpielController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
-			value = "/randomCategoriesFor/{gameID}") //TODO GET instead of POST
+			value = "/randomCategoriesFor/{gameID}")
 	public ResponseEntity<ArrayNode> randomCategories(@PathVariable("gameID") Integer gameID,
 			@CurrentUsername String authUsername) {
-		//FIXME 500 if not enough questions
-		//XXX is it authUsername's turn? -> does not matter, as the user can just submit answers if it's his turn
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
-		UserEntity opponentUserEntity = gameSpielEntity.getSpieler1().equals(userUserEntity) ? gameSpielEntity.getSpieler2() : gameSpielEntity.getSpieler1();
-		//FIXME CRITICAL: sort questions in categories (criteria: questionID)
+		
 		if(userUserEntity.equals(gameSpielEntity.getSpieler1()) || userUserEntity.equals(gameSpielEntity.getSpieler2())) {
 			/*
 			 * Ignore Kategorienfilter entities data. Every player forcibly selects every category provided.
@@ -302,9 +266,6 @@ public class SpielController {
 			value = "/submitRoundResult/{gameID}")
 	public ResponseEntity<Void> submitRoundResult(@PathVariable("gameID") Integer gameID,
 			@RequestBody RoundResultPOJO[] roundResult, @CurrentUsername String authUsername) {
-		//TODO update wartenAuf!
-		//TODO is it authUsername's turn? check wartenAuf!
-		
 		UserEntity userUserEntity = userRepository.findOne(authUsername);
 		SpielEntity gameSpielEntity = spielRepository.findOne(gameID);
 		
@@ -424,26 +385,6 @@ public class SpielController {
 		}
 	}
 	
-	/**
-	 * Returns a random intersection of common categories. The set's size
-	 * is <code>amount</code>.
-	 * 
-	 * @param categoryFilter the category filters.
-	 * @param amount the amount of randomly selected common categories
-	 * @return the randomly selected common categories
-	 */
-	private Set<KategorieEntity> randomCommonCategoryIntersection(Set<KategorienfilterEntity> categoryFilter, int amount) {
-		Set<KategorieEntity> categories = new HashSet<>(amount);
-		
-		Object[] tmpKategorienfilterEntities = categoryFilter.toArray();
-		while(categories.size() < amount) {
-			int randomIndex = random.nextInt(categoryFilter.size());
-			categories.add(((KategorienfilterEntity) tmpKategorienfilterEntities[randomIndex]).getKategorieName());
-		}
-		
-		return categories;
-	}
-	
 	private List<FrageEntity> randomQuestionsByCategory(KategorieEntity category, int questionCount) {
 		List<FrageEntity> questions = frageRepository.findByKategorieNameAndFlagFrageValidiertIsTrue(category);
 		Set<Integer> indices = new HashSet<>(questionCount);
@@ -466,7 +407,3 @@ public class SpielController {
 		return selectedQuestions;
 	}
 }
-
-//TODO @Transactional use timeout
-//TODO synchronized? multiple equal games are created instead of only one. Everywhere or nowhere!
-//FIXME CRITICAL: on database operations / JSON marshaling, escape '"', HTML entities (SQL/HTML injection)

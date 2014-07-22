@@ -17,27 +17,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @Table(name = "Spiel")
 public class SpielEntity {
-	
-	public SpielEntity() {
-	}
-
-	public SpielEntity(int spielID, SpieltypEntity spieltypName,
-			UserEntity spieler1, UserEntity spieler2, UserEntity sieger,
-			UserEntity verlierer, UserEntity wartenAuf, int aktuelleRunde,
-			SpielstatusEntity spielstatusName, Timestamp letzteAktivitaet) {
-		//XXX constructor
-		this.spielID = spielID;
-		this.spieltypName = spieltypName;
-		this.spieler1 = spieler1;
-		this.spieler2 = spieler2;
-		this.sieger = sieger;
-		this.verlierer = verlierer;
-		this.wartenAuf = wartenAuf;
-		this.aktuelleRunde = aktuelleRunde;
-		this.spielstatusName = spielstatusName;
-		this.letzteAktivitaet = letzteAktivitaet;
-	}
-	
 	@Id
 	@GeneratedValue
 	@JoinColumn(name = "spielID", unique = true, nullable = false)

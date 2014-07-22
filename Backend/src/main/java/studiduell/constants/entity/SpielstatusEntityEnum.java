@@ -19,5 +19,3 @@ public enum SpielstatusEntityEnum {
 		return entity;
 	}
 }
-
-//XXX use such enums

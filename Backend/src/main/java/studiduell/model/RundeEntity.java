@@ -73,6 +73,3 @@ public class RundeEntity {
 		return answers;
 	}
 }
-
-
-//TODO IDs int -> long, auch in DB

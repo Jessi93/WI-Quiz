@@ -74,10 +74,4 @@ public class UserEntity {
 	public void setLetzteAktivitaet(Timestamp letzteAktivitaet) {
 		this.letzteAktivitaet = letzteAktivitaet;
 	}
-	
-	//XXX only for debugging purposes
-	@Override
-	public String toString() {
-		return benutzername;
-	}
 }

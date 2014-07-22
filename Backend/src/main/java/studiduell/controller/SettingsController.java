@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import studiduell.model.FreundeslisteEntity;
-import studiduell.model.KategorieEntity;
 import studiduell.model.KategorienfilterEntity;
 import studiduell.model.UserEntity;
 import studiduell.model.id.FreundeslisteEntityPk;
@@ -24,7 +23,6 @@ import studiduell.repository.FreundeslisteRepository;
 import studiduell.repository.KategorienfilterRepository;
 import studiduell.repository.UserRepository;
 import studiduell.security.CurrentUsername;
-import studiduell.security.SecurityContextFacade;
 
 @Controller
 @Transactional(rollbackFor = RuntimeException.class)
@@ -127,12 +125,5 @@ public class SettingsController {
 		freundeslisteRepository.save(friends);
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
-
-	@RequestMapping(method = RequestMethod.DELETE, value = "/friends/{friend}")
-	public ResponseEntity<Void> deleteFriend(
-			@PathVariable("friend") String friend) {
-		// TODO maybe implement
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 }

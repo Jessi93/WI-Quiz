@@ -10,7 +10,6 @@ import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-//TODO in all entities, remove underscores
 @Entity
 @Table(name = "Frage")
 public class FrageEntity {
@@ -25,7 +24,7 @@ public class FrageEntity {
 	private KategorieEntity kategorieName;
 	
 	@JoinColumn(name = "unterkategorieName")
-	private String unterkategorieName; //XXX as entity
+	private String unterkategorieName;
 	
 	@Column(name = "flagFragenTypMult", nullable = false)
 	private boolean flagFragenTypMult;
@@ -57,40 +56,10 @@ public class FrageEntity {
 	@Column(name = "wahrheitAntwortmoeglichkeit4", nullable = false)
 	private boolean wahrheitAntwortmoeglichkeit4;
 	
-	@JsonIgnore // TODO maybe also on different properties, as client is not interested in that property
+	@JsonIgnore
 	@Column(name = "flagFrageValidiert", nullable = false)
 	private boolean flagFrageValidiert;
-
-	public FrageEntity() {
-	}
-
-	public FrageEntity(int fragenID, KategorieEntity kategorieName,
-			String unterkategorieName, boolean flagFragenTypMult, String frage,
-			String antwortmoeglichkeit1, String antwortmoeglichkeit2,
-			String antwortmoeglichkeit3, String antwortmoeglichkeit4,
-			boolean wahrheitAntwortmoeglichkeit1,
-			boolean wahrheitAntwortmoeglichkeit2,
-			boolean wahrheitAntwortmoeglichkeit3,
-			boolean wahrheitAntwortmoeglichkeit4, boolean flagFrageValidiert) {
-		//XXX
-		this.fragenID = fragenID;
-		this.kategorieName = kategorieName;
-		this.unterkategorieName = unterkategorieName;
-		this.flagFragenTypMult = flagFragenTypMult;
-		this.frage = frage;
-		this.antwortmoeglichkeit1 = antwortmoeglichkeit1;
-		this.antwortmoeglichkeit2 = antwortmoeglichkeit2;
-		this.antwortmoeglichkeit3 = antwortmoeglichkeit3;
-		this.antwortmoeglichkeit4 = antwortmoeglichkeit4;
-		this.wahrheitAntwortmoeglichkeit1 = wahrheitAntwortmoeglichkeit1;
-		this.wahrheitAntwortmoeglichkeit2 = wahrheitAntwortmoeglichkeit2;
-		this.wahrheitAntwortmoeglichkeit3 = wahrheitAntwortmoeglichkeit3;
-		this.wahrheitAntwortmoeglichkeit4 = wahrheitAntwortmoeglichkeit4;
-		this.flagFrageValidiert = flagFrageValidiert;
-	}
-
-
-
+	
 	public int getFragenID() {
 		return fragenID;
 	}
@@ -201,10 +170,5 @@ public class FrageEntity {
 
 	public void setFlagFrageValidiert(boolean flagFrageValidiert) {
 		this.flagFrageValidiert = flagFrageValidiert;
-	}
-	
-	@Override
-	public String toString() {
-		return frage; //XXX
 	}
 }

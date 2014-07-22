@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
-import org.codehaus.jackson.node.JsonNodeFactory;
-import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,7 +31,6 @@ import studiduell.repository.KategorienfilterRepository;
 import studiduell.repository.SpielRepository;
 import studiduell.repository.UserRepository;
 import studiduell.security.CurrentUsername;
-import studiduell.security.SecurityContextFacade;
 
 @Controller
 @Transactional(rollbackFor=RuntimeException.class)
@@ -105,7 +102,6 @@ public class UserController {
 						KategorienfilterEntity filter = new KategorienfilterEntity(user, c, true);
 						kategorienfilterRepository.save(filter);
 					}
-					//TODO if sth. went wrong: 500 Internal Server Error
 					
 					return new ResponseEntity<>(HttpStatus.CREATED);
 				} else {
@@ -149,39 +145,6 @@ public class UserController {
 		games.addAll(endedGames.getContent());
 		
 		return new ResponseEntity<>(games, HttpStatus.OK);
-	}
-	
-	/**
-	 * 
-	 * @return 200
-	 * @deprecated not implemented
-	 */
-	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
-			value = "/stats")
-	public ResponseEntity<ObjectNode> stats(@CurrentUsername String authUsername) {
-		// null check not required as spring security guarantees this code to be executed only for authorized users
-		UserEntity userUserEntity = userRepository.findOne(authUsername);
-		
-		// Fetch stats data
-		//TODO
-		
-		//TODO replace mock
-		JsonNodeFactory json = JsonNodeFactory.instance;
-		ObjectNode gameObj = json.objectNode();
-		gameObj.put("lost", "lostVal");
-		gameObj.put("won", "wonVal");
-		gameObj.put("draw", "drawVal");
-		gameObj.put("total", "totalVal");
-		
-		ObjectNode questionsObj = json.objectNode();
-		questionsObj.put("perc_right", "perc_rightVal");
-		questionsObj.put("total", "totalVal");
-		
-		ObjectNode allObj = json.objectNode();
-		allObj.put("game", gameObj);
-		allObj.put("questions", questionsObj);
-		
-		return new ResponseEntity<>(allObj, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,
