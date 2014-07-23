@@ -40,8 +40,8 @@ function kategorieAuswaehlen(kategorieName) {
 	localStorage.setItem("questions" + tmpGameInfo.spielID, JSON.stringify(questions));
 	localStorage.setItem("selectedCategory" + tmpGameInfo.spielID, kategorieName);
 	
-	//öffne screen ausgewählte kategrie & und schließe aktuellen screen
-	popViewPushView("html/ausgewaehlteKategorie.html");
+	//öffne screen ausgewählte Frage & und schließe aktuellen screen
+	popViewPushView("html/frage.html");
 }
 
 $( document ).ready(function() { init(); });
