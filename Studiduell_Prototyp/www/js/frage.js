@@ -27,11 +27,12 @@ function init() {
 }
 
 function setTapSwipeEventHandlers(){
-	$("#antwort1").hammer({}).on('tap',function(e){ markAnswer($("#antwort1"))});
-	$("#antwort2").hammer({}).on('tap',function(e){ markAnswer($("#antwort2"))});
-	$("#antwort3").hammer({}).on('tap',function(e){ markAnswer($("#antwort3"))});
-	$("#antwort4").hammer({}).on('tap',function(e){ markAnswer($("#antwort4"))});
-	$(document).hammer({}).on('swipeleft',function(e){ next()	});
+	$("#antwort1").hammer({}).on('tap',function(e){ markAnswer($("#antwort1"));});
+	$("#antwort2").hammer({}).on('tap',function(e){ markAnswer($("#antwort2"));});
+	$("#antwort3").hammer({}).on('tap',function(e){ markAnswer($("#antwort3"));});
+	$("#antwort4").hammer({}).on('tap',function(e){ markAnswer($("#antwort4"));});
+	$("#nextButton").hammer({}).on('tap',function(e){ next();});
+	$(document).hammer({}).on('swipeleft',function(e){ next();});
 	//$(document).hammer({}).on('swiperight',function(e){ steroids.layers.pop()	});
 }
 /* backButtonHiden();
@@ -87,12 +88,12 @@ function markAnswer(button) {
 	if (result === null){
 		var btn = $(button);
 		if (!btn.hasClass("buttonAusgewaehlt")) {
-			/* --> nicht mehr notwendig, da next durch swiperight ersetzt wurde!
+			/* --> nicht mehr notwendig, da next durch swiperight ersetzt wurde!*/
 			// Weiter-Button aktivieren, falls bisher keine Antworten ausgewählt wurden.
 			if(getSelectedButtonCount() == 0) {
 				$("#nextButton").removeAttr("disabled");
 			}
-			*/
+			
 		
 			// Der Button wird ausgewählt
 			btn.addClass("buttonAusgewaehlt");
