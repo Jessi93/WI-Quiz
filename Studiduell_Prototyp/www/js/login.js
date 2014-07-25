@@ -108,7 +108,7 @@ function handleErrorLogin(returnedObject) {
 	if(returnedObject.status == 401){
 	alert("Die Kombination aus Username und Passwort ist nicht korrekt, bitte versuche es erneut.");
 	}else{
-	alert(unescape("%22Fehler bei %DCberpr%FCfung der Login Daten %28Keine Verbindung zum Server%3F%29 %22")+JSON.stringify(returnedObject));//DEBUG +returnedObject);
+	alert(unescape("%22Fehler bei %DCberpr%FCfung der Login Daten %28Keine Verbindung zum Server%3F%29 %22"));//DEBUG +returnedObject);
 	}
 }
 

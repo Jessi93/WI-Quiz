@@ -32,7 +32,7 @@ function sendRegistration(){
 		if(returnedObject.status == 409){
 		navigator.notification.alert("Dein Username ist leider bereits vergeben...", onAlertDismissHandleErrorRegister,'Information','OK');
 		}else{
-		alert(unescape("%22Fehler bei %DCberpr%FCfung der Registrierungsdaten. %28Keine Verbindung zum Server%3F%29 %22")+JSON.stringify(returnedObject));
+		alert(unescape("%22Fehler bei %DCberpr%FCfung der Registrierungsdaten. %28Keine Verbindung zum Server%3F%29 %22"));
 		}
 	}
 

@@ -262,8 +262,7 @@ function fetchRundenuebersichtData (spielID){
 			//alert("Rundenübersichtsdaten wurden in localstorage geschrieben:"+localStorage.getItem("gameOverview"));
 			//Event wird erstellt!
 			fireEvent("RundenuebersichtDataloaded");
-		},
-		error:function(obj){alert("Fehler beim holen der Rundenübersichtsdaten! Evtl SpielID nicht vorhanden!"+JSON.stringify(obj));}
+		}
 		});
 }
 

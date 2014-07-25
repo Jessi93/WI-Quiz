@@ -146,7 +146,6 @@ function fetchServerData() {
 			beforeSend:function(xhr){authHeader(xhr);},
 			crossDomain:true,
 			success:function(obj){handleServerData(obj);},
-			error:function(obj){alert("Fehler beim holen der Hauptmenü-Spieldaten! "+JSON.stringify(obj));},
 			data:"0123456789"
 			}); 
 	
