@@ -477,7 +477,6 @@ function getCurrentGameInfo(spielID){
 				beforeSend:function(xhr){authHeader(xhr);},
 				crossDomain:true,
 				success:function(obj){writeGameInfoInLS(obj);},
-				error:function(obj){alert("Fehler beim holen der Hauptmenü-Spieldaten! "+JSON.stringify(obj));},
 				data:"0123456789" //TODO: Push ID übertragen!
 				}); 
 
@@ -666,12 +665,15 @@ for (var i=0;i<GameOverviewData.rounds.length;i++){
 				}		
 			}
 		}
-	} 
+	}
+	
 //Wenn Frage Richtig beantwortet (ergebnisCheck = true)
+var $viereck = $("#" + viereck_id);
+$viereck.attr('class', '');
+$viereck.addClass('quadrat');
 if (fragenergebnis == true){
 	//alert(viereck_id+" wurde auf grün gesetzt!");
-	$("#"+viereck_id).addClass("greenBackground");
-	
+	$viereck.addClass("greenBackground");
 	//Logik zum Berechnen des Spielstandes
 	//Prüfen, ob Frage zu Spieler 1 oder 2 gehört
 		if (zugehoerigerSpieler == 1)
@@ -687,10 +689,10 @@ if (fragenergebnis == true){
 	
 	}else if(fragenergebnis == false){
 	//Wenn Frage Falsche beantwortet (ergebnisCheck = false)
-	$("#"+viereck_id).addClass('redBackground');
+	$viereck.addClass('redBackground');
 	}else if(fragenergebnis === "grey"){
 	//Färbe Viereck grau!
-	$("#"+viereck_id).addClass('greyBackground');
+	$viereck.addClass('greyBackground');
 	}
 }
 
@@ -857,14 +859,13 @@ function setNavigationBar(){
 //alert("setNavigationBar wurde aufgerufen!");
 //Füge "aktualisieren Button" dem NavigationBar hinzu!
 	var syncButton = new steroids.buttons.NavigationBarButton();
-	var devicePlatform = device.platform; 
+	//var devicePlatform = device.platform; 
 /* 	alert("devicePlatform: "+devicePlatform); */
 	
-	 if (devicePlatform === "iOS") {
-		syncButton.imagePath = "/images/refresh_big@2x.png";
-	}else if (devicePlatform === "Android") {
-  		syncButton.title = "Aktualisieren"; 
-	} 
+	// iOS
+	syncButton.imagePath = "/images/refresh_big@2x.png";
+	// Android
+	syncButton.title = "Aktualisieren"; 
 	syncButton.onTap = function() {
 		sync();
 		};
