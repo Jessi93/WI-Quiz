@@ -78,6 +78,7 @@ function startTimer() {
 		//Alternative 2: Wenn Zeit abgelaufen, wird aktuelle Auswahl als angewählt angenommen.
 		//Zeige Auflösung der Frage
 		result = nextShowResult();
+		$("#nextButton").removeAttr("disabled");
 		//Schreibe Ergebnis in LocalStorage
 		saveQuestionResult(result);
 	});
