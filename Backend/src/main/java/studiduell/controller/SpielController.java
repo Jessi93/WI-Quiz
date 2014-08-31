@@ -197,6 +197,8 @@ public class SpielController {
 			 * Ignore Kategorienfilter entities data. Every player forcibly selects every category provided.
 			 */
 			List<KategorieEntity> categories = kategorieRepository.findAll();
+			categories = randomFromList(categories, suggestedCategoriesCount);
+			
 			if(categories.size() >= suggestedCategoriesCount) {
 				// the certain amount of common categories exists
 				
@@ -405,5 +407,25 @@ public class SpielController {
 		Collections.sort(selectedQuestions, questionsSorter);
 		
 		return selectedQuestions;
+	}
+	
+	/**
+	 * Returns a random intersection of the list.
+	 * 
+	 * @param allCats the elements' source
+	 * @param elementsToKeep the amount of new elements
+	 * @return a list with <code>elementsToKeep</code> elements, randomly selected
+	 * from <code>allCats</code>
+	 */
+	private List<KategorieEntity> randomFromList(List<KategorieEntity> allCats, int elementsToKeep) {
+		Set<KategorieEntity> newSet = new HashSet<>(elementsToKeep);
+		Random random = new Random();
+		
+		while(newSet.size() < elementsToKeep) {
+			KategorieEntity category = allCats.get(random.nextInt(allCats.size()));
+			newSet.add(category);
+		}
+		
+		return new ArrayList<>(newSet);
 	}
 }
