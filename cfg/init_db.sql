@@ -131,7 +131,7 @@ CREATE TABLE Antwort (
 /* User creation */
 CREATE USER 'studiduell'@'localhost' IDENTIFIED BY 'development';
 
-/* Grant access rights - alter is for adding indexes by JPA */
+/* Grant access rights */
 GRANT SELECT, INSERT, UPDATE, DELETE ON studiduell .* TO 'studiduell'@'localhost';
 
 
